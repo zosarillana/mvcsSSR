@@ -1,5 +1,5 @@
 import { NgModule, CUSTOM_ELEMENTS_SCHEMA } from '@angular/core';
-import { BrowserModule } from '@angular/platform-browser';
+import { BrowserModule, provideClientHydration } from '@angular/platform-browser';
 import { AppRoutingModule } from './app-routing.module';
 import { AppComponent } from './app.component';
 import { HttpClientModule, HTTP_INTERCEPTORS } from '@angular/common/http';
@@ -132,13 +132,13 @@ import { DatePipe } from '@angular/common';
     MatProgressSpinnerModule,
     RouterModule,
     MatSnackBarModule,
-  
+    
   ],
   providers: [
     DatePipe,
     TokenService, // Add TokenService to providers
     AuthService, // Add AuthService to providers
-    { provide: HTTP_INTERCEPTORS, useClass: AuthInterceptor, multi: true },
+    { provide: HTTP_INTERCEPTORS, useClass: AuthInterceptor, multi: true }, provideClientHydration(),
   ],
   bootstrap: [AppComponent],
 })
