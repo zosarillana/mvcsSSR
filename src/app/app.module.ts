@@ -1,5 +1,8 @@
 import { NgModule, CUSTOM_ELEMENTS_SCHEMA } from '@angular/core';
-import { BrowserModule, provideClientHydration } from '@angular/platform-browser';
+import {
+  BrowserModule,
+  provideClientHydration,
+} from '@angular/platform-browser';
 import { AppRoutingModule } from './app-routing.module';
 import { AppComponent } from './app.component';
 import { HttpClientModule, HTTP_INTERCEPTORS } from '@angular/common/http';
@@ -36,7 +39,7 @@ import { LoginComponent } from './components/authentication/login/login.componen
 import { AuthInterceptor } from './auth/auth.interceptor';
 import { ModalViewUserDialogComponent } from './components/admin/views/user/user-add/modal/modal-view-user-dialog/modal-view-user-dialog.component';
 import { ConfirmDialogComponent } from './components/admin/views/user/user-add/modal/modal-edit-user-dialog/confirm-dialog/confirm-dialog.component';
-import { TokenService } from './services/token.service'; // Import TokenService
+import { TokenService } from './services/token.service';
 import { AuthService } from './auth/auth.service';
 import { AddVisitsComponent } from './components/get-market-visits/views/add-visits/add-visits.component';
 import { LoadingScreenComponent } from './loading-screen/loading-screen.component';
@@ -64,6 +67,9 @@ import { EditVisitsComponent } from './components/get-market-visits/views/edit-v
 import { ViewVisitsComponent } from './components/get-market-visits/views/view-visits/view-visits.component';
 import { NotfoundComponent } from './components/notfound/notfound.component';
 import { DatePipe } from '@angular/common';
+import { ServerModule } from '@angular/platform-server';
+import { AuthGuard } from './auth/auth.guard';
+import { NoAuthGuard } from './auth/no-authguard.service';
 
 @NgModule({
   declarations: [
@@ -107,12 +113,11 @@ import { DatePipe } from '@angular/common';
     TestComponent,
     EditVisitsComponent,
     ViewVisitsComponent,
-    NotfoundComponent,    
+    NotfoundComponent,
   ],
   schemas: [CUSTOM_ELEMENTS_SCHEMA],
   imports: [
     BrowserModule,
-    AppRoutingModule,
     HttpClientModule,
     BrowserAnimationsModule,
     FormsModule,
@@ -130,15 +135,19 @@ import { DatePipe } from '@angular/common';
     MatExpansionModule,
     MatStepperModule,
     MatProgressSpinnerModule,
-    RouterModule,
+    // RouterModule,
+    ServerModule,
+    AppRoutingModule,
     MatSnackBarModule,
-    
   ],
   providers: [
+    AuthGuard,
+    NoAuthGuard,
     DatePipe,
-    TokenService, // Add TokenService to providers
-    AuthService, // Add AuthService to providers
-    { provide: HTTP_INTERCEPTORS, useClass: AuthInterceptor, multi: true }, provideClientHydration(),
+    TokenService,
+    AuthService,
+    { provide: HTTP_INTERCEPTORS, useClass: AuthInterceptor, multi: true },
+    provideClientHydration(),
   ],
   bootstrap: [AppComponent],
 })
