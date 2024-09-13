@@ -3,7 +3,6 @@ import { Router } from '@angular/router';
 import { HttpClient, HttpErrorResponse } from '@angular/common/http';
 import { Observable, catchError, throwError } from 'rxjs';
 import { isPlatformBrowser } from '@angular/common';
-import { environment } from '../../environments/environment';
 
 @Injectable({
   providedIn: 'root',
