@@ -15,6 +15,7 @@ import { ModalViewIsrComponent } from './modal/modal-view-isr/modal-view-isr.com
 import { ModalDeleteIsrComponent } from './modal/modal-delete-isr/modal-delete-isr.component';
 import { AfterViewInit } from '@angular/core';
 import { DatePipe } from '@angular/common';
+import { FlowbiteService } from '../../../../../services/flowbite.service';
 
 @Component({
   selector: 'app-isr-add',
@@ -43,6 +44,7 @@ export class IsrAddComponent {
   public imageUrlBase = `${environment.apiUrl}/Isr/image/`; // <-- Use the environment API URL
 
   constructor(
+    private flowbiteService: FlowbiteService,
     private isrService: IsrService,
     private datePipe: DatePipe,
     public dialog: MatDialog
@@ -58,7 +60,10 @@ export class IsrAddComponent {
   ngOnInit(): void {
     this.loadIsrs();
     this.startPolling();
-    initFlowbite();
+    this.flowbiteService.loadFlowbite(flowbite => {
+      // Your custom code here
+      console.log('Flowbite loaded', flowbite);
+    });
   }
 
   ngOnDestroy(): void {

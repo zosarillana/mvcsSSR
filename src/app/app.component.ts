@@ -1,7 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { MarketVisits } from './models/market-visits';
-import { Router } from '@angular/router';
-import { initFlowbite } from 'flowbite';
+import { FlowbiteService } from './services/flowbite.service';
 @Component({
   selector: 'app-root',
   templateUrl: './app.component.html',
@@ -10,19 +9,12 @@ import { initFlowbite } from 'flowbite';
 export class AppComponent implements OnInit {
   title = 'msvcREST';
   mvisits: MarketVisits[] = [];
-
-  constructor(private router: Router) {}
-
+  constructor(private flowbiteService: FlowbiteService) {}
   ngOnInit(): void {
-    initFlowbite();
-    // this.router.events.subscribe((event) => {
-    //   if (event instanceof NavigationStart) {
-    //     console.log('Navigation started to:', event.url);
-    //   }
-    //   if (event instanceof NavigationEnd) {
-    //     console.log('Navigation ended to:', event.url);
-    //   }
-    // });
+    this.flowbiteService.loadFlowbite(flowbite => {
+      // Your custom code here
+      console.log('Flowbite loaded', flowbite);
+    });
   }
 
   isSidebarOpen = true;

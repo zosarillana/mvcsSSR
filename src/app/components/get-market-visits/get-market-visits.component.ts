@@ -17,6 +17,7 @@ import moment from 'moment';
 import { Pod } from '../../models/pod';
 import { Subscription } from 'rxjs';
 import { DatePipe } from '@angular/common';
+import { FlowbiteService } from '../../services/flowbite.service';
 
 @Component({
   selector: 'app-get-market-visits',
@@ -57,6 +58,7 @@ export class GetMarketVisitsComponent implements AfterViewInit, OnInit {
   endDate: Date | null = null;
   visitCount: number = 0;
   constructor(
+    private flowbiteService: FlowbiteService,
     private datePipe: DatePipe,
     private marketVisitsService: MarketVisitsService,
     public dialog: MatDialog,
@@ -70,7 +72,10 @@ export class GetMarketVisitsComponent implements AfterViewInit, OnInit {
       .subscribe((result: MarketVisits[]) => {
         this.dataSource.data = result;
       });
-    initFlowbite();
+      this.flowbiteService.loadFlowbite(flowbite => {
+        // Your custom code here
+        console.log('Flowbite loaded', flowbite);
+      });    
   }
 
   loadMarketVisits(): void {

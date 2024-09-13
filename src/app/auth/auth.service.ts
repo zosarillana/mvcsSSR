@@ -1,7 +1,8 @@
-import { Injectable } from '@angular/core';
+import { Injectable, Inject, PLATFORM_ID } from '@angular/core';
 import { Router } from '@angular/router';
 import { HttpClient, HttpErrorResponse } from '@angular/common/http';
 import { Observable, catchError, throwError } from 'rxjs';
+import { isPlatformBrowser } from '@angular/common';
 import { environment } from '../../environments/environment';
 
 @Injectable({
@@ -9,32 +10,43 @@ import { environment } from '../../environments/environment';
 })
 export class AuthService {
   private apiUrl = `/api/Auth/login`;
+  private platformId: Object;
 
-  constructor(private http: HttpClient, private router: Router) {}
+  constructor(
+    private http: HttpClient,
+    private router: Router,
+    @Inject(PLATFORM_ID) platformId: Object
+  ) {
+    this.platformId = platformId;
+  }
 
-  login(username: string, user_password: string): Observable<{ token: string; }> {
+  login(username: string, user_password: string): Observable<{ token: string }> {
     const loginData = { username, user_password };
     return this.http
-      .post<{ token: string; }>(this.apiUrl, loginData)
+      .post<{ token: string }>(this.apiUrl, loginData)
       .pipe(catchError(this.handleError));
   }
 
   isLoggedIn(): boolean {
-    const token = localStorage.getItem('jwtToken');
-    if (!token) {
-      return false;
-    }
-    const decodedToken = this.decodeToken(token);
-    if (decodedToken && decodedToken.exp) {
-      const expiry = new Date(decodedToken.exp * 1000); // Convert exp to milliseconds
-      return new Date() < expiry; // Check if the current date is before the token expiry
+    if (isPlatformBrowser(this.platformId)) {
+      const token = localStorage.getItem('jwtToken');
+      if (!token) {
+        return false;
+      }
+      const decodedToken = this.decodeToken(token);
+      if (decodedToken && decodedToken.exp) {
+        const expiry = new Date(decodedToken.exp * 1000); // Convert exp to milliseconds
+        return new Date() < expiry; // Check if the current date is before the token expiry
+      }
     }
     return false;
   }
 
   logout(): void {
-    localStorage.removeItem('jwtToken');
-    this.router.navigate(['/login']); // Redirect to login page after logout
+    if (isPlatformBrowser(this.platformId)) {
+      localStorage.removeItem('jwtToken');
+      this.router.navigate(['/login']); // Redirect to login page after logout
+    }
   }
 
   decodeToken(token: string): any {
@@ -64,5 +76,3 @@ export class AuthService {
     return throwError(() => new Error(errorMessage));
   }
 }
-
-  

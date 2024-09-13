@@ -20,6 +20,7 @@ import { ModalEditPapComponent } from './modal/modal-edit-pap/modal-edit-pap.com
 import { ModalViewPapComponent } from './modal/modal-view-pap/modal-view-pap.component';
 import { ModalDeletePapComponent } from './modal/modal-delete-pap/modal-delete-pap.component';
 import { DatePipe } from '@angular/common';
+import { FlowbiteService } from '../../../../../services/flowbite.service';
 
 @Component({
   selector: 'app-pap-add',
@@ -47,7 +48,7 @@ export class PapAddComponent {
   // Construct the base API URL
   public imageUrlBase = `${environment.apiUrl}/Pap/image/`;  // <-- Use the environment API URL
 
-  constructor(private papService: PapService, public dialog: MatDialog, private datePipe: DatePipe) {}
+  constructor(private papService: PapService, public dialog: MatDialog, private datePipe: DatePipe, private flowbiteService: FlowbiteService) {}
 
   getFormattedVisitDate(visitDate: string | undefined): string {
     if (visitDate) {
@@ -59,7 +60,10 @@ export class PapAddComponent {
   ngOnInit(): void {
     this.loadPods();
     this.startPolling();
-    initFlowbite();
+    this.flowbiteService.loadFlowbite(flowbite => {
+      // Your custom code here
+      console.log('Flowbite loaded', flowbite);
+    });
   }
 
   ngOnDestroy(): void {

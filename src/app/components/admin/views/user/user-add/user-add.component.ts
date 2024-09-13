@@ -11,6 +11,7 @@ import { ModalViewUserDialogComponent } from './modal/modal-view-user-dialog/mod
 import { User } from '../../../../../models/user';
 import { UserService } from '../../../../../services/user.service';
 import { initFlowbite } from 'flowbite';
+import { FlowbiteService } from '../../../../../services/flowbite.service';
 
 @Component({
   selector: 'app-user-add',
@@ -34,18 +35,21 @@ export class UserAddComponent {
   endDate: Date | null = null;
   userCount: number = 0;
 
-  constructor(private userService: UserService, public dialog: MatDialog) {}
+  constructor(private userService: UserService, public dialog: MatDialog, private flowbiteService: FlowbiteService) {}
 
   ngOnInit(): void {
     this.loadUsers();
-    initFlowbite();
+    this.flowbiteService.loadFlowbite(flowbite => {
+      // Your custom code here
+      console.log('Flowbite loaded', flowbite);
+    });
   }
 
   loadUsers(): void {
     this.userService.getUsers().subscribe((result: User[]) => {
       this.dataSource.data = result;
       this.dataSource.paginator = this.paginator;
-
+      
       this.fetchUserCount();
 
       // Set up polling every 3 seconds

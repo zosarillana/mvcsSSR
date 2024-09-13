@@ -21,6 +21,7 @@ import { ModalDeletePodComponent } from './modal/modal-delete-pod/modal-delete-p
 import { ModalDeletePapComponent } from '../pap-add/modal/modal-delete-pap/modal-delete-pap.component';
 import { Pod } from '../../../../../models/pod';
 import { DatePipe } from '@angular/common';
+import { FlowbiteService } from '../../../../../services/flowbite.service';
 @Component({
   selector: 'app-pod-add',
   templateUrl: './pod-add.component.html',
@@ -48,6 +49,7 @@ export class PodAddComponent {
   public imageUrlBase = `${environment.apiUrl}/Pod/image/`; // <-- Use the environment API URL
 
   constructor(
+    private flowbiteService: FlowbiteService,
     private podService: PodService,
     public dialog: MatDialog,
     private datePipe: DatePipe
@@ -63,7 +65,10 @@ export class PodAddComponent {
   ngOnInit(): void {
     this.loadPods();
     this.startPolling();
-    initFlowbite();
+    this.flowbiteService.loadFlowbite(flowbite => {
+      // Your custom code here
+      console.log('Flowbite loaded', flowbite);
+    });
   }
 
   ngOnDestroy(): void {

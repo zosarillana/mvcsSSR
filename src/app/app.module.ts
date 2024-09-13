@@ -5,7 +5,7 @@ import {
 } from '@angular/platform-browser';
 import { AppRoutingModule } from './app-routing.module';
 import { AppComponent } from './app.component';
-import { HttpClientModule, HTTP_INTERCEPTORS } from '@angular/common/http';
+import { HttpClientModule, HTTP_INTERCEPTORS, provideHttpClient, withFetch } from '@angular/common/http';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { MatPaginatorModule } from '@angular/material/paginator';
@@ -70,6 +70,7 @@ import { DatePipe } from '@angular/common';
 import { ServerModule } from '@angular/platform-server';
 import { AuthGuard } from './auth/auth.guard';
 import { NoAuthGuard } from './auth/no-authguard.service';
+import { AppServerModule } from './app.module.server';
 
 @NgModule({
   declarations: [
@@ -114,10 +115,12 @@ import { NoAuthGuard } from './auth/no-authguard.service';
     EditVisitsComponent,
     ViewVisitsComponent,
     NotfoundComponent,
+    
   ],
   schemas: [CUSTOM_ELEMENTS_SCHEMA],
   imports: [
     BrowserModule,
+    AppRoutingModule,
     HttpClientModule,
     BrowserAnimationsModule,
     FormsModule,
@@ -137,11 +140,12 @@ import { NoAuthGuard } from './auth/no-authguard.service';
     MatProgressSpinnerModule,
     // RouterModule,
     ServerModule,
-    AppRoutingModule,
+    // AppServerModule,
     MatSnackBarModule,
   ],
   providers: [
     AuthGuard,
+    provideHttpClient(withFetch()),
     NoAuthGuard,
     DatePipe,
     TokenService,
