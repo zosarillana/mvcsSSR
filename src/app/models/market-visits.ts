@@ -2,13 +2,13 @@ export class MarketVisits {
   id?: number;
   user_id = '';
   visit_date = '';
-  area_id = '';
+  area_id: string[] = []; // Changed from string to string[]
   visit_accountName = '';
   visit_distributor = '';
   visit_salesPersonnel = '';
   visit_accountType = '';
   visit_accountType_others = '';
-  isr_id = '';
+  isr_id: string[] = []; // Changed from string to string[]
   isr_reqOthers = '';
   isr_req_ImgPath = '';
   isr_needsOthers = '';
@@ -16,11 +16,11 @@ export class MarketVisits {
   visit_payolaSupervisor = '';
   visit_payolaMerchandiser = '';
   visit_averageOffTakePd = '';
-  pod_id = '';
+  pod_id: string[] = []; // Changed from string to string[]
   pod_canned_other = '';
   pod_mpp_other = '';
   visit_competitorsCheck = '';
-  pap_id = '';
+  pap_id: string[] = []; // Changed from string to string[]
   pap_others = '';
   date_created = '';
   date_updated = '';

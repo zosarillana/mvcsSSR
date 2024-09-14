@@ -100,7 +100,6 @@ export class EditVisitsComponent implements OnInit {
     this.user_id = user?.id ?? null;
     this.formGroup.patchValue({ user_id: this.user_id });
     this.cdr.detectChanges();
-
     // Fetch areas data
     this.getAreasData();
     this.getAccountTypeData();

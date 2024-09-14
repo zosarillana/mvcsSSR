@@ -9,7 +9,7 @@
     "test": "ng test",
     "serve:ssr:msvcCLIENT": "node dist/msvc-client/server/server.mjs",
     "build:ssr": "ng build && ng run your-project-name:server",
-    "serve:ssr": "node dist/your-project-name/server/main.js",
+    "serve:ssr": "node --experimental-specifier-resolution=node dist/msvc-client/server/main.server.mjs",
     "dev:ssr": "ng run your-project-name:serve-ssr",
     "prerender": "ng run your-project-name:prerender"
   },
