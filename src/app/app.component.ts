@@ -7,7 +7,7 @@ import { FlowbiteService } from './services/flowbite.service';
   styleUrl: './app.component.css',
 })
 export class AppComponent implements OnInit {
-  title = 'msvcREST';
+  title = 'msvc-client';
   mvisits: MarketVisits[] = [];
   constructor(private flowbiteService: FlowbiteService) {}
   ngOnInit(): void {

@@ -1,18 +1,18 @@
 {
   "name": "msvc-client",
   "version": "0.0.0",
-  "scripts": {
-    "ng": "ng",
-    "start": "ng serve",
-    "build": "ng build",
-    "watch": "ng build --watch --configuration development",
-    "test": "ng test",
-    "serve:ssr:msvcCLIENT": "node dist/msvc-client/server/server.mjs",
-    "build:ssr": "ng build && ng run your-project-name:server",
-    "serve:ssr": "node --experimental-specifier-resolution=node dist/msvc-client/server/main.server.mjs",
-    "dev:ssr": "ng run your-project-name:serve-ssr",
-    "prerender": "ng run your-project-name:prerender"
-  },
+    "scripts": {
+      "ng": "ng",
+      "start": "ng serve",
+      "build": "ng build",
+      "watch": "ng build --watch --configuration development",
+      "test": "ng test",
+      "serve:ssr:msvc-client": "node dist/msvc-client/server/server.mjs",
+      "build:ssr": "ng build && ng run msvc-client:server",
+ "serve:ssr": "node dist/msvc-client/server/server.mjs",
+      "dev:ssr": "ng run msvc-client:serve-ssr",
+      "prerender": "ng run msvc-client:prerender"
+    },
   "private": true,
   "dependencies": {
     "@angular/animations": "^18.1.4",

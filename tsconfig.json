@@ -29,6 +29,18 @@
     "enableI18nLegacyMessageIdFormat": false,
     "strictInjectionParameters": true,
     "strictInputAccessModifiers": true,
-    "strictTemplates": true
-  }
+    "strictTemplates": true,
+    "entryModule": "./src/app/app.server.module#AppServerModule" // Server entry module
+  },
+  "files": [
+    "src/main.ts",
+    "src/main.server.ts" // Include server entry point
+  ],
+  "include": [
+    "src/**/*.ts"
+  ],
+  "exclude": [
+    "node_modules",
+    "dist"
+  ]
 }

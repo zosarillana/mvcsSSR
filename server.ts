@@ -1,30 +1,29 @@
-import { APP_BASE_HREF } from '@angular/common';
-import { CommonEngine } from '@angular/ssr';
 import express from 'express';
-import { fileURLToPath } from 'node:url';
-import { dirname, join, resolve } from 'node:path';
-import AppServerModule from './src/main.server';
-import { provideRouter } from '@angular/router';
-import { Router } from '@angular/router';
-import { ROUTES } from '@angular/router';
+import { join } from 'node:path';
 import { ngExpressEngine } from '@nguniversal/express-engine';
+import AppServerModule from './src/main.server';
+
 const app = express();
 
+// Setup the Angular Express Engine
 app.engine('html', ngExpressEngine({
   bootstrap: AppServerModule,
 }));
 
 app.set('view engine', 'html');
-app.set('views', join(process.cwd(), 'dist/browser'));
+app.set('views', join(process.cwd(), 'dist/msvc-client/browser'));
 
-app.get('*.*', express.static(join(process.cwd(), 'dist/browser'), {
-  maxAge: '1y'
+// Serve static files
+app.get('*.*', express.static(join(process.cwd(), 'dist/msvc-client/browser'), {
+  maxAge: '1y',
 }));
 
+// Handle all other routes
 app.get('*', (req, res) => {
-  res.render('index', { req });
+  res.sendFile(join(process.cwd(), 'dist/msvc-client/browser', 'index.csr.html'));
 });
 
+// Start the server
 app.listen(4000, () => {
   console.log(`Listening on http://localhost:4000`);
 });
