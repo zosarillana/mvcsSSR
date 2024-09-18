@@ -22,6 +22,7 @@ import { ModalDeletePapComponent } from '../pap-add/modal/modal-delete-pap/modal
 import { Pod } from '../../../../../models/pod';
 import { DatePipe } from '@angular/common';
 import { FlowbiteService } from '../../../../../services/flowbite.service';
+import { AuthService } from '../../../../../auth/auth.service';
 @Component({
   selector: 'app-pod-add',
   templateUrl: './pod-add.component.html',
@@ -43,12 +44,15 @@ export class PodAddComponent {
   startDate: Date | null = null;
   endDate: Date | null = null;
 
-  private pollingSubscription!: Subscription;
+  private pollingSubscription: Subscription = new Subscription();
+  private intervalId: any;
+
 
   // Construct the base API URL
   public imageUrlBase = `${environment.apiUrl}/Pod/image/`; // <-- Use the environment API URL
 
   constructor(
+    private authService: AuthService,
     private flowbiteService: FlowbiteService,
     private podService: PodService,
     public dialog: MatDialog,
@@ -69,12 +73,7 @@ export class PodAddComponent {
       // Your custom code here
       console.log('Flowbite loaded', flowbite);
     });
-  }
-
-  ngOnDestroy(): void {
-    if (this.pollingSubscription) {
-      this.pollingSubscription.unsubscribe();
-    }
+  
   }
 
   applyDateFilter(type: string, event: MatDatepickerInputEvent<Date>): void {
@@ -103,29 +102,52 @@ export class PodAddComponent {
     this.podService.getPods().subscribe((result: Pod[]) => {
       this.dataSource.data = result;
       this.dataSource.paginator = this.paginator; // Set paginator after data is loaded
-      this.fetchUserCount();
+
+      // Fetch pod count initially
+      this.fetchPodCount();
+
+      // Start polling for pod count
+      this.startPolling();
     });
   }
 
+  private fetchPodCount(): void {
+    if (this.authService.isLoggedIn()) {
+      this.podService.getPodsCount().subscribe(
+        (count: number) => {
+          this.podCount = count;
+        },
+        (error) => {
+          console.error('Error fetching pod count:', error);
+        }
+      );
+    }
+  }
+
   private startPolling(): void {
-    this.pollingSubscription = this.podService.getPodsCount().subscribe(
-      (count: number) => (this.podCount = count),
-      (error) => console.error('Error fetching Pod count:', error)
-    );
+    // Clear any existing interval
+    if (this.intervalId) {
+      clearInterval(this.intervalId);
+    }
 
-    setInterval(() => this.fetchUserCount(), 3000);
-  }
-
-  private fetchUserCount(): void {
-    this.podService.getPodsCount().subscribe(
-      (count: number) => {
-        this.podCount = count;
-      },
-      (error) => {
-        console.error('Error fetching pod count:', error);
+    // Set up polling every 3 seconds
+    this.intervalId = setInterval(() => {
+      if (this.authService.isLoggedIn()) {
+        this.fetchPodCount();
       }
-    );
+    }, 3000);
   }
+
+  ngOnDestroy(): void {
+    // Clean up polling interval and subscriptions
+    if (this.intervalId) {
+      clearInterval(this.intervalId);
+    }
+    if (this.pollingSubscription) {
+      this.pollingSubscription.unsubscribe();
+    }
+  }
+
 
   openViewDialog(isr: Pod): void {
     const dialogRef = this.dialog.open(ModalViewPodComponent, {

@@ -3,6 +3,8 @@ import { join } from 'node:path';
 import { ngExpressEngine } from '@nguniversal/express-engine';
 import AppServerModule from './src/main.server';
 
+
+// Initialize the express app
 const app = express();
 
 // Setup the Angular Express Engine
@@ -18,8 +20,9 @@ app.get('*.*', express.static(join(process.cwd(), 'dist/msvc-client/browser'), {
   maxAge: '1y',
 }));
 
-// Handle all other routes
-app.get('*', (req, res) => {
+
+// Handle other routes (including serving Angular static files)
+app.get('*', (_req, res) => {
   res.sendFile(join(process.cwd(), 'dist/msvc-client/browser', 'index.csr.html'));
 });
 

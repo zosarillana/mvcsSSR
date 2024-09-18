@@ -18,23 +18,21 @@ export class ModalDeleteDialogComponent {
     @Inject(MAT_DIALOG_DATA) public data: any
   ) {}
 
-  onNoClick(): void {
+ onNoClick(): void {
     this.dialogRef.close();
   }
 
   deleteVisit(): void {
-    this.marketVisitsService
-      .deleteMarketVisits(this.data)
-      .subscribe(() => this.fetchMarketVisits());
-    this.dialogRef.close(this.data);
+    this.marketVisitsService.deleteMarketVisits(this.data).subscribe(() => {
+      this.updateVisit();
+      this.dialogRef.close(this.data); // Close the dialog after fetching users
+    });
   }
 
-  //for editing and updating
-  private fetchMarketVisits() {
-    this.marketVisitsService
-      .getMarketVisits()
-      .subscribe((visits: MarketVisits[]) => {
-        this.marketVisitsUpdated.emit(visits);
-      });
+  // Fetch users after deletion to update the list
+  private updateVisit() {
+    this.marketVisitsService.getMarketVisits().subscribe((marketVisits: MarketVisits[]) => {
+      this.marketVisitsUpdated.emit(marketVisits); // Emit the updated user list
+    });
   }
 }

@@ -64,7 +64,7 @@ export class MarketVisits {
   user: {  
     user_id: number;
     abfi_id: string;
-    role?: number;
+    role_id?: number;
     fname: string; 
     mname: string;  
     lname: string; 

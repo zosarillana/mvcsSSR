@@ -10,16 +10,26 @@
             for="user_id"
             class="block text-gray-700 text-md dark:text-gray-300 font-medium mb-2"
           >
-            User Abfi ID
+            User Abfi ID 
           </label>
+          <input                
+          readonly
+          [value]="abfi_id"
+          type="text"
+          name="user_id"
+          class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
+          />
           <input
-            formControlName="user_id"
-            readonly
+            style="display: none;"
+            formControlName="user_id"           
             [value]="user_id"
             type="text"
             name="user_id"
             class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
           />
+          <div class="mt-2 text-red-700 text-xs" *ngIf="formGroup.get('user_id')?.invalid && formGroup.get('user_id')?.touched">
+            User id is required.
+          </div>
         </div>
         <div class="relative">
           <!-- Date of visit input -->
@@ -36,6 +46,9 @@
             placeholder="Date and Time"
             class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
           />
+          <div class="mt-2 text-red-700 text-xs" *ngIf="formGroup.get('visit_date')?.invalid && formGroup.get('visit_date')?.touched">
+            Visit date and time is required.
+        </div>
         </div>
       </div>
       <div class="relative">
@@ -77,6 +90,9 @@
             name="visit_accountName"
             class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
           />
+          <div class="mt-2 text-red-700 text-xs" *ngIf="formGroup.get('visit_accountName')?.invalid && formGroup.get('visit_accountName')?.touched">
+            Visit Account Name is required.
+          </div>
         </div>
         <div class="relative">
           <label
@@ -91,6 +107,9 @@
             name="visit_distributor"
             class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
           />
+          <div class="mt-2 text-red-700 text-xs" *ngIf="formGroup.get('visit_distributor')?.invalid && formGroup.get('visit_distributor')?.touched">
+           Visit Distributor is required.
+          </div>
         </div>
         <div class="relative">
           <label
@@ -104,6 +123,9 @@
             name="visit_salesPersonnel"
             class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
           />
+          <div class="mt-2 text-red-700 text-xs" *ngIf="formGroup.get('visit_salesPersonnel')?.invalid && formGroup.get('visit_salesPersonnel')?.touched">
+            Visit Sales Personnel required.
+          </div>
         </div>
         <div>
           <label
@@ -130,7 +152,8 @@
             class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-1/2 p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
             placeholder="Others"
           />
-        </div>
+         
+          </div>     
       </div>
 
       <div>
@@ -194,7 +217,7 @@
                 id="isr_reqOthers"
                 class="mt-2 bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-1/2 p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
                 placeholder="Other requirements"
-              />
+              />              
             </div>
             <div>
               <input
@@ -267,6 +290,9 @@
             name="visit_payolaMerchandiser"
             class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
           />
+          <div class="mt-2 text-red-700 text-xs" *ngIf="formGroup.get('visit_payolaMerchandiser')?.invalid && formGroup.get('visit_payolaMerchandiser')?.touched">
+            Payola Merchandiser required.
+          </div>
         </div>
 
         <div class="relative">
@@ -282,6 +308,9 @@
             name="visit_payolaSupervisor"
             class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
           />
+          <div class="mt-2 text-red-700 text-xs" *ngIf="formGroup.get('visit_payolaSupervisor')?.invalid && formGroup.get('visit_payolaSupervisor')?.touched">
+            Payola Supervisor required.
+          </div>
         </div>
 
         <div class="relative">
@@ -296,6 +325,9 @@
             name="visit_averageOffTakePd"
             class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
           />
+          <div class="mt-2 text-red-700 text-xs" *ngIf="formGroup.get('visit_averageOffTakePd')?.invalid && formGroup.get('visit_averageOffTakePd')?.touched">
+           Average Take off per day required.
+          </div>
         </div>
       </div>
       <div>
@@ -389,6 +421,9 @@
             name="visit_competitorsCheck"
             class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-1/2 p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
           />
+          <div class="mt-2 text-red-700 text-xs" *ngIf="formGroup.get('visit_competitorsCheck')?.invalid && formGroup.get('visit_competitorsCheck')?.touched">
+            Average Take off per day required.
+           </div>
         </div>
       </div>
       <label

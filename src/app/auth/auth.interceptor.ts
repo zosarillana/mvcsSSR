@@ -1,28 +1,37 @@
-import { Injectable } from '@angular/core';
-import { HttpInterceptor, HttpRequest, HttpHandler, HttpEvent } from '@angular/common/http';
-import { Observable } from 'rxjs';
+import { Injectable, NgZone } from '@angular/core';
+import { HttpInterceptor, HttpRequest, HttpHandler, HttpErrorResponse, HttpHeaders } from '@angular/common/http';
+import { Observable, throwError } from 'rxjs';
+import { catchError } from 'rxjs/operators';
+import { Router } from '@angular/router';
 
 @Injectable()
 export class AuthInterceptor implements HttpInterceptor {
+  constructor(private router: Router, private ngZone: NgZone) {}
 
-  constructor() { }
-
-  intercept(req: HttpRequest<any>, next: HttpHandler): Observable<HttpEvent<any>> {
-    // Retrieve the JWT token from localStorage
+  intercept(req: HttpRequest<any>, next: HttpHandler): Observable<any> {
+    let authReq = req;
     const token = localStorage.getItem('jwtToken');
-    
-    // If there is a token, clone the request and add the Authorization header
+
+    // Add token to the headers if it exists
     if (token) {
-      const cloned = req.clone({
-        setHeaders: {
-          Authorization: `Bearer ${token}`
-        }
+      authReq = req.clone({
+        headers: new HttpHeaders({
+          'Authorization': `Bearer ${token}`
+        })
       });
-      return next.handle(cloned);
     }
 
-    // If no token is present, pass the request unmodified
-    return next.handle(req);
+    return next.handle(authReq).pipe(
+      catchError((error: HttpErrorResponse) => {
+        if (error.status === 401) {
+          // Handle unauthorized errors
+          this.ngZone.run(() => {
+            localStorage.removeItem('jwtToken'); // Remove token
+            this.router.navigate(['/login']); // Redirect to login
+          });
+        }
+        return throwError(() => new Error(error.message));
+      })
+    );
   }
 }
-

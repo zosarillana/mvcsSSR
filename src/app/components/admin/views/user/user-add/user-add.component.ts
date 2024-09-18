@@ -10,9 +10,9 @@ import moment from 'moment';
 import { ModalViewUserDialogComponent } from './modal/modal-view-user-dialog/modal-view-user-dialog.component';
 import { User } from '../../../../../models/user';
 import { UserService } from '../../../../../services/user.service';
-import { initFlowbite } from 'flowbite';
 import { FlowbiteService } from '../../../../../services/flowbite.service';
-
+import { Subscription } from 'rxjs';
+import { AuthService } from '../../../../../auth/auth.service';
 @Component({
   selector: 'app-user-add',
   templateUrl: './user-add.component.html',
@@ -34,8 +34,10 @@ export class UserAddComponent {
   startDate: Date | null = null;
   endDate: Date | null = null;
   userCount: number = 0;
-
-  constructor(private userService: UserService, public dialog: MatDialog, private flowbiteService: FlowbiteService) {}
+  ;
+  private pollingSubscription: Subscription = new Subscription();
+  private intervalId: any;
+  constructor(private authService: AuthService,private userService: UserService, public dialog: MatDialog, private flowbiteService: FlowbiteService) {}
 
   ngOnInit(): void {
     this.loadUsers();
@@ -49,24 +51,42 @@ export class UserAddComponent {
     this.userService.getUsers().subscribe((result: User[]) => {
       this.dataSource.data = result;
       this.dataSource.paginator = this.paginator;
-      
+
       this.fetchUserCount();
 
       // Set up polling every 3 seconds
-      setInterval(() => this.fetchUserCount(), 3000);
+      this.startPolling();
     });
   }
 
   private fetchUserCount(): void {
-    this.userService.getUserCount().subscribe(
-      (count: number) => {
-        this.userCount = count;
-      },
-      (error) => {
-        console.error('Error fetching user count:', error);
-      }
-    );
+    if (this.authService.isLoggedIn()) {
+      this.userService.getUserCount().subscribe(
+        (count: number) => {
+          this.userCount = count;
+        },
+        (error) => {
+          console.error('Error fetching user count:', error);
+        }
+      );
+    }
   }
+
+  private startPolling(): void {
+    this.intervalId = setInterval(() => {
+      if (this.authService.isLoggedIn()) {
+        this.fetchUserCount();
+      }
+    }, 3000);
+  }
+
+  ngOnDestroy(): void {
+    // Clear the polling interval when the component is destroyed
+    if (this.intervalId) {
+      clearInterval(this.intervalId);
+    }
+  }
+
 
   applyFilter(event: Event, filterType: string): void {
     const input = event.target as HTMLInputElement;

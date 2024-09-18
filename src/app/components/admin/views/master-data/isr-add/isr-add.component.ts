@@ -16,6 +16,7 @@ import { ModalDeleteIsrComponent } from './modal/modal-delete-isr/modal-delete-i
 import { AfterViewInit } from '@angular/core';
 import { DatePipe } from '@angular/common';
 import { FlowbiteService } from '../../../../../services/flowbite.service';
+import { AuthService } from '../../../../../auth/auth.service';
 
 @Component({
   selector: 'app-isr-add',
@@ -37,13 +38,14 @@ export class IsrAddComponent {
   isrCount: number = 0;
   startDate: Date | null = null;
   endDate: Date | null = null;
+  private intervalId: any;
 
-  private pollingSubscription!: Subscription;
 
   // Construct the base API URL
   public imageUrlBase = `${environment.apiUrl}/Isr/image/`; // <-- Use the environment API URL
 
   constructor(
+    private authService: AuthService,
     private flowbiteService: FlowbiteService,
     private isrService: IsrService,
     private datePipe: DatePipe,
@@ -64,12 +66,6 @@ export class IsrAddComponent {
       // Your custom code here
       console.log('Flowbite loaded', flowbite);
     });
-  }
-
-  ngOnDestroy(): void {
-    if (this.pollingSubscription) {
-      this.pollingSubscription.unsubscribe();
-    }
   }
 
   applyDateFilter(type: string, event: MatDatepickerInputEvent<Date>): void {
@@ -98,29 +94,49 @@ export class IsrAddComponent {
     this.isrService.getIsrs().subscribe((result: Isr[]) => {
       this.dataSource.data = result;
       this.dataSource.paginator = this.paginator; // Set paginator after data is loaded
-      this.fetchUserCount();
+
+      // Fetch ISR count initially
+      this.fetchIsrCount();
+
+      // Start polling for ISR count
+      this.startPolling();
     });
   }
 
+  private fetchIsrCount(): void {
+    if (this.authService.isLoggedIn()) {
+      this.isrService.getIsrCount().subscribe(
+        (count: number) => {
+          this.isrCount = count;
+        },
+        (error) => {
+          console.error('Error fetching ISR count:', error);
+        }
+      );
+    }
+  }
+
   private startPolling(): void {
-    this.pollingSubscription = this.isrService.getIsrCount().subscribe(
-      (count: number) => (this.isrCount = count),
-      (error) => console.error('Error fetching ISR count:', error)
-    );
+    // Clear any existing interval
+    if (this.intervalId) {
+      clearInterval(this.intervalId);
+    }
 
-    setInterval(() => this.fetchUserCount(), 3000);
-  }
-
-  private fetchUserCount(): void {
-    this.isrService.getIsrCount().subscribe(
-      (count: number) => {
-        this.isrCount = count;
-      },
-      (error) => {
-        console.error('Error fetching ISR count:', error);
+    // Set up polling every 3 seconds
+    this.intervalId = setInterval(() => {
+      if (this.authService.isLoggedIn()) {
+        this.fetchIsrCount();
       }
-    );
+    }, 3000);
   }
+
+  ngOnDestroy(): void {
+    // Clean up polling interval
+    if (this.intervalId) {
+      clearInterval(this.intervalId);
+    }
+  }
+
 
   openViewDialog(isr: Isr): void {
     const dialogRef = this.dialog.open(ModalViewIsrComponent, {

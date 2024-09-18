@@ -4,4 +4,5 @@ export class Area {
   description = '';
   date_created = '';
   date_updated = '';
+  area_id: any;
 }

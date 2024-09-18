@@ -260,32 +260,77 @@ export class AddVisitsComponent implements OnInit {
     ) {
       const dummyFormData = this.prepareDummyFormData();
   
-      // Log FormData to verify content
-      dummyFormData.forEach((value, key) => console.log(`FormData Key: ${key}, Value: ${value}`));
+      // Check if image files are available, if not, fetch default images
+      const imagePromises: Promise<void>[] = [];
   
-      this.marketVisitsService.createMarketVisits(dummyFormData).subscribe(
-        (response) => console.log('Visit successfully created:', response),
-        (error) => {
-          console.error('Error creating visit:', error);
-          
-          // Check if the error response contains validation errors
-          if (error.error && error.error.errors) {
-            Object.entries(error.error.errors).forEach(([key, messages]) => {
-              // Ensure messages is an array of strings before using join
-              if (Array.isArray(messages) && messages.every(msg => typeof msg === 'string')) {
-                console.error(`${key}: ${messages.join(', ')}`);
-              } else {
-                console.error(`${key}: Invalid error format`);
+      if (this.imageFileReq) {
+        dummyFormData.append('fileReq', this.imageFileReq);
+      } else {
+        imagePromises.push(
+          fetch('/default_img_req.png')
+            .then(response => {
+              if (!response.ok) {
+                throw new Error('Failed to fetch default image for req.');
               }
-            });
-          }
-        }
-      );
+              return response.blob();
+            })
+            .then(blob => {
+              dummyFormData.append('fileReq', blob, 'default_img_req.png');
+            })
+            .catch(error => console.error('Error fetching default req image:', error))
+        );
+      }
+  
+      if (this.imageFileNeed) {
+        dummyFormData.append('fileNeed', this.imageFileNeed);
+      } else {
+        imagePromises.push(
+          fetch('/default_img_need.png')
+            .then(response => {
+              if (!response.ok) {
+                throw new Error('Failed to fetch default image for need.');
+              }
+              return response.blob();
+            })
+            .then(blob => {
+              dummyFormData.append('fileNeed', blob, 'default_img_need.png');
+            })
+            .catch(error => console.error('Error fetching default need image:', error))
+        );
+      }
+  
+      // Wait for any fetches to complete before submitting the form data
+      Promise.all(imagePromises)
+        .then(() => {
+          // Log FormData to verify content
+          dummyFormData.forEach((value, key) => console.log(`FormData Key: ${key}, Value: ${value}`));
+  
+          this.marketVisitsService.createMarketVisits(dummyFormData).subscribe(
+            (response) => console.log('Visit successfully created:', response),
+            (error) => {
+              console.error('Error creating visit:', error);
+  
+              // Handle validation errors in the response
+              if (error.error && error.error.errors) {
+                Object.entries(error.error.errors).forEach(([key, messages]) => {
+                  if (Array.isArray(messages) && messages.every(msg => typeof msg === 'string')) {
+                    console.error(`${key}: ${messages.join(', ')}`);
+                  } else {
+                    console.error(`${key}: Invalid error format`);
+                  }
+                });
+              }
+            }
+          );
+        })
+        .catch((error) => {
+          console.error('Error handling form submission:', error);
+        });
     } else {
       console.error('Please fill out all required fields.');
     }
   }
-
+  
   onImageSelect(event: Event, type: 'req' | 'need'): void {
     const input = event.target as HTMLInputElement;
     if (input.files?.[0]) {
@@ -304,6 +349,17 @@ export class AddVisitsComponent implements OnInit {
         this.cdr.markForCheck(); // Ensure change detection is triggered
       };
       reader.readAsDataURL(file);
+    } else {
+      // If no file is selected, clear the image preview and file reference
+      if (type === 'req') {
+        this.imageFileReq = null;
+        this.imagePreviewReq = null;
+        this.thirdFormGroup.patchValue({ isr_req_ImgPath: null });
+      } else {
+        this.imageFileNeed = null;
+        this.imagePreviewNeed = null;
+        this.thirdFormGroup.patchValue({ isr_needs_ImgPath: null });
+      }
     }
   }
-}
+}  

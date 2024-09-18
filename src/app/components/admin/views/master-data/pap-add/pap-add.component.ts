@@ -21,6 +21,7 @@ import { ModalViewPapComponent } from './modal/modal-view-pap/modal-view-pap.com
 import { ModalDeletePapComponent } from './modal/modal-delete-pap/modal-delete-pap.component';
 import { DatePipe } from '@angular/common';
 import { FlowbiteService } from '../../../../../services/flowbite.service';
+import { AuthService } from '../../../../../auth/auth.service';
 
 @Component({
   selector: 'app-pap-add',
@@ -42,13 +43,13 @@ export class PapAddComponent {
   podCount: number = 0;
   startDate: Date | null = null;
   endDate: Date | null = null;
+  private intervalId: any;
 
-  private pollingSubscription!: Subscription;
 
   // Construct the base API URL
   public imageUrlBase = `${environment.apiUrl}/Pap/image/`;  // <-- Use the environment API URL
 
-  constructor(private papService: PapService, public dialog: MatDialog, private datePipe: DatePipe, private flowbiteService: FlowbiteService) {}
+  constructor(private authService: AuthService, private papService: PapService, public dialog: MatDialog, private datePipe: DatePipe, private flowbiteService: FlowbiteService) {}
 
   getFormattedVisitDate(visitDate: string | undefined): string {
     if (visitDate) {
@@ -66,11 +67,7 @@ export class PapAddComponent {
     });
   }
 
-  ngOnDestroy(): void {
-    if (this.pollingSubscription) {
-      this.pollingSubscription.unsubscribe();
-    }
-  }
+  
   
   applyDateFilter(type: string, event: MatDatepickerInputEvent<Date>): void {
     const date = event.value;
@@ -95,29 +92,47 @@ export class PapAddComponent {
     this.papService.getPaps().subscribe((result: Pap[]) => {
       this.dataSource.data = result;
       this.dataSource.paginator = this.paginator; // Set paginator after data is loaded
-      this.fetchUserCount();
+
+      // Fetch pod count initially
+      this.fetchPodCount();
+
+      // Start polling for pod count
+      this.startPolling();
     });
   }
 
-  private startPolling(): void {
-    this.pollingSubscription = this.papService.getPapsCount()
-      .subscribe(
-        (count: number) => this.podCount = count,
-        (error) => console.error('Error fetching ISR count:', error)
+  private fetchPodCount(): void {
+    if (this.authService.isLoggedIn()) {
+      this.papService.getPapsCount().subscribe(
+        (count: number) => {
+          this.podCount = count;
+        },
+        (error) => {
+          console.error('Error fetching pod count:', error);
+        }
       );
-
-    setInterval(() => this.fetchUserCount(), 3000);
+    }
   }
 
-  private fetchUserCount(): void {
-    this.papService.getPapsCount().subscribe(
-      (count: number) => {
-        this.podCount = count;
-      },
-      (error) => {
-        console.error('Error fetching ISR count:', error);
+  private startPolling(): void {
+    // Clear any existing interval
+    if (this.intervalId) {
+      clearInterval(this.intervalId);
+    }
+
+    // Set up polling every 3 seconds
+    this.intervalId = setInterval(() => {
+      if (this.authService.isLoggedIn()) {
+        this.fetchPodCount();
       }
-    );
+    }, 3000);
+  }
+
+  ngOnDestroy(): void {
+    // Clean up polling interval
+    if (this.intervalId) {
+      clearInterval(this.intervalId);
+    }
   }
 
   openViewDialog(pap: Pap): void {

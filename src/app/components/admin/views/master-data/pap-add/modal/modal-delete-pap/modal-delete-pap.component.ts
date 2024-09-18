@@ -1,7 +1,5 @@
 import { Component, EventEmitter, Inject, Input, Output } from '@angular/core';
 import { MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
-import { Pod } from '../../../../../../../models/pod';
-import { PodService } from '../../../../../../../services/pod.service';
 import { ModalDeleteAreaComponent } from '../../../area-add/modal/modal-delete-area/modal-delete-area.component';
 import { Pap } from '../../../../../../../models/pap';
 import { PapService } from '../../../../../../../services/pap.service';

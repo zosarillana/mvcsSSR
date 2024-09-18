@@ -1,4 +1,11 @@
-import { AfterViewInit, Component, ViewChild, OnInit } from '@angular/core';
+import {
+  AfterViewInit,
+  Component,
+  ViewChild,
+  OnInit,
+  ChangeDetectorRef,
+  Input,
+} from '@angular/core';
 import { MatPaginator } from '@angular/material/paginator';
 import { MatTableDataSource } from '@angular/material/table';
 import * as ExcelJS from 'exceljs';
@@ -6,37 +13,33 @@ import * as FileSaver from 'file-saver';
 import { MarketVisits } from '../../models/market-visits';
 import { MarketVisitsService } from '../../services/market-visits.service';
 import { MatDialog } from '@angular/material/dialog';
-import { ModalEditDialogComponent } from './modal/modal-edit-dialog/modal-edit-dialog.component';
-import { ModalCreateDialogComponent } from './modal/modal-create-dialog/modal-create-dialog.component';
 import { ModalDeleteDialogComponent } from './modal/modal-delete-dialog/modal-delete-dialog.component';
 import { SharedService } from '../../services/shared.service';
-import { initFlowbite } from 'flowbite';
-import { AreaService } from '../../services/area.service';
 import { MatDatepickerInputEvent } from '@angular/material/datepicker';
 import moment from 'moment';
-import { Pod } from '../../models/pod';
 import { Subscription } from 'rxjs';
 import { DatePipe } from '@angular/common';
 import { FlowbiteService } from '../../services/flowbite.service';
-
+import { TokenService } from '../../services/token.service';
+import { AuthService } from '../../auth/auth.service';
 @Component({
   selector: 'app-get-market-visits',
   templateUrl: './get-market-visits.component.html',
   styleUrls: ['./get-market-visits.component.css'],
 })
 export class GetMarketVisitsComponent implements AfterViewInit, OnInit {
+  @Input() mvisit?: MarketVisits;
   displayedColumns: string[] = [
     'visit_area',
     'visit_date',
     'visit_accountName',
     'visit_distributor',
     'visit_salesPersonnel',
-    'visit_accountType',    
+    'visit_accountType',
     'date_created',
     'action',
   ];
 
-  private pollingSubscription!: Subscription;
   // Method to filter 'isrs'
   public filterIsrsForNeeds(isrs: any[]): any[] {
     return isrs.filter((isr) => isr.isr_type === 'NEEDS');
@@ -57,63 +60,114 @@ export class GetMarketVisitsComponent implements AfterViewInit, OnInit {
   startDate: Date | null = null;
   endDate: Date | null = null;
   visitCount: number = 0;
+  role_id: string | null = null;
+  user_id: string | null = null;
+
   constructor(
+    private authService: AuthService,
+    private cdr: ChangeDetectorRef,
     private flowbiteService: FlowbiteService,
     private datePipe: DatePipe,
     private marketVisitsService: MarketVisitsService,
     public dialog: MatDialog,
-    private sharedService: SharedService // Inject SharedService
+    private sharedService: SharedService, // Inject SharedService
+    private tokenService: TokenService
   ) {}
 
   ngOnInit(): void {
+    this.tokenService.decodeTokenAndSetUser();
+    const user = this.tokenService.getUser();
+    this.role_id = user?.role_id ?? null;
+    this.user_id = user?.id ?? null;
+    this.cdr.detectChanges();
+  
     this.startPolling();
-    this.marketVisitsService
-      .getMarketVisits()
-      .subscribe((result: MarketVisits[]) => {
-        this.dataSource.data = result;
-      });
-      this.flowbiteService.loadFlowbite(flowbite => {
-        // Your custom code here
-        console.log('Flowbite loaded', flowbite);
-      });    
+    this.marketVisitsService.getMarketVisits().subscribe(
+      (result: MarketVisits[]) => {
+        let dataToDisplay = result;
+  
+        // Apply filtering only if role_id is 2
+        if (this.role_id === '2') {
+          dataToDisplay = result.filter(
+            (visit) => visit.user?.user_id?.toString() === this.user_id
+          );
+          console.log('Filtered Data for role_id 2:', dataToDisplay);
+        } else {
+          console.log('Unfiltered Data for other roles:', dataToDisplay);
+        }
+  
+        // Assign filtered or unfiltered data to the data source
+        this.dataSource.data = dataToDisplay;
+      },
+      (error) => {
+        console.error('Error fetching market visits:', error);
+      }
+    );
+  
+    this.flowbiteService.loadFlowbite((flowbite) => {
+      console.log('Flowbite loaded', flowbite);
+    });
   }
-
+  
   loadMarketVisits(): void {
     this.marketVisitsService
       .getMarketVisits()
       .subscribe((result: MarketVisits[]) => {
-        this.dataSource.data = result;
+        let dataToDisplay = result;
+  
+        // Apply filtering only if role_id is 2
+        if (this.role_id === '2') {
+          dataToDisplay = result.filter(
+            (visit) => visit.user?.user_id?.toString() === this.user_id
+          );
+          console.log('Filtered Data for role_id 2:', dataToDisplay);
+        } else {
+          console.log('Unfiltered Data for other roles:', dataToDisplay);
+        }
+  
+        // Assign filtered or unfiltered data to the data source
+        this.dataSource.data = dataToDisplay;
       });
   }
-
+  
   getFormattedVisitDate(visitDate: string | undefined): string {
     if (visitDate) {
       return this.datePipe.transform(new Date(visitDate), 'short') || 'No Date';
     }
     return 'No Date';
   }
-  
+  private pollingSubscription: Subscription = new Subscription();
+  // private authSubscription: Subscription = new Subscription();
 
   private startPolling(): void {
-    this.pollingSubscription = this.marketVisitsService
-      .getVisitCount()
-      .subscribe(
+    this.pollingSubscription.add(
+      this.marketVisitsService.getVisitCount().subscribe(
         (count: number) => (this.visitCount = count),
-        (error) => console.error('Error fetching visit count:', error)
-      );
+        // Handle error if needed
+      )
+    );
 
-    setInterval(() => this.fetchUserCount(), 3000);
+    // Poll every 3 seconds
+    setInterval(() => {
+      if (this.authService.isLoggedIn()) {
+        this.fetchUserCount();
+      }
+    }, 3000);
   }
 
   private fetchUserCount(): void {
     this.marketVisitsService.getVisitCount().subscribe(
-      (count: number) => {
-        this.visitCount = count;
-      },
-      (error) => {
-        console.error('Error fetching pod count:', error);
+      (count: number) => (this.visitCount = count),
+      error => {
+        // Handle error if needed
+        console.error('Error fetching visit count:', error);
       }
     );
+  }
+
+  ngOnDestroy(): void {
+    // Clean up subscriptions to prevent memory leaks
+    this.pollingSubscription.unsubscribe();
   }
 
   ngAfterViewInit(): void {
@@ -131,46 +185,28 @@ export class GetMarketVisitsComponent implements AfterViewInit, OnInit {
   editMvisits(visit: MarketVisits): void {
     this.mvisitsToEdit = visit;
   }
-
-  openEditDialog(mvisit: MarketVisits): void {
-    const dialogRef = this.dialog.open(ModalEditDialogComponent, {
-      width: '500px',
-      data: mvisit,
-    });
-
-    dialogRef.afterClosed().subscribe(() => {
-      console.log('The dialog was closed');
-    });
-  }
-
-  openAddDialog(): void {
-    const dialogRef = this.dialog.open(ModalCreateDialogComponent, {
-      panelClass: 'custom-dialog',
-      width: '2000px',
-      height: '1000px',
-      data: {},
-    });
-
-    dialogRef.afterClosed().subscribe((result) => {
-      if (result) {
-        this.loadMarketVisits();
-      }
-    });
-  }
-
-  openDeleteDialog(mvisit: MarketVisits): void {
+  openDeleteDialog(visit: MarketVisits): void {
     const dialogRef = this.dialog.open(ModalDeleteDialogComponent, {
       width: '500px',
-      data: mvisit,
+      data: visit,
     });
 
-    dialogRef.afterClosed().subscribe((result) => {
-      console.log('The dialog was closed');
-      if (result) {
-        this.loadMarketVisits();
-      }
-    });
+    dialogRef.afterClosed().subscribe(() => this.loadMarketVisits());
   }
+
+  // openDeleteDialog(mvisit: MarketVisits): void {
+  //   const dialogRef = this.dialog.open(ModalDeleteDialogComponent, {
+  //     width: '500px',
+  //     data: mvisit,
+  //   });
+
+  //   dialogRef.afterClosed().subscribe((result) => {
+  //     console.log('The dialog was closed');
+  //     if (result) {
+  //       this.loadMarketVisits();
+  //     }
+  //   });
+  // }
 
   applyDateFilter(type: string, event: MatDatepickerInputEvent<Date>): void {
     const date = event.value;
@@ -236,7 +272,7 @@ export class GetMarketVisitsComponent implements AfterViewInit, OnInit {
           header: 'Average Off Take PD',
           key: 'visit_averageOffTakePd',
           width: 25,
-        },       
+        },
         { header: 'Pod Canned', key: 'pod_canned', width: 50 },
         { header: 'Pod Canned Others', key: 'pod_canned_other', width: 15 },
 
@@ -275,34 +311,37 @@ export class GetMarketVisitsComponent implements AfterViewInit, OnInit {
                 .map((AccountType) => AccountType.accountType_name)
                 .join(', ')
             : 'No Account Types';
-         // Filter ISRs
-         const isrsForNeeds = this.filterIsrsForNeeds(item.isrs);
-         const isrNeedString = isrsForNeeds.length > 0
-           ? isrsForNeeds.map((isr) => isr.isr_name).join(', ')
-           : 'No ISR Needs';
+        // Filter ISRs
+        const isrsForNeeds = this.filterIsrsForNeeds(item.isrs);
+        const isrNeedString =
+          isrsForNeeds.length > 0
+            ? isrsForNeeds.map((isr) => isr.isr_name).join(', ')
+            : 'No ISR Needs';
 
-         const isrsForReqs = this.filterIsrsForReqs(item.isrs);
-         const isrReqString = isrsForReqs.length > 0
-           ? isrsForReqs.map((isr) => isr.isr_name).join(', ')
-           : 'No ISR Requirements';
-        
-            // Filter PODs
-         const podsForCanned = this.filterPodsForCanned(item.pods);
-         const podsCannedString = podsForCanned.length > 0
-           ? podsForCanned.map((pod) => pod.pod_name).join(', ')
-           : 'No ISR CANNED';
+        const isrsForReqs = this.filterIsrsForReqs(item.isrs);
+        const isrReqString =
+          isrsForReqs.length > 0
+            ? isrsForReqs.map((isr) => isr.isr_name).join(', ')
+            : 'No ISR Requirements';
 
-         const podsForMPP = this.filterPodsForMpp(item.pods);
-         const podsMPPString = podsForMPP.length > 0
-           ? podsForMPP.map((pod) => pod.pod_name).join(', ')
-           : 'No Pod MPPS';
+        // Filter PODs
+        const podsForCanned = this.filterPodsForCanned(item.pods);
+        const podsCannedString =
+          podsForCanned.length > 0
+            ? podsForCanned.map((pod) => pod.pod_name).join(', ')
+            : 'No ISR CANNED';
 
-            //For paps
-            const papsString =
-            item.paps && item.paps.length > 0
-              ? item.paps.map((pap) => pap.pap_name).join(', ')
-              : 'No Areas';
-        
+        const podsForMPP = this.filterPodsForMpp(item.pods);
+        const podsMPPString =
+          podsForMPP.length > 0
+            ? podsForMPP.map((pod) => pod.pod_name).join(', ')
+            : 'No Pod MPPS';
+
+        //For paps
+        const papsString =
+          item.paps && item.paps.length > 0
+            ? item.paps.map((pap) => pap.pap_name).join(', ')
+            : 'No Areas';
 
         const row = worksheet.addRow({
           id: item.id,
@@ -326,7 +365,7 @@ export class GetMarketVisitsComponent implements AfterViewInit, OnInit {
           isr_needOThers: item.isr_needsOthers,
           visit_competitorsCheck: item.visit_competitorsCheck,
           visit_pap: papsString,
-          pap_others:item.pap_others,
+          pap_others: item.pap_others,
         });
 
         // Set row height

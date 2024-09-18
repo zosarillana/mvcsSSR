@@ -1,7 +1,7 @@
 import { Injectable } from '@angular/core';
 import { MarketVisits } from '../models/market-visits';
-import { HttpClient } from '@angular/common/http';
-import { Observable } from 'rxjs';
+import { HttpClient, HttpHeaders } from '@angular/common/http';
+import { catchError, Observable, throwError } from 'rxjs';
 
 @Injectable({
   providedIn: 'root',
@@ -41,7 +41,19 @@ export class MarketVisitsService {
     );
   }
 
-  getVisitCount(): Observable<number> {
-    return this.http.get<number>(`${this.url}/count`);
+  public getVisitCount(): Observable<number> {
+    // This endpoint does not require authentication
+    return this.http.get<number>(`${this.url}/count`).pipe(
+      catchError(error => {
+        // Handle errors if needed
+        return throwError(() => new Error(error.message));
+      })
+    );
+  }
+  
+
+  private createAuthorizationHeader(): HttpHeaders {
+    const token = localStorage.getItem('jwtToken');
+    return token ? new HttpHeaders({ 'Authorization': `Bearer ${token}` }) : new HttpHeaders();
   }
 }

@@ -12,7 +12,7 @@ import { ModalViewAreaComponent } from './modal/modal-view-area/modal-view-area.
 import { ModalDeleteAreaComponent } from './modal/modal-delete-area/modal-delete-area.component';
 import { ModalEditAreaComponent } from './modal/modal-edit-area/modal-edit-area.component';
 import { DatePipe } from '@angular/common';
-
+import { AuthService } from '../../../../../auth/auth.service';
 @Component({
   selector: 'app-area-add',
   templateUrl: './area-add.component.html',
@@ -31,9 +31,11 @@ export class AreaAddComponent implements OnInit, OnDestroy {
   startDate: Date | null = null;
   endDate: Date | null = null;
 
-  private pollingSubscription!: Subscription;
+  private pollingSubscription: Subscription = new Subscription();
+  private intervalId: any;
 
   constructor(
+    private authService: AuthService,
     private areaService: AreaService,
     public dialog: MatDialog,
     private datePipe: DatePipe
@@ -41,12 +43,6 @@ export class AreaAddComponent implements OnInit, OnDestroy {
   ngOnInit(): void {
     this.loadAreas();
     this.startPolling();
-  }
-
-  ngOnDestroy(): void {
-    if (this.pollingSubscription) {
-      this.pollingSubscription.unsubscribe();
-    }
   }
 
   applyDateFilter(type: string, event: MatDatepickerInputEvent<Date>): void {
@@ -75,17 +71,48 @@ export class AreaAddComponent implements OnInit, OnDestroy {
     this.areaService.getAreas().subscribe((result: Area[]) => {
       this.dataSource.data = result;
       this.dataSource.paginator = this.paginator; // Set paginator after data is loaded
-      this.fetchUserCount();
+      this.fetchAreaCount();
+
+      // Start polling for area count
+      this.startPolling();
     });
   }
 
-  private startPolling(): void {
-    this.pollingSubscription = this.areaService.getAreaCount().subscribe(
-      (count: number) => (this.areaCount = count),
-      (error) => console.error('Error fetching area count:', error)
-    );
+  private fetchAreaCount(): void {
+    if (this.authService.isLoggedIn()) {
+      this.areaService.getAreaCount().subscribe(
+        (count: number) => {
+          this.areaCount = count;
+        },
+        (error) => {
+          console.error('Error fetching area count:', error);
+        }
+      );
+    }
+  }
 
-    setInterval(() => this.fetchUserCount(), 3000);
+  private startPolling(): void {
+    // Clear any existing interval
+    if (this.intervalId) {
+      clearInterval(this.intervalId);
+    }
+
+    // Set up polling every 3 seconds
+    this.intervalId = setInterval(() => {
+      if (this.authService.isLoggedIn()) {
+        this.fetchAreaCount();
+      }
+    }, 3000);
+  }
+
+  ngOnDestroy(): void {
+    // Clean up polling interval and subscriptions
+    if (this.intervalId) {
+      clearInterval(this.intervalId);
+    }
+    if (this.pollingSubscription) {
+      this.pollingSubscription.unsubscribe();
+    }
   }
 
   getFormattedVisitDate(visitDate: string | undefined): string {

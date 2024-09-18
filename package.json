@@ -1,18 +1,18 @@
 {
   "name": "msvc-client",
   "version": "0.0.0",
-    "scripts": {
-      "ng": "ng",
-      "start": "ng serve",
-      "build": "ng build",
-      "watch": "ng build --watch --configuration development",
-      "test": "ng test",
-      "serve:ssr:msvc-client": "node dist/msvc-client/server/server.mjs",
-      "build:ssr": "ng build && ng run msvc-client:server",
- "serve:ssr": "node dist/msvc-client/server/server.mjs",
-      "dev:ssr": "ng run msvc-client:serve-ssr",
-      "prerender": "ng run msvc-client:prerender"
-    },
+  "scripts": {
+    "ng": "ng",
+    "start": "ng serve",
+    "build": "ng build",
+    "watch": "ng build --watch --configuration development",
+    "test": "ng test",
+    "serve:ssr:msvc-client": "node dist/msvc-client/server/server.mjs",
+    "build:ssr": "ng build && ng run msvc-client:server",
+    "serve:ssr": "node dist/msvc-client/server/server.mjs",
+    "dev:ssr": "ng run msvc-client:serve-ssr",
+    "prerender": "ng run msvc-client:prerender"
+  },
   "private": true,
   "dependencies": {
     "@angular/animations": "^18.1.4",
@@ -34,6 +34,7 @@
     "file-saver": "^2.0.5",
     "flowbite": "^2.5.1",
     "flowbite-datepicker": "^1.3.0",
+    "http-proxy-middleware": "^3.0.2",
     "moment": "^2.30.1",
     "rxjs": "~7.8.0",
     "ssr": "^6.2.79",

@@ -1,11 +1,13 @@
 <!-- edit-visits.component.html -->
-<div>  
-  <div *ngIf="visitId">   
+<div>
+  <div *ngIf="visitId">
     <div class="text-2xl font-semibold mb-1">Edit visits for {{ visitId }}</div>
     <mat-stepper orientation="vertical" [linear]="false" #stepper>
       <mat-step [stepControl]="formGroup">
         <form [formGroup]="formGroup">
-          <ng-template matStepLabel>Fill out time and date of visit</ng-template>
+          <ng-template matStepLabel
+            >Fill out time and date of visit</ng-template
+          >
           <div class="grid grid-cols-1 lg:grid-cols-2 gap-2 mb-4">
             <div class="relative">
               <!-- User ID input -->
@@ -15,10 +17,19 @@
               >
                 User Abfi ID
               </label>
-              <input
-                formControlName="user_id"
+              <input                
                 readonly
                 [value]="mvisit?.user?.abfi_id"
+                type="text"
+                name="user_id"
+                class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
+              />
+              <input
+                readonly
+                style="display: none;"
+                formControlName="user_id"
+                readonly
+                [ngModel]="mvisit?.user?.user_id"
                 type="text"
                 name="user_id"
                 class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
@@ -36,7 +47,7 @@
                 id="visit_date"
                 name="visit_date"
                 type="datetime-local"
-                [value]="mvisit?.visit_date"
+                [ngModel]="mvisit?.visit_date"
                 placeholder="Date and Time"
                 class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
               />
@@ -46,8 +57,9 @@
             <label
               for="area_id"
               class="block text-gray-700 text-md dark:text-gray-300 font-medium mb-2"
-              >Area</label
             >
+              Area
+            </label>
             <div formArrayName="area_id">
               <div *ngFor="let area of areas; let i = index">
                 <input
@@ -55,7 +67,9 @@
                   [formControlName]="i"
                   class="h-5 w-5 text-blue-500 bg-gray-100 border-gray-300 rounded focus:ring-blue-500"
                 />
-                <label class="ml-2 text-xs text-gray-700">{{ area.area }}</label>
+                <label class="ml-2 text-xs text-gray-700">{{
+                  area.area
+                }}</label>
               </div>
             </div>
           </div>
@@ -77,9 +91,10 @@
               <input
                 formControlName="visit_accountName"
                 id="visit_accountName"
-                placeholder="Account name"
+                [ngModel]="mvisit?.visit_accountName"
                 name="visit_accountName"
                 class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
+                required
               />
             </div>
             <div class="relative">
@@ -91,7 +106,7 @@
               <input
                 formControlName="visit_distributor"
                 id="visit_distributor"
-                placeholder="Visit Distributor"
+                [ngModel]="mvisit?.visit_distributor"
                 name="visit_distributor"
                 class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
               />
@@ -104,7 +119,7 @@
               >
               <input
                 formControlName="visit_salesPersonnel"
-                placeholder="Sales Personnel in Charge"
+                [ngModel]="mvisit?.visit_salesPersonnel"
                 name="visit_salesPersonnel"
                 class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
               />
@@ -132,11 +147,11 @@
                 type="text"
                 id="visit_accountType_others"
                 class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-1/2 p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
-                placeholder="Others"
+                [ngModel]="mvisit?.visit_accountType_others"
               />
             </div>
           </div>
-    
+
           <div>
             <button mat-button matStepperPrevious>Back</button>
             <button mat-button matStepperNext>Next</button>
@@ -163,7 +178,7 @@
                     isr.isr_name
                   }}</label>
                 </div>
-    
+
                 <ng-template #noIsrRequirements
                   >No ISR Requirements Available</ng-template
                 >
@@ -197,7 +212,7 @@
                     name="isr_reqOthers"
                     id="isr_reqOthers"
                     class="mt-2 bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-1/2 p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
-                    placeholder="Other requirements"
+                    [ngModel]="mvisit?.isr_reqOthers"
                   />
                 </div>
                 <div>
@@ -211,8 +226,11 @@
                   />
                 </div>
                 <img
-                  *ngIf="imagePreviewReq"
-                  [src]="imagePreviewReq"
+                  [src]="
+                    imagePreviewReq
+                      ? imagePreviewReq
+                      : getImageUrl(mvisit?.isr_needs_ImgPath)
+                  "
                   alt="Selected Image"
                   class="mt-2 border-2 bg-gray-700 border-gray-500 rounded-lg h-64 w-96"
                 />
@@ -226,7 +244,7 @@
                     type="text"
                     id="isr_needsOthers"
                     class="mt-2 bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-1/2 p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
-                    placeholder="Other needs"
+                    [ngModel]="mvisit?.isr_needsOthers"
                   />
                 </div>
                 <div>
@@ -240,8 +258,11 @@
                   />
                 </div>
                 <img
-                  *ngIf="imagePreviewNeed"
-                  [src]="imagePreviewNeed"
+                  [src]="
+                    imagePreviewNeed
+                      ? imagePreviewNeed
+                      : getImageUrl(mvisit?.isr_req_ImgPath)
+                  "
                   alt="Selected Image"
                   class="mt-2 border-2 bg-gray-700 border-gray-500 rounded-lg h-64 w-96"
                 />
@@ -267,12 +288,12 @@
               <input
                 formControlName="visit_payolaMerchandiser"
                 id="visit_payolaMerchandiser"
-                placeholder="Payola Merchandiser"
+                [ngModel]="mvisit?.visit_payolaMerchandiser"
                 name="visit_payolaMerchandiser"
                 class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
               />
             </div>
-    
+
             <div class="relative">
               <label
                 for="visit_payolaSupervisor"
@@ -282,12 +303,12 @@
               <input
                 formControlName="visit_payolaSupervisor"
                 id="visit_payolaSupervisor"
-                placeholder="Payola Supervisor"
+                [ngModel]="mvisit?.visit_payolaMerchandiser"
                 name="visit_payolaSupervisor"
                 class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
               />
             </div>
-    
+
             <div class="relative">
               <label
                 for="visit_averageOffTakePd"
@@ -296,7 +317,7 @@
               >
               <input
                 formControlName="visit_averageOffTakePd"
-                placeholder="Average Off Take Per Day"
+                [ngModel]="mvisit?.visit_averageOffTakePd"
                 name="visit_averageOffTakePd"
                 class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
               />
@@ -354,7 +375,7 @@
                 type="text"
                 id="pod_canned_others"
                 class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-1/2 p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
-                placeholder="Other canned pods"
+                [ngModel]="mvisit?.pod_canned_other"
               />
             </div>
             <div>
@@ -363,7 +384,7 @@
                 type="text"
                 id="pod_mpp_others"
                 class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-1/2 p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
-                placeholder="Other mpp pods"
+                [ngModel]="mvisit?.pod_mpp_other"
               />
             </div>
           </div>
@@ -373,7 +394,7 @@
           </div>
         </form>
       </mat-step>
-    
+
       <mat-step [stepControl]="formGroup">
         <form [formGroup]="formGroup">
           <ng-template matStepLabel
@@ -389,7 +410,7 @@
               <input
                 formControlName="visit_competitorsCheck"
                 id="visit_competitorsCheck"
-                placeholder="SKU Competitors Check"
+                [ngModel]="mvisit?.visit_competitorsCheck"
                 name="visit_competitorsCheck"
                 class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-1/2 p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
               />
@@ -407,7 +428,9 @@
                 [formControlName]="i"
                 class="h-5 w-5 text-blue-500 bg-gray-100 border-gray-300 rounded focus:ring-blue-500"
               />
-              <label class="ml-2 text-xs text-gray-700">{{ paps.pap_name }}</label>
+              <label class="ml-2 text-xs text-gray-700">{{
+                paps.pap_name
+              }}</label>
             </div>
           </div>
           <input
@@ -416,13 +439,13 @@
             id="pap_others"
             name="pap_others"
             class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-1/2 p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
-            placeholder="Others paps"
+            [ngModel]="mvisit?.pap_others"
           />
-    
+
           <ng-template #noMppData>
             <p>No MPP PODs available.</p>
           </ng-template>
-    
+
           <div>
             <button mat-button matStepperPrevious>Back</button>
             <button mat-button matStepperNext>Next</button>
@@ -450,7 +473,6 @@
         </div>
       </mat-step>
     </mat-stepper>
-    
   </div>
   <div *ngIf="!visitId">
     <p>No visit ID provided.</p>

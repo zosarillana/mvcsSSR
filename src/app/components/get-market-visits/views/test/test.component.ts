@@ -5,7 +5,7 @@ import {
   Input,
   Output,
 } from '@angular/core';
-import { FormGroup, FormBuilder, FormArray, FormControl } from '@angular/forms';
+import { FormGroup, FormBuilder, FormArray, FormControl, Validators } from '@angular/forms';
 import { Area } from '../../../../models/area';
 import { MarketVisits } from '../../../../models/market-visits';
 import { AreaService } from '../../../../services/area.service';
@@ -31,6 +31,7 @@ export class TestComponent {
   @Input() data?: MarketVisits;
   @Output() MarketVisitsUpdated = new EventEmitter<MarketVisits[]>();
 
+  abfi_id: string | null = null;
   user_id: string | null = null;
   imageFileReq: File | null = null;
   imagePreviewReq: string | ArrayBuffer | null = null;
@@ -71,21 +72,21 @@ export class TestComponent {
       isr_id: this._formBuilder.array([]), // Should be initialized
       pod_id: this._formBuilder.array([]), // Should be initialized
       pap_id: this._formBuilder.array([]), // Should be initialized
-      user_id: new FormControl(''),
+      user_id: new FormControl('', Validators.required),
       pap_others: new FormControl(''),
       pod_mpp_other: new FormControl(''),
-      visit_competitorsCheck: new FormControl(''),
+      visit_competitorsCheck: new FormControl('', Validators.required),
       pod_canned_other: new FormControl(''),
-      visit_averageOffTakePd: new FormControl(''),
-      visit_payolaMerchandiser: new FormControl(''),
-      visit_payolaSupervisor: new FormControl(''),
+      visit_averageOffTakePd: new FormControl('', Validators.required),
+      visit_payolaMerchandiser: new FormControl('', Validators.required),
+      visit_payolaSupervisor: new FormControl('', Validators.required),
       isr_needsOthers: new FormControl(''),
       isr_reqOthers: new FormControl(''),
-      visit_salesPersonnel: new FormControl(''),
+      visit_salesPersonnel: new FormControl('', Validators.required),
       visit_accountType_others: new FormControl(''),
-      visit_distributor: new FormControl(''),
-      visit_accountName: new FormControl(''),
-      visit_date: new FormControl(null),
+      visit_distributor: new FormControl('', Validators.required),
+      visit_accountName: new FormControl('', Validators.required),
+      visit_date: new FormControl('', Validators.required),
     });
   }
 
@@ -94,7 +95,8 @@ export class TestComponent {
     this.tokenService.decodeTokenAndSetUser(); // Decode the token and set user information
     const user = this.tokenService.getUser();
     this.user_id = user?.id ?? null;
-    this.formGroup.patchValue({ user_id: this.user_id });
+    this.abfi_id = user?.abfi_id??null;
+    this.formGroup.patchValue({ user_id: this.user_id, abfi_id: this.abfi_id });
     this.cdr.detectChanges();
 
     // Fetch areas data
@@ -225,8 +227,22 @@ export class TestComponent {
   }
 
   onSubmit(): void {
+    if (this.formGroup.invalid) {
+      this.formGroup.markAllAsTouched(); // Mark all fields as touched to trigger validation errors
+  
+      // Show snackbar for validation failure
+      this.snackBar.open('Please fill in all required fields before submitting.', 'Close', {
+        duration: 3000, // 3 seconds
+      });
+  
+      return; // Exit the method to prevent form submission
+    }
+  
     const formData = new FormData();
-
+  
+    // Helper function to replace null or empty values with "N/A"
+    const handleEmptyValue = (value: any): string => (value === null || value === '') ? 'N/A' : value;
+  
     // Get selected IDs from the form group for areas, account types, etc.
     const selectedAreaIds = this.formGroup
       .get('area_id')
@@ -234,7 +250,7 @@ export class TestComponent {
         checked && this.areas ? this.areas[index]?.id?.toString() : null
       )
       .filter((value: string | null) => value !== null) as string[];
-
+  
     const selectedAccountTypeIds = this.formGroup
       .get('accountType_id')
       ?.value.map((checked: boolean, index: number) =>
@@ -243,72 +259,55 @@ export class TestComponent {
           : null
       )
       .filter((value: string | null) => value !== null) as string[];
-
+  
     const selectedIsrsIds = this.formGroup
       .get('isr_id')
       ?.value.map((checked: boolean, index: number) =>
         checked && this.isrs ? this.isrs[index]?.id?.toString() : null
       )
       .filter((value: string | null) => value !== null) as string[];
-
+  
     const selectedPodIds = this.formGroup
       .get('pod_id')
       ?.value.map((checked: boolean, index: number) =>
         checked && this.pods ? this.pods[index]?.id?.toString() : null
       )
       .filter((value: string | null) => value !== null) as string[];
-
+  
     const selectedPapIds = this.formGroup
       .get('pap_id')
       ?.value.map((checked: boolean, index: number) =>
         checked && this.paps ? this.paps[index]?.id?.toString() : null
       )
       .filter((value: string | null) => value !== null) as string[];
-
+  
     // Get form field values (input boxes)
-    const user_id = this.formGroup.get('user_id')?.value;
-    const visitDate = this.formGroup.get('visit_date')?.value;
-    const accountName = this.formGroup.get('visit_accountName')?.value;
-    const distributor = this.formGroup.get('visit_distributor')?.value;
-    const salesPersonnel = this.formGroup.get('visit_salesPersonnel')?.value;
-    const accountTypeOthers = this.formGroup.get(
-      'visit_accountType_others'
-    )?.value;
-    const competitorsCheck = this.formGroup.get(
-      'visit_competitorsCheck'
-    )?.value;
-    const averageOffTakePd = this.formGroup.get(
-      'visit_averageOffTakePd'
-    )?.value;
-    const payolaMerchandiser = this.formGroup.get(
-      'visit_payolaMerchandiser'
-    )?.value;
-    const payolaSupervisor = this.formGroup.get(
-      'visit_payolaSupervisor'
-    )?.value;
-    const isrNeedsOthers = this.formGroup.get('isr_needsOthers')?.value;
-    const isrReqOthers = this.formGroup.get('isr_reqOthers')?.value;
-    const pap_others = this.formGroup.get('pap_others')?.value;
-    const pod_canned_other = this.formGroup.get('pod_canned_other')?.value;
-    const pod_mpp_other = this.formGroup.get('pod_mpp_other')?.value;
-
-    console.log('Selected Area IDs:', selectedAreaIds);
-    console.log('Selected Account Type IDs:', selectedAccountTypeIds);
-    console.log('Selected ISR IDs:', selectedIsrsIds);
-    console.log('Selected POD IDs:', selectedPodIds);
-    console.log('Selected PAP IDs:', selectedPapIds);
-
+    const user_id = handleEmptyValue(this.formGroup.get('user_id')?.value);
+    const visitDate = handleEmptyValue(this.formGroup.get('visit_date')?.value);
+    const accountName = handleEmptyValue(this.formGroup.get('visit_accountName')?.value);
+    const distributor = handleEmptyValue(this.formGroup.get('visit_distributor')?.value);
+    const salesPersonnel = handleEmptyValue(this.formGroup.get('visit_salesPersonnel')?.value);
+    const accountTypeOthers = handleEmptyValue(this.formGroup.get('visit_accountType_others')?.value);
+    const competitorsCheck = handleEmptyValue(this.formGroup.get('visit_competitorsCheck')?.value);
+    const averageOffTakePd = handleEmptyValue(this.formGroup.get('visit_averageOffTakePd')?.value);
+    const payolaMerchandiser = handleEmptyValue(this.formGroup.get('visit_payolaMerchandiser')?.value);
+    const payolaSupervisor = handleEmptyValue(this.formGroup.get('visit_payolaSupervisor')?.value);
+    const isrNeedsOthers = handleEmptyValue(this.formGroup.get('isr_needsOthers')?.value);
+    const isrReqOthers = handleEmptyValue(this.formGroup.get('isr_reqOthers')?.value);
+    const pap_others = handleEmptyValue(this.formGroup.get('pap_others')?.value);
+    const pod_canned_other = handleEmptyValue(this.formGroup.get('pod_canned_other')?.value);
+    const pod_mpp_other = handleEmptyValue(this.formGroup.get('pod_mpp_other')?.value);
+  
     // Convert arrays to strings that look like JSON arrays
     const formatArrayAsString = (arr: string[]): string =>
       `[${arr.map((id) => `"${id}"`).join(', ')}]`;
-
+  
     // Append form data (checkbox selections and input field values)
     formData.append('area_id', formatArrayAsString(selectedAreaIds));
-    formData.append('accountType_id',formatArrayAsString(selectedAccountTypeIds));
-    formData.append('isr_id',formatArrayAsString(selectedIsrsIds));
+    formData.append('accountType_id', formatArrayAsString(selectedAccountTypeIds));
+    formData.append('isr_id', formatArrayAsString(selectedIsrsIds));
     formData.append('pod_id', formatArrayAsString(selectedPodIds));
     formData.append('pap_id', formatArrayAsString(selectedPapIds));
-
     formData.append('user_id', user_id);
     formData.append('visit_date', visitDate);
     formData.append('visit_accountName', accountName);
@@ -324,40 +323,79 @@ export class TestComponent {
     formData.append('pap_others', pap_others);
     formData.append('pod_canned_other', pod_canned_other);
     formData.append('pod_mpp_other', pod_mpp_other);
-
-    // Append images if selected
+  
+    // Prepare a list of promises for fetching default images if needed
+    const imagePromises: Promise<void>[] = [];
+  
+    // Append images if selected, otherwise append default images
     if (this.imageFileReq) {
       formData.append('isr_req_ImgPath', this.imageFileReq);
+    } else {
+      imagePromises.push(
+        fetch('/default_img.png')
+          .then(response => {
+            if (!response.ok) {
+              throw new Error('Failed to fetch default req image.');
+            }
+            return response.blob();
+          })
+          .then(blob => {
+            formData.append('isr_req_ImgPath', blob, 'default_img.png');
+          })
+          .catch(error => console.error('Error fetching default req image:', error))
+      );
     }
+  
     if (this.imageFileNeed) {
       formData.append('isr_needs_ImgPath', this.imageFileNeed);
+    } else {
+      imagePromises.push(
+        fetch('/default_img.png')
+          .then(response => {
+            if (!response.ok) {
+              throw new Error('Failed to fetch default need image.');
+            }
+            return response.blob();
+          })
+          .then(blob => {
+            formData.append('isr_needs_ImgPath', blob, 'default_img.png');
+          })
+          .catch(error => console.error('Error fetching default need image:', error))
+      );
     }
-
-    // Submit the form data to the server
-this.marketVisitsService.createMarketVisits(formData).subscribe(
-  (response) => {
-    console.log('Market visit submitted successfully', response);
-
-    // Show success notification (for example, using MatSnackBar)
-    this.snackBar.open('Market visit submitted successfully!', 'Close', {
-      duration: 3000, // 3 seconds
-    });
-
-    // Optionally, reset the form or navigate to another page
-    this.formGroup.reset(); // Clear the form
-    this.sharedService.setSelectedContent('content1');
-  },
-  (error) => {
-    console.error('Error creating market visit:', error);
-
-    // Show error notification
-    this.snackBar.open('Failed to submit market visit. Please try again.', 'Close', {
-      duration: 3000, // 3 seconds
-    });
+  
+    // Wait for any image fetch promises to resolve before submitting the form
+    Promise.all(imagePromises)
+      .then(() => {
+        // Submit the form data to the server
+        this.marketVisitsService.createMarketVisits(formData).subscribe(
+          (response) => {
+            console.log('Market visit submitted successfully', response);
+  
+            // Show success notification (for example, using MatSnackBar)
+            this.snackBar.open('Market visit submitted successfully!', 'Close', {
+              duration: 3000, // 3 seconds
+            });
+  
+            // Optionally, reset the form or navigate to another page
+            this.formGroup.reset(); // Clear the form
+            this.sharedService.setSelectedContent('content1');
+          },
+          (error) => {
+            console.error('Error creating market visit:', error);
+  
+            // Show error notification
+            this.snackBar.open('Failed to submit market visit. Please try again.', 'Close', {
+              duration: 3000, // 3 seconds
+            });
+          }
+        );
+      })
+      .catch((error) => {
+        console.error('Error processing form submission:', error);
+      });
   }
-);
-  }
-
+  
   onImageSelect(event: Event, type: 'req' | 'need'): void {
     const input = event.target as HTMLInputElement;
     if (input.files?.[0]) {
@@ -378,4 +416,4 @@ this.marketVisitsService.createMarketVisits(formData).subscribe(
       reader.readAsDataURL(file);
     }
   }
-}
+}  
