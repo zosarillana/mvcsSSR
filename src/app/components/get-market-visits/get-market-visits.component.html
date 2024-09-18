@@ -1,5 +1,6 @@
 <div class="grid grid-cols-1 lg:grid-cols-4 gap-6 mb-5">
   <div
+    *ngIf="role_id === '1'"
     class="bg-white rounded-md border border-gray-100 p-6 shadow-md shadow-black/5"
   >
     <div class="flex justify-between mb-6">
@@ -25,9 +26,9 @@
   >
     <div class="w-full mx-auto">
       <!-- <div class="bg-white dark:bg-gray-700 shadow-lg rounded-lg p-6"> -->
-      <div class="rounded-t mb-0 border-0 mb-4">
-        <div class="flex justify-between  flex-wrap">
-          <div class="flex items-center">
+      <div class="mb-0 border-0 mb-4">
+        <div class="flex justify-between flex-row flex-wrap">
+          <div class="flex items-center justify-start">
             <h1 class="font-semibold text-2xl text-blueGray-700">
               Market Visits
             </h1>
@@ -40,22 +41,23 @@
               <mat-icon>add_circle</mat-icon>
             </button>
           </div>
-          <div></div>
-          <div class="grid grid-cols-1 sm:grid-cols-4 gap-4">
-            <!-- Export to Excel Button -->
-            <div class="col-span-1 flex items-center justify-center sm:justify-start">
-              <button
-                mat-raised-button
-                color="primary"
-                (click)="exportMarketVisitsToExcel()"
-                class="mb-5"
-              >
-                Export to Excel
-              </button>
-            </div>
-          
-            <!-- Date Pickers -->
+
+          <div>
             <div class="col-span-3 flex flex-col gap-2 sm:flex-row sm:gap-4">
+              <!-- Export to Excel Button -->
+              <div
+                *ngIf="role_id === '1'"
+                class="col-span-1 flex items-center justify-center sm:justify-start"
+              >
+                <button
+                  mat-raised-button
+                  color="primary"
+                  (click)="exportMarketVisitsToExcel()"
+                  class="mb-5"
+                >
+                  Export to Excel
+                </button>
+              </div>
               <mat-form-field class="sm:min-w-[150px] sm:h-[70px]">
                 <mat-label class="text-base">Filter by (Start Date)</mat-label>
                 <input
@@ -71,7 +73,7 @@
                 ></mat-datepicker-toggle>
                 <mat-datepicker #startPicker></mat-datepicker>
               </mat-form-field>
-          
+
               <mat-form-field class="sm:min-w-[150px] sm:h-[70px]">
                 <mat-label class="text-base">Filter by (End Date)</mat-label>
                 <input
@@ -88,135 +90,134 @@
                 <mat-datepicker #endPicker></mat-datepicker>
               </mat-form-field>
             </div>
+            <!-- Date Pickers -->
           </div>
-          
-          
-      </div>
-      <div class="block w-full overflow-x-auto">
-        <table
-          mat-table
-          [dataSource]="dataSource"
-          class="items-center bg-transparent w-full border-collapse"
-        >
-          <!-- Column Definitions -->
-
-          <ng-container matColumnDef="visit_area">
-            <th
-              mat-header-cell
-              *matHeaderCellDef
-              class="bg-white-imp uppercase text-xs"
-            >
-              Areas
-            </th>
-            <td
-              mat-cell
-              *matCellDef="let mvisit"
-              class="bg-white-imp border border-blueGray-100 px-6 py-3 text-sm whitespace-nowrap text-left text-blueGray-700"
-            >
-              <div *ngIf="mvisit.areas.length">
-                <span *ngFor="let area of mvisit.areas; let last = last">
-                  {{ area.area_name }}<span *ngIf="!last">, </span>
-                </span>
-              </div>
-              <div *ngIf="!mvisit.areas.length">No Areas</div>
-            </td>
-          </ng-container>
+        </div>
+        <div class="block w-full overflow-x-auto">
+          <table
+            mat-table
+            [dataSource]="dataSource"
+            class="items-center bg-transparent w-full border-collapse"
           >
+            <!-- Column Definitions -->
 
-          <ng-container matColumnDef="visit_date">
-            <th
-              mat-header-cell
-              *matHeaderCellDef
-              class="bg-white-imp uppercase text-xs"
+            <ng-container matColumnDef="visit_area">
+              <th
+                mat-header-cell
+                *matHeaderCellDef
+                class="bg-white-imp uppercase text-xs"
+              >
+                Areas
+              </th>
+              <td
+                mat-cell
+                *matCellDef="let mvisit"
+                class="bg-white-imp border border-blueGray-100 px-6 py-3 text-sm whitespace-nowrap text-left text-blueGray-700"
+              >
+                <div *ngIf="mvisit.areas.length">
+                  <span *ngFor="let area of mvisit.areas; let last = last">
+                    {{ area.area_name }}<span *ngIf="!last">, </span>
+                  </span>
+                </div>
+                <div *ngIf="!mvisit.areas.length">No Areas</div>
+              </td>
+            </ng-container>
             >
-              Visit time and date
-            </th>
-            <td
-              mat-cell
-              *matCellDef="let mvisit"
-              class="bg-white-imp border border-blueGray-100 px-6 py-3 text-sm whitespace-nowrap text-left text-blueGray-700"
-            >
-            {{ getFormattedVisitDate(mvisit.visit_date)}}
-            </td>
-          </ng-container>
 
-          <ng-container matColumnDef="visit_accountName">
-            <th
-              mat-header-cell
-              *matHeaderCellDef
-              class="bg-white-imp uppercase text-xs"
-            >
-              Account
-            </th>
-            <td
-              mat-cell
-              *matCellDef="let mvisit"
-              class="bg-white-imp border border-blueGray-100 px-6 py-3 text-sm whitespace-nowrap text-left text-blueGray-700"
-            >
-              {{ mvisit.visit_accountName }}
-            </td>
-          </ng-container>
-          <ng-container matColumnDef="visit_distributor">
-            <th
-              mat-header-cell
-              *matHeaderCellDef
-              class="bg-white-imp uppercase text-xs"
-            >
-              Distributor
-            </th>
-            <td
-              mat-cell
-              *matCellDef="let mvisit"
-              class="bg-white-imp border border-blueGray-100 px-6 py-3 text-sm whitespace-nowrap text-left text-blueGray-700"
-            >
-              {{ mvisit.visit_distributor }}
-            </td>
-          </ng-container>
+            <ng-container matColumnDef="visit_date">
+              <th
+                mat-header-cell
+                *matHeaderCellDef
+                class="bg-white-imp uppercase text-xs"
+              >
+                Visit time and date
+              </th>
+              <td
+                mat-cell
+                *matCellDef="let mvisit"
+                class="bg-white-imp border border-blueGray-100 px-6 py-3 text-sm whitespace-nowrap text-left text-blueGray-700"
+              >
+                {{ getFormattedVisitDate(mvisit.visit_date) }}
+              </td>
+            </ng-container>
 
-          <ng-container matColumnDef="visit_salesPersonnel">
-            <th
-              mat-header-cell
-              *matHeaderCellDef
-              class="bg-white-imp uppercase text-xs"
-            >
-              Sales Personnel In Charge
-            </th>
-            <td
-              mat-cell
-              *matCellDef="let mvisit"
-              class="bg-white-imp border border-blueGray-100 px-6 py-3 text-sm whitespace-nowrap text-left text-blueGray-700"
-            >
-              {{ mvisit.visit_salesPersonnel }}
-            </td>
-          </ng-container>
-          <ng-container matColumnDef="visit_accountType">
-            <th
-              mat-header-cell
-              *matHeaderCellDef
-              class="bg-white-imp uppercase text-xs"
-            >
-              Account Type
-            </th>
-            <td
-              mat-cell
-              *matCellDef="let mvisit"
-              class="bg-white-imp border border-blueGray-100 px-6 py-3 text-sm whitespace-nowrap text-left text-blueGray-700"
-            >
-              <div *ngIf="mvisit.accountTypes.length">
-                <span
-                  *ngFor="
-                    let accountTypes of mvisit.accountTypes;
-                    let last = last
-                  "
-                >
-                  {{ accountTypes.accountType_name
-                  }}<span *ngIf="!last">, </span>
-                </span>
-              </div>
-              <div *ngIf="!mvisit.accountTypes.length">No Account Types</div>
-            </td>
-          </ng-container>
-          <!-- <ng-container matColumnDef="isr_need">
+            <ng-container matColumnDef="visit_accountName">
+              <th
+                mat-header-cell
+                *matHeaderCellDef
+                class="bg-white-imp uppercase text-xs"
+              >
+                Account
+              </th>
+              <td
+                mat-cell
+                *matCellDef="let mvisit"
+                class="bg-white-imp border border-blueGray-100 px-6 py-3 text-sm whitespace-nowrap text-left text-blueGray-700"
+              >
+                {{ mvisit.visit_accountName }}
+              </td>
+            </ng-container>
+            <ng-container matColumnDef="visit_distributor">
+              <th
+                mat-header-cell
+                *matHeaderCellDef
+                class="bg-white-imp uppercase text-xs"
+              >
+                Distributor
+              </th>
+              <td
+                mat-cell
+                *matCellDef="let mvisit"
+                class="bg-white-imp border border-blueGray-100 px-6 py-3 text-sm whitespace-nowrap text-left text-blueGray-700"
+              >
+                {{ mvisit.visit_distributor }}
+              </td>
+            </ng-container>
+
+            <ng-container matColumnDef="visit_salesPersonnel">
+              <th
+                mat-header-cell
+                *matHeaderCellDef
+                class="bg-white-imp uppercase text-xs"
+              >
+                Sales Personnel In Charge
+              </th>
+              <td
+                mat-cell
+                *matCellDef="let mvisit"
+                class="bg-white-imp border border-blueGray-100 px-6 py-3 text-sm whitespace-nowrap text-left text-blueGray-700"
+              >
+                {{ mvisit.visit_salesPersonnel }}
+              </td>
+            </ng-container>
+            <ng-container matColumnDef="visit_accountType">
+              <th
+                mat-header-cell
+                *matHeaderCellDef
+                class="bg-white-imp uppercase text-xs"
+              >
+                Account Type
+              </th>
+              <td
+                mat-cell
+                *matCellDef="let mvisit"
+                class="bg-white-imp border border-blueGray-100 px-6 py-3 text-sm whitespace-nowrap text-left text-blueGray-700"
+              >
+                <div *ngIf="mvisit.accountTypes.length">
+                  <span
+                    *ngFor="
+                      let accountTypes of mvisit.accountTypes;
+                      let last = last
+                    "
+                  >
+                    {{ accountTypes.accountType_name
+                    }}<span *ngIf="!last">, </span>
+                  </span>
+                </div>
+                <div *ngIf="!mvisit.accountTypes.length">No Account Types</div>
+              </td>
+            </ng-container>
+            <!-- <ng-container matColumnDef="isr_need">
             <th
               mat-header-cell
               *matHeaderCellDef
@@ -243,54 +244,53 @@
               <div *ngIf="!filterIsrsForNeeds(mvisit.isrs).length">No Isrs Types</div>
             </td>
           </ng-container> -->
-          
-          <ng-container matColumnDef="date_created">
-            <th
-              mat-header-cell
-              *matHeaderCellDef
-              class="bg-white-imp uppercase text-xs"
-            >
-              Date Created
-            </th>
-            <td
-              mat-cell
-              *matCellDef="let mvisit"
-              class="bg-white-imp border border-blueGray-100 px-6 py-3 text-sm whitespace-nowrap text-left text-blueGray-700"
-            >
-               {{ getFormattedVisitDate( mvisit.date_created) }}
-            </td>
-          </ng-container>
-          <ng-container matColumnDef="action">
-            <th
-              mat-header-cell
-              *matHeaderCellDef
-              class="bg-white-imp uppercase text-xs"
-            >
-              Action
-            </th>
-            <td
-              mat-cell
-              *matCellDef="let mvisit"
-              class="bg-white-imp border border-blueGray-100 px-6 py-3 text-sm whitespace-nowrap text-left text-blueGray-700"
-            >
-              <div class="flex space-x-2">
-                <div class="relative inline-block group">
-                  <button
-                    mat-icon-button
-                    class="icon-button-edit"
-                    (click)="showContent('edit-visits', mvisit.id)"
-                  >
-                    <mat-icon>edit</mat-icon>
-                  </button>
-                  <button
-                    mat-icon-button
-                    class="icon-button-edit"
-                    (click)="showContent('view-visits', mvisit.id)"
-                  >
-                    <mat-icon>visibility</mat-icon>
-                  </button>
-                </div>
-                <!-- <div class="relative inline-block group">
+            <ng-container matColumnDef="date_created">
+              <th
+                mat-header-cell
+                *matHeaderCellDef
+                class="bg-white-imp uppercase text-xs"
+              >
+                Date Created
+              </th>
+              <td
+                mat-cell
+                *matCellDef="let mvisit"
+                class="bg-white-imp border border-blueGray-100 px-6 py-3 text-sm whitespace-nowrap text-left text-blueGray-700"
+              >
+                {{ getFormattedVisitDate(mvisit.date_created) }}
+              </td>
+            </ng-container>
+            <ng-container matColumnDef="action">
+              <th
+                mat-header-cell
+                *matHeaderCellDef
+                class="bg-white-imp uppercase text-xs"
+              >
+                Action
+              </th>
+              <td
+                mat-cell
+                *matCellDef="let mvisit"
+                class="bg-white-imp border border-blueGray-100 px-6 py-3 text-sm whitespace-nowrap text-left text-blueGray-700"
+              >
+                <div class="flex space-x-2">
+                  <div class="relative inline-block group">
+                    <button
+                      mat-icon-button
+                      class="icon-button-edit"
+                      (click)="showContent('edit-visits', mvisit.id)"
+                    >
+                      <mat-icon>edit</mat-icon>
+                    </button>
+                    <button
+                      mat-icon-button
+                      class="icon-button-edit"
+                      (click)="showContent('view-visits', mvisit.id)"
+                    >
+                      <mat-icon>visibility</mat-icon>
+                    </button>
+                  </div>
+                  <!-- <div class="relative inline-block group">
                 <button
                   mat-icon-button
                   class="icon-button-edit"
@@ -299,39 +299,40 @@
                   <mat-icon>visibility</mat-icon>
                 </button>                
               </div> -->
-                <div class="relative inline-block group">
-                  <button
-                    mat-icon-button
-                    class="icon-button-edit"
-                    (click)="openDeleteDialog(mvisit)"
-                  >
-                    <mat-icon>delete</mat-icon>
-                  </button>
+                  <div class="relative inline-block group">
+                    <button
+                      mat-icon-button
+                      class="icon-button-edit"
+                      (click)="openDeleteDialog(mvisit)"
+                    >
+                      <mat-icon>delete</mat-icon>
+                    </button>
+                  </div>
                 </div>
-              </div>
-            </td>
-          </ng-container>
-          <!-- Table Header and Rows -->
-          <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
-          <tr mat-row *matRowDef="let row; columns: displayedColumns"></tr>
-        </table>
-      </div>
-      <div>
-        <mat-paginator
-          class="bg-white-imp"
-          [length]="dataSource.data.length"
-          [pageSize]="10"
-          [pageSizeOptions]="[5, 10, 25, 100]"
-          aria-label="Select page"
-        >
-        </mat-paginator>
+              </td>
+            </ng-container>
+            <!-- Table Header and Rows -->
+            <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
+            <tr mat-row *matRowDef="let row; columns: displayedColumns"></tr>
+          </table>
+        </div>
+        <div>
+          <mat-paginator
+            class="bg-white-imp"
+            [length]="dataSource.data.length"
+            [pageSize]="10"
+            [pageSizeOptions]="[5, 10, 25, 100]"
+            aria-label="Select page"
+          >
+          </mat-paginator>
+        </div>
       </div>
     </div>
   </div>
-</div>
-<!-- </div> -->
+  <!-- </div> -->
 
-<app-update-market-visits
-  [mvisit]="mvisitsToEdit"
-  (marketVisitsUpdated)="updateVisitList($event)"
-></app-update-market-visits>
+  <app-update-market-visits
+    [mvisit]="mvisitsToEdit"
+    (marketVisitsUpdated)="updateVisitList($event)"
+  ></app-update-market-visits>
+</div>

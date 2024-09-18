@@ -27,6 +27,6 @@ app.get('*', (_req, res) => {
 });
 
 // Start the server
-app.listen(4000, () => {
-  console.log(`Listening on http://localhost:4000`);
+app.listen(4200, () => {
+  console.log(`Listening on http://localhost:4200`);
 });
