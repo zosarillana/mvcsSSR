@@ -7,7 +7,7 @@ import { Area } from '../models/area';
   providedIn: 'root'
 })
 export class AreaService {
-  private url = '/api/Area';  
+  private url = '/api/api/Area';  
 
   constructor(private http: HttpClient) {}
 

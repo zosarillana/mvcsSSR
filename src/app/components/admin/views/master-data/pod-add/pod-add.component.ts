@@ -49,7 +49,8 @@ export class PodAddComponent {
 
 
   // Construct the base API URL
-  public imageUrlBase = `${environment.apiUrl}/Pod/image/`; // <-- Use the environment API URL
+  private url = '/api/api/Pod';
+  public imageUrlBase = `${this.url}/image/`; // <-- Use the environment API URL
 
   constructor(
     private authService: AuthService,

@@ -21,14 +21,12 @@
       "prefix": "app",
       "architect": {
         "build": {
-          "builder": "@angular-devkit/build-angular:application",
+          "builder": "@angular-devkit/build-angular:browser",
           "options": {
             "outputPath": "dist/msvc-client",
             "index": "src/index.html",
-            "browser": "src/main.ts",
-            "polyfills": [
-              "zone.js"
-            ],
+            "main": "src/main.ts",
+            "polyfills": ["zone.js"],
             "tsConfig": "tsconfig.app.json",
             "assets": [
               {
@@ -40,27 +38,20 @@
               "src/styles.css",
               "@angular/material/prebuilt-themes/azure-blue.css"
             ],
-            "scripts": [
-              "node_modules/flowbite/dist/flowbite.js"
-            ],
-            "server": "src/main.server.ts",
-            "prerender": true,
-            "ssr": {
-              "entry": "server.ts"
-            }
+            "scripts": ["node_modules/flowbite/dist/flowbite.js"]
           },
           "configurations": {
             "production": {
               "budgets": [
                 {
                   "type": "initial",
-                  "maximumWarning": "2.6MB",
-                  "maximumError": "4MB"
+                  "maximumWarning": "3mb",
+                  "maximumError": "5mb"
                 },
                 {
                   "type": "anyComponentStyle",
-                  "maximumWarning": "2kB",
-                  "maximumError": "4kB"
+                  "maximumWarning": "75kb",
+                  "maximumError": "90kb"
                 }
               ],
               "outputHashing": "all",
@@ -78,11 +69,12 @@
           "builder": "@angular-devkit/build-angular:dev-server",
           "configurations": {
             "production": {
-              "buildTarget": "msvc-client:build:production"
+              "buildTarget": "msvc-client:build:production",
+              "proxyConfig": "proxy.json"
             },
             "development": {
               "buildTarget": "msvc-client:build:development",
-              "proxyConfig": "proxy.conf.json"
+              "proxyConfig": "proxy.json"
             }
           },
           "defaultConfiguration": "development"
@@ -116,9 +108,7 @@
           "options": {
             "browserTarget": "msvc-client:build",
             "serverTarget": "msvc-client:server",
-            "routes": [
-              "/"
-            ]
+            "routes": ["/"]
           },
           "configurations": {
             "production": {

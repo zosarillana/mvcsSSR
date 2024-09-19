@@ -7,7 +7,7 @@ import { Observable } from 'rxjs';
   providedIn: 'root',
 })
 export class IsrService {
-  private url = 'api/Isr';
+  private url = '/api/api/Isr';
 
   constructor(private http: HttpClient) {}
 

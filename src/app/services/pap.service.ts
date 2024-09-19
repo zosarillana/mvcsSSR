@@ -8,7 +8,7 @@ import { Pap } from '../models/pap';
   providedIn: 'root'
 })
 export class PapService {
-  private url = 'api/Pap';
+  private url = '/api/api/Pap';
 
   constructor(private http: HttpClient) {}
 

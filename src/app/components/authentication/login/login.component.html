@@ -38,7 +38,7 @@
             <input
               matInput
               [type]="hide ? 'password' : 'text'"
-              #password="ngModel"
+              #password="ngModel" 
               ngModel
               name="password"
               required
@@ -48,6 +48,7 @@
             <button
               mat-icon-button
               matSuffix
+              type="button"
               (click)="togglePasswordVisibility()"
               [attr.aria-label]="hide ? 'Show password' : 'Hide password'"
               [attr.aria-pressed]="!hide"
@@ -55,7 +56,9 @@
               <mat-icon>{{ hide ? 'visibility_off' : 'visibility' }}</mat-icon>
             </button>
             <mat-error *ngIf="password.invalid && (password.dirty || password.touched)">
-              <ng-container *ngIf="password.errors?.['required']">Password is required</ng-container>
+              <ng-container *ngIf="password.errors?.['required']">
+                Password is required
+              </ng-container>
             </mat-error>
           </mat-form-field>
 

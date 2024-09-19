@@ -22,7 +22,8 @@ export class ModalViewPodComponent {
   ) {}
 
   // Construct the base API URL
-  public imageUrlBase = `${environment.apiUrl}/Pod/image/`; 
+  private url = '/api/api/Pod';
+  public imageUrlBase = `${this.url}/image/`; 
 
 
   onNoClick(): void {

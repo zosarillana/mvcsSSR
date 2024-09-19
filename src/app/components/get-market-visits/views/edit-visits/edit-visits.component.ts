@@ -130,7 +130,8 @@ export class EditVisitsComponent implements OnInit {
   }
 
   //for getting of images
-  public imageUrlBase = `${environment.apiUrl}/MarketVisits/image/`;
+  private url = '/api/api/MarketVisits';
+  public imageUrlBase = `${this.url}/MarketVisits/image/`;
   getImageUrl(imageName: string | undefined): string {
     return imageName ? `${this.imageUrlBase}${imageName}` : '/default_img.png';
   }

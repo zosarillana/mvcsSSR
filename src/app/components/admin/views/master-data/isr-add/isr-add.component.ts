@@ -2,18 +2,15 @@ import { Component, ViewChild } from '@angular/core';
 import { Isr } from '../../../../../models/isr';
 import { MatPaginator } from '@angular/material/paginator';
 import { MatTableDataSource } from '@angular/material/table';
-import { Subscription } from 'rxjs';
 import { IsrService } from '../../../../../services/isr.service';
 import { MatDialog } from '@angular/material/dialog';
 import { ModalCreateIsrComponent } from './modal/modal-create-isr/modal-create-isr.component';
-import { environment } from '../../../../../../environments/environment'; // <-- Import the environment
+import { environment } from '../../../../../../environments/environment';
 import { MatDatepickerInputEvent } from '@angular/material/datepicker';
 import moment from 'moment';
 import { ModalEditIsrComponent } from './modal/modal-edit-isr/modal-edit-isr.component';
-import { initFlowbite } from 'flowbite';
 import { ModalViewIsrComponent } from './modal/modal-view-isr/modal-view-isr.component';
 import { ModalDeleteIsrComponent } from './modal/modal-delete-isr/modal-delete-isr.component';
-import { AfterViewInit } from '@angular/core';
 import { DatePipe } from '@angular/common';
 import { FlowbiteService } from '../../../../../services/flowbite.service';
 import { AuthService } from '../../../../../auth/auth.service';
@@ -40,9 +37,9 @@ export class IsrAddComponent {
   endDate: Date | null = null;
   private intervalId: any;
 
-
+  private url = '/api/api/Isr';
   // Construct the base API URL
-  public imageUrlBase = `${environment.apiUrl}/Isr/image/`; // <-- Use the environment API URL
+  public imageUrlBase = `${this.url}/image/`; // <-- Use the environment API URL
 
   constructor(
     private authService: AuthService,

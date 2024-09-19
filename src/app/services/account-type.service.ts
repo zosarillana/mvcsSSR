@@ -7,7 +7,7 @@ import { AccountType } from '../models/accountType';
   providedIn: 'root'
 })
 export class AccountTypeService {
-  private url = 'api/AccountType';
+  private url = '/api/api/AccountType';
 
   constructor(private http: HttpClient) {}
 

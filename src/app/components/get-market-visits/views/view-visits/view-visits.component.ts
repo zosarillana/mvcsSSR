@@ -68,7 +68,8 @@ export class ViewVisitsComponent {
         .join(', ') || 'No Poduct on Display'
     );
   }
-  public imageUrlBase = `${environment.apiUrl}/MarketVisits/image/`;
+  private url = '/api/api/MarketVisits';
+  public imageUrlBase = `${this.url}/image/`;
   
   getImageUrl(imageName: string | undefined): string {
     return imageName ? `${this.imageUrlBase}${imageName}` : 'assets/images/placeholder.png'; // Fallback to a placeholder image

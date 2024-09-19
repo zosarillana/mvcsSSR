@@ -58,13 +58,16 @@
           class="block text-gray-700 text-md dark:text-gray-300 font-medium mb-2"
           >Type</label
         >
-        <input
+        <select
           id="type"
           [(ngModel)]="data.isr_type"
-          placeholder="Type"
           name="type"
           class="border p-2 text-sm rounded w-full"
-        />
+        >
+          <option value="" disabled selected hidden>Select Type</option>
+          <option value="NEEDS">NEEDS</option>
+          <option value="REQUIREMENTS">REQUIREMENTS</option>
+        </select>
         <div *ngIf="errorMessages['type']" class="text-red-700 text-xs mt-1">
           <ul>
             <li *ngFor="let errorMsg of errorMessages['type']">
@@ -72,7 +75,7 @@
             </li>
           </ul>
         </div>
-      </div>
+      </div>      
     </div>
     <div class="grid grid-cols-1 gap-2 mb-4">
       <div class="relative">

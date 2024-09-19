@@ -47,7 +47,8 @@ export class PapAddComponent {
 
 
   // Construct the base API URL
-  public imageUrlBase = `${environment.apiUrl}/Pap/image/`;  // <-- Use the environment API URL
+  private url = '/api/api/Pap';
+  public imageUrlBase = `${this.url}/image/`;  // <-- Use the environment API URL
 
   constructor(private authService: AuthService, private papService: PapService, public dialog: MatDialog, private datePipe: DatePipe, private flowbiteService: FlowbiteService) {}
 

@@ -8,7 +8,7 @@ import { isPlatformBrowser } from '@angular/common';
   providedIn: 'root',
 })
 export class AuthService {
-  private apiUrl = `/api/Auth/login`;
+  private apiUrl = `/api/api/Auth/login`;
   private platformId: Object;
 
   constructor(

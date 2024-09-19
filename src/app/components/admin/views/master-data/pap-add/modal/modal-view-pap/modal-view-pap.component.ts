@@ -22,7 +22,8 @@ export class ModalViewPapComponent {
   ) {}
 
   // Construct the base API URL
-  public imageUrlBase = `${environment.apiUrl}/Pap/image/`; 
+  private url = '/api/api/Pap';
+  public imageUrlBase = `${this.url}/image/`; 
 
 
   onNoClick(): void {

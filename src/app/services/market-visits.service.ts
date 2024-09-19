@@ -7,7 +7,7 @@ import { catchError, Observable, throwError } from 'rxjs';
   providedIn: 'root',
 })
 export class MarketVisitsService {
-  private url = 'api/MarketVisits';
+  private url = '/api/api/MarketVisits';
 
   constructor(private http: HttpClient) {}
 

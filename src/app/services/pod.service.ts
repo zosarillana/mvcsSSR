@@ -7,7 +7,7 @@ import { Observable } from 'rxjs';
   providedIn: 'root',
 })
 export class PodService {
-  private url = 'api/Pod';
+  private url = '/api/api/Pod';
 
   constructor(private http: HttpClient) {}
 

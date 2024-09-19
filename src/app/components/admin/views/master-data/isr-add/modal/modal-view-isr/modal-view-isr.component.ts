@@ -28,7 +28,8 @@ export class ModalViewIsrComponent {
   ) {}
 
   // Construct the base API URL
-  public imageUrlBase = `${environment.apiUrl}/Isr/image/`; 
+  private url = '/api/api/Isr';
+  public imageUrlBase = `${this.url}/image/`; 
 
 
   onNoClick(): void {
