@@ -332,7 +332,7 @@ export class TestComponent {
       formData.append('isr_req_ImgPath', this.imageFileReq);
     } else {
       imagePromises.push(
-        fetch('/default_img.png')
+        fetch('/no_img.jpg')
           .then(response => {
             if (!response.ok) {
               throw new Error('Failed to fetch default req image.');
@@ -340,7 +340,7 @@ export class TestComponent {
             return response.blob();
           })
           .then(blob => {
-            formData.append('isr_req_ImgPath', blob, 'default_img.png');
+            formData.append('isr_req_ImgPath', blob, 'no_img.jpg');
           })
           .catch(error => console.error('Error fetching default req image:', error))
       );
@@ -350,7 +350,7 @@ export class TestComponent {
       formData.append('isr_needs_ImgPath', this.imageFileNeed);
     } else {
       imagePromises.push(
-        fetch('/default_img.png')
+        fetch('/no_img.jpg')
           .then(response => {
             if (!response.ok) {
               throw new Error('Failed to fetch default need image.');
@@ -358,7 +358,7 @@ export class TestComponent {
             return response.blob();
           })
           .then(blob => {
-            formData.append('isr_needs_ImgPath', blob, 'default_img.png');
+            formData.append('isr_needs_ImgPath', blob, 'no_img.jpg');
           })
           .catch(error => console.error('Error fetching default need image:', error))
       );

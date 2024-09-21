@@ -1,5 +1,5 @@
 <!-- modal.component.html -->
-<h1 mat-dialog-title>Add area</h1>
+<h1 mat-dialog-title style="text-align: center">Add Area</h1>
 <div
   *ngIf="errorMessages['general']"
   class="bg-red-100 text-red-700 p-2 rounded mb-4"
@@ -10,6 +10,7 @@
 </div>
 <div *ngIf="data" mat-dialog-content>
   <form>
+    <hr class="h-px my-4 bg-gray-200 border-0 dark:bg-gray-700" />
     <div class="grid grid-cols-1 gap-2 mb-4">
       <div class="relative">
         <label
@@ -25,10 +26,7 @@
           aria-modal="true"
           class="border p-2 text-sm rounded w-full"
         />
-        <div
-          *ngIf="errorMessages['area']"
-          class="text-red-700 text-xs mt-1"
-        >
+        <div *ngIf="errorMessages['area']" class="text-red-700 text-xs mt-1">
           <ul>
             <li *ngFor="let errorMsg of errorMessages['area']">
               {{ errorMsg }}
@@ -42,7 +40,8 @@
             <label
               for="description"
               class="block text-gray-700 text-md dark:text-gray-300 font-medium mb-2"
-            >Description</label>
+              >Description</label
+            >
             <textarea
               id="description"
               aria-modal="true"
@@ -54,7 +53,7 @@
             ></textarea>
           </div>
         </div>
-        
+
         <div
           *ngIf="errorMessages['description']"
           class="text-red-700 text-xs mt-1"

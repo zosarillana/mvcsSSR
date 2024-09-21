@@ -4,12 +4,13 @@
   <div class="w-full mx-auto">
     <div>
       <div *ngIf="visitId">
-        <div class="text-2xl font-semibold mb-1">View details of {{ visitId }}</div>
+        <div class="text-2xl font-semibold mb-1">
+          View details of {{ visitId }}
+        </div>
         <!-- Form for editing visit details -->
-        <hr class="h-px my-4 bg-gray-200 border-0 dark:bg-gray-700">
-        <form (ngSubmit)="onSubmit()" *ngIf="mvisit">
+        <hr class="h-px my-4 bg-gray-200 border-0 dark:bg-gray-700" />
+        <form *ngIf="mvisit">
           <!-- User ID input -->
-    
           <div class="grid grid-cols-1 lg:grid-cols-3 mt-5 gap-2">
             <div class="relative">
               <label
@@ -25,7 +26,7 @@
                 class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
               />
             </div>
-    
+
             <!-- User Full Name input -->
             <div class="relative">
               <label
@@ -47,7 +48,7 @@
                 class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
               />
             </div>
-    
+
             <!-- User Email input -->
             <div class="relative">
               <label
@@ -64,7 +65,7 @@
               />
             </div>
           </div>
-    
+
           <div class="grid grid-cols-1 lg:grid-cols-2 mt-5 gap-2">
             <div class="relative">
               <label
@@ -80,7 +81,7 @@
                 class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
               />
             </div>
-    
+
             <!-- User Full Name input -->
             <div class="relative">
               <label
@@ -97,11 +98,8 @@
               />
             </div>
           </div>
-          <hr class="h-px my-8 bg-gray-200 border-0 dark:bg-gray-700">
-          <div class="text-1xl font-semibold mb-1 mt-5">
-            Submitted account details
-          </div>
-          <div class="grid grid-cols-1 lg:grid-cols-4 mt-5 gap-2">
+          <hr class="h-px my-8 bg-gray-200 border-0 dark:bg-gray-700" />
+          <div class="grid grid-cols-1 lg:grid-cols-2 mt-5 gap-2">
             <div class="relative">
               <label
                 for="accountName"
@@ -116,7 +114,7 @@
                 class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
               />
             </div>
-    
+
             <!-- User Full Name input -->
             <div class="relative">
               <label
@@ -132,7 +130,7 @@
                 class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
               />
             </div>
-    
+
             <!-- User Email input -->
             <div class="relative">
               <label
@@ -164,11 +162,7 @@
               />
             </div>
           </div>
-    
-          <div class="text-1xl font-semibold mb-1 mt-5">
-            In store requirements checklist
-          </div>
-    
+          <hr class="h-px my-4 bg-gray-200 border-0 dark:bg-gray-700" />
           <div class="grid grid-cols-1 lg:grid-cols-2 mt-5 gap-2">
             <div class="relative">
               <label
@@ -176,15 +170,35 @@
                 class="block text-gray-700 text-md dark:text-gray-300 font-medium mb-2"
                 >In store requirements</label
               >
-              <input
+              <form [formGroup]="formGroup">
+                <!-- ISR Requirements Form Array -->
+                <div formArrayName="isr_id">
+                  <div *ngFor="let isr of isrRequirements; let i = index">
+                    <input
+                      type="checkbox"
+                      [formControlName]="i"
+                      [value]="isr.id"
+                      class="h-5 w-5 text-blue-500 bg-gray-100 border-gray-300 rounded focus:ring-blue-500"
+                    />
+                    <label class="ml-2 text-xs text-gray-700">
+                      {{ isr.isr_name }}
+                    </label>
+                  </div>
+                  <ng-template #noIsrRequirements
+                    >No ISR Requirements Available</ng-template
+                  >
+                </div>
+              </form>
+
+              <!-- <input
                 id="allisrsreqs"
                 type="text"
                 [value]="getAllIsrs('REQUIREMENTS')"
                 readonly
                 class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
-              />
+              /> -->
             </div>
-    
+
             <!-- User Full Name input -->
             <div class="relative">
               <label
@@ -192,18 +206,37 @@
                 class="block text-gray-700 text-md dark:text-gray-300 font-medium mb-2"
                 >In store requirements needs</label
               >
-              <input
+              <form [formGroup]="formGroup">
+                <div formArrayName="isr_id">
+                  <div *ngFor="let isr of isrNeeds; let i = index">
+                    <input
+                      type="checkbox"
+                      [formControlName]="i + isrRequirements.length"
+                      [value]="isr.id"
+                      class="h-5 w-5 text-blue-500 bg-gray-100 border-gray-300 rounded focus:ring-blue-500"
+                    />
+                    <label class="ml-2 text-xs text-gray-700">
+                      {{ isr.isr_name }}
+                    </label>
+                  </div>
+                  <ng-template #noisrNeeds>
+                    <p>No ISR NEEDS available.</p>
+                  </ng-template>
+                </div>
+              </form>
+
+              <!-- <input
                 id="allisrsneeds"
                 type="text"
                 [value]="getAllIsrs('NEEDS')"
                 readonly
                 class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
-              />
+              /> -->
             </div>
             <div class="relative">
               <label
                 for="imageDisplay"
-                class="block text-gray-700 text-md dark:text-gray-300 font-medium mb-2"
+                class="block text-gray-700 text-xs dark:text-gray-300 font-bold mb-2"
               >
                 Display Requirement Image
               </label>
@@ -211,14 +244,13 @@
                 id="imageDisplay"
                 [src]="getImageUrl(mvisit.isr_req_ImgPath)"
                 alt="Visit Image"
-                class="border rounded-lg text-sm h-80 w-1/2 cursor-pointer mt-2"
+                class="border rounded-lg text-sm h-52 w-1/2 cursor-pointer mt-2"
               />
             </div>
-    
             <div class="relative">
               <label
                 for="imageDisplay2"
-                class="block text-gray-700 text-md dark:text-gray-300 font-medium mb-2"
+                class="block text-gray-700 text-xs dark:text-gray-300 font-bold mb-2"
               >
                 Display Needs Image
               </label>
@@ -226,12 +258,26 @@
                 id="imageDisplay2"
                 [src]="getImageUrl(mvisit.isr_needs_ImgPath)"
                 alt="Visit Image"
-                class="border rounded-lg text-sm h-80 w-1/2 cursor-pointer mt-2"
+                class="border rounded-lg text-sm h-52 w-1/2 cursor-pointer mt-2"
               />
             </div>
+            <input
+              id="needsOthers"
+              type="text"
+              [value]="mvisit.isr_needsOthers"
+              readonly
+              class="w-1/2 bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
+            />
+            <input
+              id="reqOthers"
+              type="text"
+              [value]="mvisit.isr_reqOthers"
+              readonly
+              class="w-1/2 bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
+            />
           </div>
-          <hr class="h-px my-8 bg-gray-200 border-0 dark:bg-gray-700">
-          <div class="text-1xl font-semibold mb-1 mt-5">Payola Information</div>
+          <hr class="h-px my-8 bg-gray-200 border-0 dark:bg-gray-700" />
+
           <div class="grid grid-cols-1 lg:grid-cols-3 mt-5 gap-2">
             <div class="relative">
               <label
@@ -247,7 +293,7 @@
                 class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
               />
             </div>
-    
+
             <!-- User Full Name input -->
             <div class="relative">
               <label
@@ -263,7 +309,7 @@
                 class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
               />
             </div>
-    
+
             <!-- User Email input -->
             <div class="relative">
               <label
@@ -280,16 +326,13 @@
               />
             </div>
           </div>
-          <hr class="h-px my-8 bg-gray-200 border-0 dark:bg-gray-700">
-          <div class="text-1xl font-semibold mb-1 mt-5">
-            Product on display information
-          </div>
+          <hr class="h-px my-8 bg-gray-200 border-0 dark:bg-gray-700" />
           <div class="grid grid-cols-1 lg:grid-cols-2 mt-5 gap-2">
             <div class="relative">
               <label
                 for="canned"
                 class="block text-gray-700 text-md dark:text-gray-300 font-medium mb-2"
-                >Canned product on display</label
+                >Canned Product on Display</label
               >
               <input
                 id="canned"
@@ -299,7 +342,7 @@
                 class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
               />
             </div>
-    
+
             <!-- User Full Name input -->
             <div class="relative">
               <label
@@ -316,40 +359,107 @@
               />
             </div>
           </div>
-          <hr class="h-px my-8 bg-gray-200 border-0 dark:bg-gray-700">
-          <div class="text-1xl font-semibold mb-1 mt-5">
-            Prepared action plan informaiton
-          </div>
-          <div class="grid grid-cols-1 lg:grid-cols-2 mt-5 gap-2">
-            <div class="relative">
-              <label
-                for="canned"
-                class="block text-gray-700 text-md dark:text-gray-300 font-medium mb-2"
-                >Competitors Checklist (existing SKU in-store)</label
-              >
-              <input
-                id="canned"
-                type="text"
-                [value]="mvisit.visit_competitorsCheck"
-                readonly
-                class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
-              />
+          <hr class="h-px my-6 bg-gray-200 border-0 dark:bg-gray-700" />
+          <div>
+            <div class="grid grid-cols-1 lg:grid-cols-2 gap-2">
+              <div>
+                <label class="block font-medium mb-4"
+                  >Canned Product on Display</label
+                >
+                <form [formGroup]="formGroup">
+                  <div formArrayName="pod_id">
+                    <div *ngFor="let pod of cannedPods; let i = index">
+                      <input
+                        type="checkbox"
+                        [formControlName]="i + cannedPods.length"
+                        [value]="pod.id"
+                        class="h-5 w-5 text-blue-500 bg-gray-100 border-gray-300 rounded focus:ring-blue-500"
+                      />
+                      <label class="ml-2 text-xs text-gray-700">
+                        {{ pod.pod_name }}
+                      </label>
+                    </div>
+                    <ng-template #noCannedPods>
+                      <p>No Canned Pods available.</p>
+                    </ng-template>
+                  </div>
+                  <input
+                    readonly
+                    formControlName="pod_canned_other"
+                    type="text"
+                    id="pod_canned_others"
+                    class="mt-2 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-1/2 p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
+                    [ngModel]="mvisit.pod_canned_other"
+                  />
+                </form>
+              </div>
+              <div>
+                <label class="block font-medium mb-4"
+                  >MPP Product on Display</label
+                >
+                <form [formGroup]="formGroup">
+                  <div formArrayName="pod_id">
+                    <div *ngFor="let pod of mppPods; let i = index">
+                      <input
+                        type="checkbox"
+                        [formControlName]="i + cannedPods.length"
+                        [value]="pod.id"
+                        class="h-5 w-5 text-blue-500 bg-gray-100 border-gray-300 rounded focus:ring-blue-500"
+                      />
+                      <label class="ml-2 text-xs text-gray-700">
+                        {{ pod.pod_name }}
+                      </label>
+                    </div>
+                    <ng-template #noCannedPods>
+                      <p>No MPP Pods available.</p>
+                    </ng-template>
+                  </div>
+                  <input
+                    readonly
+                    formControlName="pod_canned_other"
+                    type="text"
+                    id="pod_canned_others"
+                    class="mt-2 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-1/2 p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
+                    [ngModel]="mvisit.pod_mpp_other"
+                  />
+                </form>
+              </div>
             </div>
-    
-            <!-- User Full Name input -->
-            <div class="relative">
-              <label
-                for="mpp"
-                class="block text-gray-700 text-md dark:text-gray-300 font-medium mb-2"
-                >MPP Product on display</label
-              >
-              <input
-                id="mpp"
-                type="text"
-                [value]="getAllPaps()"
-                readonly
-                class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
-              />
+          </div>
+          <hr class="h-px my-6 bg-gray-200 border-0 dark:bg-gray-700" />
+          <div>
+            <div class="grid grid-cols-1 lg:grid-cols-2 gap-2">
+              <div>
+                <label class="block font-medium mb-4"
+                  >Canned Product on Display</label
+                >
+                <form [formGroup]="formGroup">
+                  <div formArrayName="pod_id">
+                    <div *ngFor="let pod of cannedPods; let i = index">
+                      <input
+                        type="checkbox"
+                        [formControlName]="i + cannedPods.length"
+                        [value]="pod.id"
+                        class="h-5 w-5 text-blue-500 bg-gray-100 border-gray-300 rounded focus:ring-blue-500"
+                      />
+                      <label class="ml-2 text-xs text-gray-700">
+                        {{ pod.pod_name }}
+                      </label>
+                    </div>
+                    <ng-template #noCannedPods>
+                      <p>No Canned Pods available.</p>
+                    </ng-template>
+                  </div>
+                  <input
+                    readonly
+                    formControlName="pod_canned_other"
+                    type="text"
+                    id="pod_canned_others"
+                    class="mt-2 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-1/2 p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
+                    [ngModel]="mvisit.pod_canned_other"
+                  />
+                </form>
+              </div>              
             </div>
           </div>
         </form>
@@ -357,7 +467,6 @@
       <div *ngIf="!visitId">
         <p>No visit ID provided.</p>
       </div>
-    </div>    
+    </div>
   </div>
 </div>
-

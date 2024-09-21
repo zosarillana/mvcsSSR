@@ -25,7 +25,7 @@ export class IsrAddComponent {
     'isr_name',
     'others',
     'type',
-    'image_path',
+    // 'image_path',
     'description',
     'date_created',
     'action',

@@ -142,7 +142,7 @@ export class EditVisitsComponent implements OnInit {
   private url = '/api/api/MarketVisits';
   public imageUrlBase = `${this.url}/image/`;
   getImageUrl(imageName: string | undefined): string {
-    return imageName ? `${this.imageUrlBase}${imageName}` : '/default_img.png';
+    return imageName ? `${this.imageUrlBase}${imageName}` : '/no_img.jpg';
   }
   public imagePreviewNeed: string | ArrayBuffer | null = null;
   public imagePreviewReq: string | ArrayBuffer | null = null;

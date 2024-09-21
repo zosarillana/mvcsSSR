@@ -42,7 +42,7 @@ export class ModalCreateIsrComponent {
         this.submitFormData(formData);
       } else {
         // Create a default image Blob
-        fetch('/default_img.png')
+        fetch('/no_img.jpg')
           .then(response => {
             if (!response.ok) {
               throw new Error('Network response was not ok.');
@@ -50,7 +50,7 @@ export class ModalCreateIsrComponent {
             return response.blob();
           })
           .then(blob => {
-            formData.append('file', blob, 'default_img.png');
+            formData.append('file', blob, 'no_img.jpg');
             this.submitFormData(formData);
           })
           .catch(error => {

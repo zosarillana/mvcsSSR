@@ -1,5 +1,5 @@
 <!-- modal.component.html -->
-<h1 mat-dialog-title>Edit area</h1>
+<h1 mat-dialog-title style="text-align: center;">Edit area</h1>
 <div
   *ngIf="errorMessages['general']"
   class="bg-red-100 text-red-700 p-2 rounded mb-4"
@@ -10,6 +10,7 @@
 </div>
 <div *ngIf="data" mat-dialog-content>
   <form>
+    <hr class="h-px my-4 bg-gray-200 border-0 dark:bg-gray-700">
     <div class="grid grid-cols-1 gap-2 mb-4">
       <div class="relative">
         <label

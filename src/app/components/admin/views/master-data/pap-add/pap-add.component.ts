@@ -32,8 +32,6 @@ export class PapAddComponent {
   displayedColumns: string[] = [
     'pod_name',
     'others',
-    
-    'image_path',
     'description',
     'date_created',
     'action',

@@ -1,4 +1,4 @@
-<h1 mat-dialog-title>Edit in store requirements</h1>
+<h1 mat-dialog-title style="text-align: center;">Edit Product on Display</h1>
 <div
   *ngIf="errorMessages['general']"
   class="bg-red-100 text-red-700 p-2 rounded mb-4"
@@ -8,6 +8,7 @@
   </ul>
 </div>
 <div *ngIf="data" mat-dialog-content>
+  <hr class="h-px my-4 bg-gray-200 border-0 dark:bg-gray-700" />
   <form>
     <div class="grid md:grid-cols-1 grid-cols-1 lg:grid-cols-3 gap-2 mb-4">
       <div class="relative">
@@ -19,7 +20,7 @@
         <input
           id="podName"
           [(ngModel)]="data.pod_name"
-          placeholder="Isr Name"
+          placeholder="pod name"
           name="podName"
           class="border p-2 text-sm rounded w-full"
         />
@@ -77,6 +78,7 @@
         </div>
       </div>      
     </div>
+    <hr class="h-px my-4 bg-gray-200 border-0 dark:bg-gray-700" />
     <div class="grid grid-cols-1 gap-2 mb-4">
       <div class="relative">
         <div class="grid grid-cols-2">

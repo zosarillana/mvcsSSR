@@ -269,7 +269,7 @@ export class AddVisitsComponent implements OnInit {
         dummyFormData.append('fileReq', this.imageFileReq);
       } else {
         imagePromises.push(
-          fetch('/default_img_req.png')
+          fetch('/no_img.jpg')
             .then(response => {
               if (!response.ok) {
                 throw new Error('Failed to fetch default image for req.');
@@ -287,7 +287,7 @@ export class AddVisitsComponent implements OnInit {
         dummyFormData.append('fileNeed', this.imageFileNeed);
       } else {
         imagePromises.push(
-          fetch('/default_img_need.png')
+          fetch('/no_img.jpg')
             .then(response => {
               if (!response.ok) {
                 throw new Error('Failed to fetch default image for need.');
@@ -295,7 +295,7 @@ export class AddVisitsComponent implements OnInit {
               return response.blob();
             })
             .then(blob => {
-              dummyFormData.append('fileNeed', blob, 'default_img_need.png');
+              dummyFormData.append('fileNeed', blob, 'no_img.jpg');
             })
             .catch(error => console.error('Error fetching default need image:', error))
         );

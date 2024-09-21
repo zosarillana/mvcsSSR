@@ -46,7 +46,7 @@ export class ModalCreatePapComponent {
         this.submitFormData(formData);
       } else {
         // Fetch the default image and append it to formData
-        fetch('/default_img.png')
+        fetch('/no_img.jpg')
           .then(response => {
             if (!response.ok) {
               throw new Error('Network response was not ok.');
@@ -54,7 +54,7 @@ export class ModalCreatePapComponent {
             return response.blob();
           })
           .then(blob => {
-            formData.append('file', blob, 'default_img.png');
+            formData.append('file', blob, 'no_img.jpg');
             this.submitFormData(formData);
           })
           .catch(error => {
