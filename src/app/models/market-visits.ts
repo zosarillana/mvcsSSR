@@ -1,5 +1,6 @@
 export class MarketVisits {
   id?: number;
+  mv_id = '';
   user_id = '';
   visit_date = '';
   area_id: string[] = []; // Changed from string to string[]

@@ -1,7 +1,7 @@
 <!-- edit-visits.component.html -->
 <div>
   <div *ngIf="visitId">
-    <div class="text-2xl font-semibold mb-1">Edit visits for {{ visitId }}</div>
+    <div class="text-2xl font-semibold mb-1">EDIT MV / {{ mvisit?.mv_id }}</div>
     <mat-stepper orientation="vertical" [linear]="false" #stepper>
       <mat-step [stepControl]="formGroup">
         <form [formGroup]="formGroup">
