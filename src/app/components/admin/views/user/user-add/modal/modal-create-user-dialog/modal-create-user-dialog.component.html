@@ -1,7 +1,8 @@
 <!-- modal.component.html -->
-<h1 mat-dialog-title>
-  Register user: {{ data.fname }} {{ data.mname }} {{ data.lname }}
+<h1 mat-dialog-title style="text-align: center;">
+  Register user {{ data.fname }} {{ data.mname }} {{ data.lname }}
 </h1>
+
 <div
   *ngIf="errorMessages['general']"
   class="bg-red-100 text-red-700 p-2 rounded mb-4"
@@ -10,14 +11,15 @@
     <li *ngFor="let errorMsg of errorMessages['general']">{{ errorMsg }}</li>
   </ul>
 </div>
-<div *ngIf="data" mat-dialog-content>
+<hr class="h-px my-4 bg-gray-200 border-0 dark:bg-gray-700">
+<div *ngIf="data" mat-dialog-content [ngStyle]="{'max-width': '45vw', 'width': '45vw'}">
   <form>
     <div class="grid grid-cols-1 gap-2 lg:grid-cols-2 mb-4">
       <div class="relative">
         <label
           for="abfi_id"
           class="block text-gray-700 text-md  dark:text-gray-300 font-medium mb-2"
-          >Annas Breeder INC ID</label
+          >Employee ID</label
         >
         <input
           id="abfi_id"
@@ -35,24 +37,7 @@
         </div>
       </div>
 
-      <div class="relative">
-        <!-- <label
-          for="role"
-          class="block text-gray-700 text-md dark:text-gray-300 font-medium mb-2"
-          >Role</label
-        >
-        <select
-          id="role"
-          [(ngModel)]="data.role_id"
-          name="role_id"
-          class="border p-2 text-sm rounded w-full"
-        >
-          <option value="" selected disabled>Select a role</option>
-          <option value="2">User</option>
-          <option value="1">Admin</option>
-        </select> -->
-
-       
+      <div class="relative"> 
           <label
             for="countries"
             class="block mb-2 text-sm font-medium text-gray-900 dark:text-white"
@@ -106,8 +91,8 @@
       <div class="relative">
         <label
           for="Middlename"
-          class="block text-gray-700 text-xs dark:text-gray-300 font-medium mb-3"
-          >Middle Name (Optional)</label
+          class="block text-gray-700 text-md dark:text-gray-300 font-medium mb-3"
+          >Middle Name</label
         >
         <input
           id="Middlename"
@@ -177,7 +162,7 @@
             <label
               for="Contactnum"
               class="block text-gray-700 text-md dark:text-gray-300 font-medium mb-2"
-              >Contact Number</label
+              >No.</label
             >
           </div>
         </div>

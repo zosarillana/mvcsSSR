@@ -24,7 +24,8 @@ import { SharedService } from '../../../../services/shared.service';
 import { TokenService } from '../../../../services/token.service';
 import { ConfirmDialogComponent } from '../../../admin/views/user/user-add/modal/modal-edit-user-dialog/confirm-dialog/confirm-dialog.component';
 import { MatDialog } from '@angular/material/dialog';
-import { environment } from '../../../../../environments/environment';
+import { ActivatedRoute } from '@angular/router';
+
 @Component({
   selector: 'app-edit-visits',
   templateUrl: './edit-visits.component.html',
@@ -57,6 +58,7 @@ export class EditVisitsComponent implements OnInit {
   formGroup: FormGroup;
 
   constructor(
+    private route: ActivatedRoute,
     private marketVisitsService: MarketVisitsService,
     private sharedService: SharedService,
     private snackBar: MatSnackBar,
@@ -96,6 +98,13 @@ export class EditVisitsComponent implements OnInit {
   }
 
   ngOnInit(): void {
+    this.route.paramMap.subscribe(params => {
+      this.visitId = params.get('id');
+      if (this.visitId) {
+        // Logic to handle the ID, e.g., load data based on the ID
+        console.log('Visit ID:', this.visitId);
+      }
+    });
     // Decode token and set user information
     this.tokenService.decodeTokenAndSetUser();
     const user = this.tokenService.getUser();
@@ -131,7 +140,7 @@ export class EditVisitsComponent implements OnInit {
 
   //for getting of images
   private url = '/api/api/MarketVisits';
-  public imageUrlBase = `${this.url}/MarketVisits/image/`;
+  public imageUrlBase = `${this.url}/image/`;
   getImageUrl(imageName: string | undefined): string {
     return imageName ? `${this.imageUrlBase}${imageName}` : '/default_img.png';
   }

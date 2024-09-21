@@ -14,7 +14,7 @@
       </div>
     </div>
     <a
-      (click)="showContent('content5')"
+      routerLink="/dashboard/visits/create"
       class="text-blue-500 font-medium text-sm hover:text-blue-600 cursor-pointer"
       >Add visits</a
     >
@@ -35,10 +35,17 @@
             <!-- Your existing button -->
             <button
               mat-icon-button
-              class="icon-button ml-4"
-              (click)="showContent('content5')"
+              class="icon-button ml-2"
+              routerLink="/dashboard/visits/create"
             >
               <mat-icon>add_circle</mat-icon>
+            </button>
+            <button
+              mat-icon-button
+              (click)="exportMarketVisitsToExcel()"
+              class="icon-button ml-2"
+            >
+              <mat-icon>save</mat-icon>
             </button>
           </div>
 
@@ -48,16 +55,7 @@
               <div
                 *ngIf="role_id === '1'"
                 class="col-span-1 flex items-center justify-center sm:justify-start"
-              >
-                <button
-                  mat-raised-button
-                  color="primary"
-                  (click)="exportMarketVisitsToExcel()"
-                  class="mb-5"
-                >
-                  Export to Excel
-                </button>
-              </div>
+              ></div>
               <mat-form-field class="sm:min-w-[150px] sm:h-[70px]">
                 <mat-label class="text-base">Filter by (Start Date)</mat-label>
                 <input
@@ -278,14 +276,14 @@
                     <button
                       mat-icon-button
                       class="icon-button-edit"
-                      (click)="showContent('edit-visits', mvisit.id)"
+                      [routerLink]="['/dashboard/visits/edit', mvisit.id]"
                     >
                       <mat-icon>edit</mat-icon>
                     </button>
                     <button
                       mat-icon-button
                       class="icon-button-edit"
-                      (click)="showContent('view-visits', mvisit.id)"
+                      [routerLink]="['/dashboard/visits/view', mvisit.id]"
                     >
                       <mat-icon>visibility</mat-icon>
                     </button>

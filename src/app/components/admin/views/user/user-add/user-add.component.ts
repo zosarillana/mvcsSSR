@@ -131,17 +131,18 @@ export class UserAddComponent {
 
   openAddDialog(): void {
     const dialogRef = this.dialog.open(ModalCreateUserDialogComponent, {
-      width: '500px',
-      height: '55%',
+      width: '45vw',   // Adjust the width to a percentage of the viewport width
+      maxWidth: '45vw', // Optional: ensure it doesn’t exceed a maximum width
+      height: '67%',   // Keep or adjust the height as needed
       data: {},
     });
-
+  
     dialogRef.afterClosed().subscribe((result) => {
       if (result) {
         this.loadUsers();
       }
     });
-  }
+  }  
 
   openDeleteDialog(user: User): void {
     const dialogRef = this.dialog.open(ModalDeleteUserDialogComponent, {

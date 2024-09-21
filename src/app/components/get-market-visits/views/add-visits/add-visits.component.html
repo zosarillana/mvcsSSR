@@ -2,7 +2,7 @@
 <mat-stepper orientation="vertical" [linear]="false" #stepper>
   <mat-step [stepControl]="firstFormGroup">
     <form [formGroup]="firstFormGroup">
-      <ng-template matStepLabel>Fill out time and date of visit</ng-template>
+      <ng-template matStepLabel>Fill out Time and Date of Visit</ng-template>
       <div class="grid grid-cols-1 lg:grid-cols-2 gap-2 mb-4">
         <div class="relative">
           <!-- User ID input -->
@@ -10,10 +10,17 @@
             for="user_id"
             class="block text-gray-700 text-md dark:text-gray-300 font-medium mb-2"
           >
-            User Abfi ID
+            Employee ID
           </label>
+          <input                
+          readonly
+          [value]="abfi_id"
+          type="text"
+          name="user_id"
+          class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
+        />
           <input
-            hidden
+            style="display: none;"
             readonly
             formControlName="user_id"
             type="text"
@@ -66,7 +73,7 @@
   </mat-step>
   <mat-step [stepControl]="secondFormGroup">
     <form [formGroup]="secondFormGroup">
-      <ng-template matStepLabel>Fill out account information</ng-template>
+      <ng-template matStepLabel>Fill out Account Information</ng-template>
       <div class="grid grid-cols-1 lg:grid-cols-3 gap-2 mb-4">
         <div class="relative">
           <label
@@ -149,7 +156,7 @@
   <mat-step [stepControl]="thirdFormGroup">
     <form [formGroup]="thirdFormGroup">
       <ng-template matStepLabel
-        >Fill out In store requirement checklist</ng-template
+        >Fill out In Store Requirement Checklist</ng-template
       >
       <div class="grid grid-cols-1 lg:grid-cols-2 gap-2 mb-2">
         <div class="relative mt-4">
@@ -269,7 +276,7 @@
   </mat-step>
   <mat-step [stepControl]="fourthFormGroup">
     <form [formGroup]="fourthFormGroup">
-      <ng-template matStepLabel>Fill out payola infomation</ng-template>
+      <ng-template matStepLabel>Fill out Payola Infomation</ng-template>
       <div class="grid grid-cols-1 lg:grid-cols-3 gap-2 mb-4">
         <div class="relative">
           <label
@@ -325,7 +332,7 @@
   <mat-step [stepControl]="fifthFormGroup">
     <form [formGroup]="fifthFormGroup">
       <ng-template matStepLabel
-        >Fill out product on display checklist</ng-template
+        >Fill out Product on Display Checklist</ng-template
       >
       <div class="grid grid-cols-1 lg:grid-cols-2 gap-2 mb-2">
         <!-- Canned PODs Section -->
@@ -403,7 +410,7 @@
   <mat-step [stepControl]="sixthFormGroup">
     <form [formGroup]="sixthFormGroup">
       <ng-template matStepLabel
-        >Fill out Competitors Check and Action plan</ng-template
+        >Fill out Competitors Check and Action Plan</ng-template
       >
       <div class="grid grid-cols-1 lg:grid-cols-2 gap-2 mt-4 mb-4">
         <div class="relative">

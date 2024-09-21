@@ -23,6 +23,7 @@ export class AddVisitsComponent implements OnInit {
   @Output() MarketVisitsUpdated = new EventEmitter<MarketVisits[]>();
 
   user_id: string | null = null;
+  abfi_id: string | null = null;
   imageFileReq: File | null = null;
   imagePreviewReq: string | ArrayBuffer | null = null;
   imageFileNeed: File | null = null;
@@ -103,7 +104,8 @@ export class AddVisitsComponent implements OnInit {
     this.tokenService.decodeTokenAndSetUser(); // Decode the token and set user information
     const user = this.tokenService.getUser();
     this.user_id = user?.id ?? null;
-    this.firstFormGroup.patchValue({ user_id: this.user_id });
+    this.abfi_id= user?.abfi_id ?? null;
+    this.firstFormGroup.patchValue({ user_id: this.user_id, abfi_id: this.abfi_id });
 
     this.getPodData();
     this.getIsrsData();

@@ -6,6 +6,7 @@
       <div *ngIf="visitId">
         <div class="text-2xl font-semibold mb-1">View details of {{ visitId }}</div>
         <!-- Form for editing visit details -->
+        <hr class="h-px my-4 bg-gray-200 border-0 dark:bg-gray-700">
         <form (ngSubmit)="onSubmit()" *ngIf="mvisit">
           <!-- User ID input -->
     
@@ -96,8 +97,8 @@
               />
             </div>
           </div>
-    
-          <div class="text-2xl font-semibold mb-1 mt-5">
+          <hr class="h-px my-8 bg-gray-200 border-0 dark:bg-gray-700">
+          <div class="text-1xl font-semibold mb-1 mt-5">
             Submitted account details
           </div>
           <div class="grid grid-cols-1 lg:grid-cols-4 mt-5 gap-2">
@@ -164,7 +165,7 @@
             </div>
           </div>
     
-          <div class="text-2xl font-semibold mb-1 mt-5">
+          <div class="text-1xl font-semibold mb-1 mt-5">
             In store requirements checklist
           </div>
     
@@ -229,7 +230,8 @@
               />
             </div>
           </div>
-          <div class="text-2xl font-semibold mb-1 mt-5">Payola Information</div>
+          <hr class="h-px my-8 bg-gray-200 border-0 dark:bg-gray-700">
+          <div class="text-1xl font-semibold mb-1 mt-5">Payola Information</div>
           <div class="grid grid-cols-1 lg:grid-cols-3 mt-5 gap-2">
             <div class="relative">
               <label
@@ -278,7 +280,8 @@
               />
             </div>
           </div>
-          <div class="text-2xl font-semibold mb-1 mt-5">
+          <hr class="h-px my-8 bg-gray-200 border-0 dark:bg-gray-700">
+          <div class="text-1xl font-semibold mb-1 mt-5">
             Product on display information
           </div>
           <div class="grid grid-cols-1 lg:grid-cols-2 mt-5 gap-2">
@@ -291,7 +294,7 @@
               <input
                 id="canned"
                 type="text"
-                [value]="getAllIsrs('REQUIREMENTS')"
+                [value]="getAllPods('CANNED')"
                 readonly
                 class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
               />
@@ -307,13 +310,14 @@
               <input
                 id="mpp"
                 type="text"
-                [value]="getAllIsrs('NEEDS')"
+                [value]="getAllPods('MPP')"
                 readonly
                 class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
               />
             </div>
           </div>
-          <div class="text-2xl font-semibold mb-1 mt-5">
+          <hr class="h-px my-8 bg-gray-200 border-0 dark:bg-gray-700">
+          <div class="text-1xl font-semibold mb-1 mt-5">
             Prepared action plan informaiton
           </div>
           <div class="grid grid-cols-1 lg:grid-cols-2 mt-5 gap-2">
@@ -353,8 +357,7 @@
       <div *ngIf="!visitId">
         <p>No visit ID provided.</p>
       </div>
-    </div>
-    
+    </div>    
   </div>
 </div>
 

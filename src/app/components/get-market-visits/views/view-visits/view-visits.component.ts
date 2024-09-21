@@ -3,6 +3,7 @@ import { MarketVisits } from '../../../../models/market-visits';
 import { MarketVisitsService } from '../../../../services/market-visits.service';
 import { DatePipe } from '@angular/common';
 import { environment } from '../../../../../environments/environment';
+import { ActivatedRoute } from '@angular/router';
 
 @Component({
   selector: 'app-view-visits',
@@ -15,11 +16,19 @@ export class ViewVisitsComponent {
   @Output() marketVisitsUpdated = new EventEmitter<MarketVisits[]>();
 
   constructor(
+    private route: ActivatedRoute,
     private marketVisitsService: MarketVisitsService,
     private datePipe: DatePipe
   ) {}
 
   ngOnInit(): void {
+    this.route.paramMap.subscribe(params => {
+      this.visitId = params.get('id');
+      if (this.visitId) {
+        // Logic to handle the ID, e.g., load data based on the ID
+        console.log('Visit ID:', this.visitId);
+      }
+    });
     console.log('Visit ID:', this.visitId); // Debugging
     if (this.visitId) {
       this.marketVisitsService.getVisitById(this.visitId).subscribe(
