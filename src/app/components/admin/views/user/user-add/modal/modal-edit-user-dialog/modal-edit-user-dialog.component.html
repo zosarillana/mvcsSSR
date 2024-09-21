@@ -1,6 +1,6 @@
 <!-- modal.component.html -->
 <!-- <h1 mat-dialog-title>Edit - {{data.fname}} {{data.mname}} {{data.lname}}</h1> -->
-<h1 mat-dialog-title>Edit</h1>
+<h1 mat-dialog-title style="text-align: center;">Edit</h1>
 <div
   *ngIf="errorMessages['general']"
   class="bg-red-100 text-red-700 p-2 rounded mb-4"
@@ -9,13 +9,18 @@
     <li *ngFor="let errorMsg of errorMessages['general']">{{ errorMsg }}</li>
   </ul>
 </div>
-<div *ngIf="data" mat-dialog-content>
+<hr class="h-px my-2 bg-gray-200 border-0 dark:bg-gray-700" />
+<div
+  *ngIf="data"
+  mat-dialog-content
+  [ngStyle]="{ 'max-width': '75vw', width: '100%' }"
+>
   <form>
     <div class="grid grid-cols-2 gap-2 mb-2">
       <div class="relative">
         <label
           for="Username"
-          class="block text-gray-700 text-md dark:text-gray-300 font-medium mb-2"
+          class="block text-gray-700 text-xs dark:text-gray-300 font-medium mb-2"
           >Username</label
         >
         <input
@@ -41,46 +46,47 @@
         <!-- Password Input -->
         <label
           for="user_password"
-          class="block text-gray-700 text-md dark:text-gray-300 font-medium mb-2"
+          class="block text-gray-700 text-xs dark:text-gray-300 font-medium mb-2"
         >
           Password
         </label>
         <input
-        id="user_password"
-        [value]="passwordValue"  
-        placeholder="user_password"
-        name="user_password"
-        type="password"
-        class="w-full border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
-        [attr.disabled]="!isPasswordEnabled ? true : null"
-        [attr.readOnly]="!isPasswordEnabled ? true : null"
-        (input)="onPasswordInput($event)"  
-      />
-    
-      <!-- Enable Checkbox -->
-      <div class="mt-4">
-        <input
-          id="enable_password"
-          type="checkbox"
-          [checked]="isPasswordEnabled"
-          (change)="togglePasswordField($event)"
-          class="mr-2"
+          id="user_password"
+          [value]="passwordValue"
+          placeholder="user_password"
+          name="user_password"
+          type="password"
+          class="w-full border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
+          [attr.disabled]="!isPasswordEnabled ? true : null"
+          [attr.readOnly]="!isPasswordEnabled ? true : null"
+          (input)="onPasswordInput($event)"
         />
-        <label
-          for="enable_password"
-          class="text-gray-700 text-sm dark:text-gray-300"
-        >
-          Enable Password Input
-        </label>
-      </div>
+
+        <!-- Enable Checkbox -->
+        <div class="mt-2">
+          <input
+            id="enable_password"
+            type="checkbox"
+            [checked]="isPasswordEnabled"
+            (change)="togglePasswordField($event)"
+            class="mr-2"
+          />
+          <label
+            for="enable_password"
+            class="text-gray-700 text-sm dark:text-gray-300"
+          >
+            Enable Password Input
+          </label>
+        </div>
       </div>
     </div>
+    <hr class="h-px my-4 bg-gray-200 border-0 dark:bg-gray-700" />
     <div class="grid grid-cols-1 lg:grid-cols-2 gap-2 mb-4">
       <div class="relative">
         <label
           for="abfi_id"
-          class="block text-gray-700 text-md dark:text-gray-300 font-medium mb-2"
-          >Annas Breeder INC ID</label
+          class="block text-gray-700 text-xs dark:text-gray-300 font-medium mb-2"
+          >Employee ID</label
         >
         <input
           id="abfi_id"
@@ -99,23 +105,21 @@
       </div>
 
       <div class="relative">
-    
-          <label
-            for="countries"
-            class="block mb-2 text-sm font-medium text-gray-900 dark:text-white"
-            >Select an option</label
-          >
-          <select
-            id="role_id"
-            [(ngModel)]="data.role_id"
-            name="role_id"
-            class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
-          >
-            <option selected disabled>Select a role</option>
-            <option value="2">User</option>
-            <option value="1">Admin</option>
-          </select>
-      
+        <label
+          for="countries"
+          class="block mb-2 text-sm font-medium text-gray-900 dark:text-white"
+          >Select an option</label
+        >
+        <select
+          id="role_id"
+          [(ngModel)]="data.role_id"
+          name="role_id"
+          class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
+        >
+          <option selected disabled>Select a role</option>
+          <option value="2">User</option>
+          <option value="1">Admin</option>
+        </select>
 
         <div *ngIf="errorMessages['role']" class="text-red-700 text-xs mt-1">
           <ul>
@@ -126,12 +130,12 @@
         </div>
       </div>
     </div>
-
+    <hr class="h-px my-4 bg-gray-200 border-0 dark:bg-gray-700">
     <div class="grid grid-cols-1 lg:grid-cols-3 gap-2 mb-4">
       <div class="relative">
         <label
           for="Firstname"
-          class="block text-gray-700 text-md dark:text-gray-300 font-medium mb-2"
+          class="block text-gray-700 text-xs dark:text-gray-300 font-medium mb-2"
           >First name</label
         >
         <input
@@ -175,7 +179,7 @@
       <div class="relative">
         <label
           for="Lastname"
-          class="block text-gray-700 text-md dark:text-gray-300 font-medium mb-2"
+          class="block text-gray-700 text-xs dark:text-gray-300 font-medium mb-2"
           >Last Name</label
         >
         <input
@@ -194,11 +198,12 @@
         </div>
       </div>
     </div>
+    <hr class="h-px my-4 bg-gray-200 border-0 dark:bg-gray-700">
     <div class="grid grid-cols-1 lg:grid-cols-2 gap-2">
       <div class="relative">
         <label
           for="Emailadd"
-          class="block text-gray-700 text-md dark:text-gray-300 font-medium mb-2"
+          class="block text-gray-700 text-xs dark:text-gray-300 font-medium mb-2"
           >Email Address</label
         >
         <input
@@ -224,7 +229,7 @@
           <div class="relative">
             <label
               for="Contactnum"
-              class="block text-gray-700 text-md dark:text-gray-300 font-medium mb-2"
+              class="block text-gray-700 text-xs dark:text-gray-300 font-medium mb-2"
               >Contact Number</label
             >
           </div>

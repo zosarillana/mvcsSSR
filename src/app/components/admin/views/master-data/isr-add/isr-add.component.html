@@ -147,8 +147,10 @@
           </ng-container>
 
           <ng-container matColumnDef="image_path">
-            <th mat-header-cell *matHeaderCellDef  class="bg-white-imp">Image</th>
-              <td mat-cell *matCellDef="let element" class="bg-white-imp">
+            <th mat-header-cell *matHeaderCellDef class="bg-white-imp">
+              Image
+            </th>
+            <td mat-cell *matCellDef="let element" class="bg-white-imp">
               <img
                 [src]="imageUrlBase + element.image_path"
                 alt="Image"
@@ -226,6 +228,8 @@
         <!-- MatPaginator added here -->
         <div class="mt-4">
           <mat-paginator
+          showFirstLastButtons="true"
+            class="bg-white-imp"
             [length]="dataSource.data.length"
             [pageSize]="5"
             [pageSizeOptions]="[5, 10, 25, 100]"

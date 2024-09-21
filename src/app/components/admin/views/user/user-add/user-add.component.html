@@ -200,7 +200,7 @@
               *matCellDef="let user"
               class="bg-white-imp border border-blueGray-100 px-6 py-3 text-sm whitespace-nowrap text-left text-blueGray-700"
             >
-              {{ user.date_created | date : "short" }}
+              {{ user.dateCreated | date : "short" }}
             </td>
           </ng-container>
           <ng-container matColumnDef="action">
@@ -258,6 +258,7 @@
       <div>
         <mat-paginator
           class="bg-white-imp"
+          showFirstLastButtons="true"
           [length]="dataSource.data.length"
           [pageSize]="10"
           [pageSizeOptions]="[5, 10, 25, 100]"

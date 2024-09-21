@@ -1,222 +1,219 @@
 <div class="grid grid-cols-1 lg:grid-cols-4 gap-6 mb-6">
-    <div
-      class="bg-white rounded-md border border-gray-100 p-6 shadow-md shadow-black/5"
-    >
-      <div class="flex justify-between mb-6">
-        <div>
-          <div class="flex items-center text-2xl font-semibold mb-1">
-            <!-- SVG icon -->
-            <mat-icon>description</mat-icon>
-            <span>{{ podCount }}</span>
-          </div>
-          <div class="text-sm font-medium text-gray-400">
-            Number of products
-          </div>
+  <div
+    class="bg-white rounded-md border border-gray-100 p-6 shadow-md shadow-black/5"
+  >
+    <div class="flex justify-between mb-6">
+      <div>
+        <div class="flex items-center text-2xl font-semibold mb-1">
+          <!-- SVG icon -->
+          <mat-icon>description</mat-icon>
+          <span>{{ podCount }}</span>
         </div>
+        <div class="text-sm font-medium text-gray-400">Number of products</div>
       </div>
     </div>
   </div>
-  <div class="grid grid-cols-1 gap-6 mb-6">
-    <div
-      class="bg-white border border-gray-100 shadow-md shadow-black/5 p-6 rounded-md"
-    >
-      <div class="w-full mx-auto">
-        <div class="rounded-t mb-4 border-0">
-          <div class="flex flex-wrap items-center justify-between">
-            <!-- Header -->
-            <div class="flex items-center">
-              <h1 class="font-semibold text-2xl text-blueGray-700 flex-grow">
-               Proposed Action Plan
-              </h1>
-              <!-- Add button -->          
-              <div class="relative inline-block group">
-                <button
-                  mat-icon-button
-                  class="icon-button-edit"
-                  (click)="openAddDialog()"
-                >
-                  <mat-icon>add</mat-icon>
-                </button>
-               
-              </div>    
-            </div>
-            <div class="flex flex-col gap-2 sm:flex-row sm:gap-4">
-              <mat-form-field class="sm:min-w-[150px] sm:h-[70px]">
-                <mat-label class="text-base">Filter by (Start Date)</mat-label>
-                <input
-                  matInput
-                  [matDatepicker]="startPicker"
-                  placeholder="Start Date"
-                  (dateChange)="applyDateFilter('start', $event)"
-                  class="text-xs"
-                />
-                <mat-datepicker-toggle
-                  matSuffix
-                  [for]="startPicker"
-                ></mat-datepicker-toggle>
-                <mat-datepicker #startPicker></mat-datepicker>
-              </mat-form-field>
-  
-              <mat-form-field class="sm:min-w-[150px] sm:h-[70px]">
-                <mat-label class="text-base">Filter by (End Date)</mat-label>
-                <input
-                  matInput
-                  [matDatepicker]="endPicker"
-                  placeholder="End Date"
-                  (dateChange)="applyDateFilter('end', $event)"
-                  class="text-xs"
-                />
-                <mat-datepicker-toggle
-                  matSuffix
-                  [for]="endPicker"
-                ></mat-datepicker-toggle>
-                <mat-datepicker #endPicker></mat-datepicker>
-              </mat-form-field>
+</div>
+<div class="grid grid-cols-1 gap-6 mb-6">
+  <div
+    class="bg-white border border-gray-100 shadow-md shadow-black/5 p-6 rounded-md"
+  >
+    <div class="w-full mx-auto">
+      <div class="rounded-t mb-4 border-0">
+        <div class="flex flex-wrap items-center justify-between">
+          <!-- Header -->
+          <div class="flex items-center">
+            <h1 class="font-semibold text-2xl text-blueGray-700 flex-grow">
+              Proposed Action Plan
+            </h1>
+            <!-- Add button -->
+            <div class="relative inline-block group">
+              <button
+                mat-icon-button
+                class="icon-button-edit"
+                (click)="openAddDialog()"
+              >
+                <mat-icon>add</mat-icon>
+              </button>
             </div>
           </div>
+          <div class="flex flex-col gap-2 sm:flex-row sm:gap-4">
+            <mat-form-field class="sm:min-w-[150px] sm:h-[70px]">
+              <mat-label class="text-base">Filter by (Start Date)</mat-label>
+              <input
+                matInput
+                [matDatepicker]="startPicker"
+                placeholder="Start Date"
+                (dateChange)="applyDateFilter('start', $event)"
+                class="text-xs"
+              />
+              <mat-datepicker-toggle
+                matSuffix
+                [for]="startPicker"
+              ></mat-datepicker-toggle>
+              <mat-datepicker #startPicker></mat-datepicker>
+            </mat-form-field>
+
+            <mat-form-field class="sm:min-w-[150px] sm:h-[70px]">
+              <mat-label class="text-base">Filter by (End Date)</mat-label>
+              <input
+                matInput
+                [matDatepicker]="endPicker"
+                placeholder="End Date"
+                (dateChange)="applyDateFilter('end', $event)"
+                class="text-xs"
+              />
+              <mat-datepicker-toggle
+                matSuffix
+                [for]="endPicker"
+              ></mat-datepicker-toggle>
+              <mat-datepicker #endPicker></mat-datepicker>
+            </mat-form-field>
+          </div>
         </div>
-  
-        <div class="block w-full overflow-x-auto">
-          <table
-            mat-table
-            [dataSource]="dataSource"
-            class="items-center bg-transparent w-full border-collapse"
-          >
-            <ng-container matColumnDef="pod_name">
-              <th
-                mat-header-cell
-                *matHeaderCellDef
-                class="bg-white-imp uppercase text-xs"
-              >
-                In store requirements
-              </th>
-              <td
-                mat-cell
-                *matCellDef="let pod"
-                class="bg-white-imp border border-blueGray-100 px-6 py-3 text-sm whitespace-nowrap text-left text-blueGray-700"
-              >
-                {{ pod.pap_name }}
-              </td>
-            </ng-container>
-            <ng-container matColumnDef="others">
-              <th
-                mat-header-cell
-                *matHeaderCellDef
-                class="bg-white-imp uppercase text-xs"
-              >
-                Others
-              </th>
-              <td
-                mat-cell
-                *matCellDef="let pod"
-                class="bg-white-imp border border-blueGray-100 px-6 py-3 text-sm whitespace-nowrap text-left text-blueGray-700"
-              >
-                {{ pod.pap_others}}
-              </td>
-            </ng-container>           
-            <ng-container matColumnDef="description">
-              <th
-                mat-header-cell
-                *matHeaderCellDef
-                class="bg-white-imp uppercase text-xs"
-              >
-                Description
-              </th>
-              <td
-                mat-cell
-                *matCellDef="let pod"
-                class="bg-white-imp border border-blueGray-100 px-6 py-3 text-sm whitespace-nowrap text-left text-blueGray-700"
-              >
-                {{ pod.description }}
-              </td>
-            </ng-container>
-            <ng-container matColumnDef="image_path">
-              <th mat-header-cell *matHeaderCellDef  class="bg-white-imp">Image</th>
-              <td mat-cell *matCellDef="let element" class="bg-white-imp">
-                <img
-                  [src]="imageUrlBase + element.image_path"
-                  alt="Image"
-                  class="mx-auto h-32 w-36"
-                />
-              </td>
-            </ng-container>
-            <ng-container matColumnDef="date_created">
-              <th
-                mat-header-cell
-                *matHeaderCellDef
-                class="bg-white-imp uppercase text-xs"
-              >
-                Date Created
-              </th>
-              <td
-                mat-cell
-                *matCellDef="let pod"
-                class="bg-white-imp border border-blueGray-100 px-6 py-3 text-sm whitespace-nowrap text-left text-blueGray-700"
-              >
-                {{ getFormattedVisitDate(pod.date_created) }}
-              </td>
-            </ng-container>
-            <ng-container matColumnDef="action">
-              <th
-                mat-header-cell
-                *matHeaderCellDef
-                class="bg-white-imp uppercase text-xs"
-              >
-                Action
-              </th>
-              <td
-                mat-cell
-                *matCellDef="let user"
-                class="bg-white-imp border border-blueGray-100 px-6 py-3 text-sm whitespace-nowrap text-left text-blueGray-700"
-              >
-                <div class="flex space-x-2">
-                  <div class="relative inline-block group">
-                    <button
-                      mat-icon-button
-                      class="icon-button-edit"
-                      (click)="openEditDialog(user)"
-                    >
-                      <mat-icon>edit</mat-icon>
-                    </button>
-                   
-                  </div>
-                  <div class="relative inline-block group">
-                    <button
-                      mat-icon-button
-                      class="icon-button-edit"
-                      (click)="openViewDialog(user)"
-                    >
-                      <mat-icon>visibility</mat-icon>
-                    </button>
-                    
-                  </div>
-                       
-                  <div class="relative inline-block group">
-                    <button
-                      mat-icon-button
-                      class="icon-button-edit"
-                      (click)="openDeleteDialog(user)"
-                    >
-                      <mat-icon>delete</mat-icon>
-                    </button>                
-                  </div>                                               
+      </div>
+
+      <div class="block w-full overflow-x-auto">
+        <table
+          mat-table
+          [dataSource]="dataSource"
+          class="items-center bg-transparent w-full border-collapse"
+        >
+          <ng-container matColumnDef="pod_name">
+            <th
+              mat-header-cell
+              *matHeaderCellDef
+              class="bg-white-imp uppercase text-xs"
+            >
+              In store requirements
+            </th>
+            <td
+              mat-cell
+              *matCellDef="let pod"
+              class="bg-white-imp border border-blueGray-100 px-6 py-3 text-sm whitespace-nowrap text-left text-blueGray-700"
+            >
+              {{ pod.pap_name }}
+            </td>
+          </ng-container>
+          <ng-container matColumnDef="others">
+            <th
+              mat-header-cell
+              *matHeaderCellDef
+              class="bg-white-imp uppercase text-xs"
+            >
+              Others
+            </th>
+            <td
+              mat-cell
+              *matCellDef="let pod"
+              class="bg-white-imp border border-blueGray-100 px-6 py-3 text-sm whitespace-nowrap text-left text-blueGray-700"
+            >
+              {{ pod.pap_others }}
+            </td>
+          </ng-container>
+          <ng-container matColumnDef="description">
+            <th
+              mat-header-cell
+              *matHeaderCellDef
+              class="bg-white-imp uppercase text-xs"
+            >
+              Description
+            </th>
+            <td
+              mat-cell
+              *matCellDef="let pod"
+              class="bg-white-imp border border-blueGray-100 px-6 py-3 text-sm whitespace-nowrap text-left text-blueGray-700"
+            >
+              {{ pod.description }}
+            </td>
+          </ng-container>
+          <ng-container matColumnDef="image_path">
+            <th mat-header-cell *matHeaderCellDef class="bg-white-imp">
+              Image
+            </th>
+            <td mat-cell *matCellDef="let element" class="bg-white-imp">
+              <img
+                [src]="imageUrlBase + element.image_path"
+                alt="Image"
+                class="mx-auto h-32 w-36"
+              />
+            </td>
+          </ng-container>
+          <ng-container matColumnDef="date_created">
+            <th
+              mat-header-cell
+              *matHeaderCellDef
+              class="bg-white-imp uppercase text-xs"
+            >
+              Date Created
+            </th>
+            <td
+              mat-cell
+              *matCellDef="let pod"
+              class="bg-white-imp border border-blueGray-100 px-6 py-3 text-sm whitespace-nowrap text-left text-blueGray-700"
+            >
+              {{ getFormattedVisitDate(pod.date_created) }}
+            </td>
+          </ng-container>
+          <ng-container matColumnDef="action">
+            <th
+              mat-header-cell
+              *matHeaderCellDef
+              class="bg-white-imp uppercase text-xs"
+            >
+              Action
+            </th>
+            <td
+              mat-cell
+              *matCellDef="let user"
+              class="bg-white-imp border border-blueGray-100 px-6 py-3 text-sm whitespace-nowrap text-left text-blueGray-700"
+            >
+              <div class="flex space-x-2">
+                <div class="relative inline-block group">
+                  <button
+                    mat-icon-button
+                    class="icon-button-edit"
+                    (click)="openEditDialog(user)"
+                  >
+                    <mat-icon>edit</mat-icon>
+                  </button>
                 </div>
-              </td>
-            </ng-container>
-            <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
-            <tr mat-row *matRowDef="let row; columns: displayedColumns"></tr>
-          </table>
-          <div>
-            <mat-paginator
-              class="bg-white-imp"
-              [length]="dataSource.data.length"
-              [pageSize]="5"
-              [pageSizeOptions]="[5, 10, 25, 100]"
-              aria-label="Select page"
-            ></mat-paginator>
-          </div>
+                <div class="relative inline-block group">
+                  <button
+                    mat-icon-button
+                    class="icon-button-edit"
+                    (click)="openViewDialog(user)"
+                  >
+                    <mat-icon>visibility</mat-icon>
+                  </button>
+                </div>
+
+                <div class="relative inline-block group">
+                  <button
+                    mat-icon-button
+                    class="icon-button-edit"
+                    (click)="openDeleteDialog(user)"
+                  >
+                    <mat-icon>delete</mat-icon>
+                  </button>
+                </div>
+              </div>
+            </td>
+          </ng-container>
+          <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
+          <tr mat-row *matRowDef="let row; columns: displayedColumns"></tr>
+        </table>
+        <div>
+          <mat-paginator
+            showFirstLastButtons="true"
+            class="bg-white-imp"
+            [length]="dataSource.data.length"
+            [pageSize]="5"
+            [pageSizeOptions]="[5, 10, 25, 100]"
+            aria-label="Select page"
+          ></mat-paginator>
         </div>
       </div>
     </div>
   </div>
-  
+</div>

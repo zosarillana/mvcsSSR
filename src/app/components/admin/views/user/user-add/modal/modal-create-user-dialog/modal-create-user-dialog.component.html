@@ -1,6 +1,6 @@
 <!-- modal.component.html -->
 <h1 mat-dialog-title style="text-align: center;">
-  Register user {{ data.fname }} {{ data.mname }} {{ data.lname }}
+  Register {{ data.fname }} {{ data.mname }} {{ data.lname }}
 </h1>
 
 <div
@@ -12,13 +12,13 @@
   </ul>
 </div>
 <hr class="h-px my-4 bg-gray-200 border-0 dark:bg-gray-700">
-<div *ngIf="data" mat-dialog-content [ngStyle]="{'max-width': '45vw', 'width': '45vw'}">
+<div *ngIf="data" mat-dialog-content [ngStyle]="{'max-width': '75vw', 'width': '100%'}">
   <form>
     <div class="grid grid-cols-1 gap-2 lg:grid-cols-2 mb-4">
       <div class="relative">
         <label
           for="abfi_id"
-          class="block text-gray-700 text-md  dark:text-gray-300 font-medium mb-2"
+          class="block text-gray-700 text-xs  dark:text-gray-300 font-medium mb-2"
           >Employee ID</label
         >
         <input
@@ -40,7 +40,7 @@
       <div class="relative"> 
           <label
             for="countries"
-            class="block mb-2 text-sm font-medium text-gray-900 dark:text-white"
+            class="block mb-2 text-xs font-medium text-gray-900 dark:text-white"
             >Select a Role</label
           >
           <select
@@ -64,12 +64,12 @@
         </div>
       </div>
     </div>
-
+    <hr class="h-px my-4 bg-gray-200 border-0 dark:bg-gray-700">
     <div class="grid grid-cols-1 lg:grid-cols-3 gap-2 mb-4">
       <div class="relative">
         <label
           for="Firstname"
-          class="block text-gray-700 text-md dark:text-gray-300 font-medium mb-2"
+          class="block text-gray-700 text-xs dark:text-gray-300 font-medium mb-2"
           >First name</label
         >
         <input
@@ -91,7 +91,7 @@
       <div class="relative">
         <label
           for="Middlename"
-          class="block text-gray-700 text-md dark:text-gray-300 font-medium mb-3"
+          class="block text-gray-700 text-xs dark:text-gray-300 font-medium mb-3"
           >Middle Name</label
         >
         <input
@@ -112,7 +112,7 @@
       <div class="relative">
         <label
           for="Lastname"
-          class="block text-gray-700 text-md dark:text-gray-300 font-medium mb-2"
+          class="block text-gray-700 text-xs dark:text-gray-300 font-medium mb-2"
           >Last Name</label
         >
         <input
@@ -131,11 +131,12 @@
         </div>
       </div>
     </div>
+    <hr class="h-px my-4 bg-gray-200 border-0 dark:bg-gray-700">
     <div class="grid grid-cols-1 lg:grid-cols-2 gap-2">
       <div class="relative">
         <label
           for="Emailadd"
-          class="block text-gray-700 text-md dark:text-gray-300 font-medium mb-2"
+          class="block text-gray-700 text-xs dark:text-gray-300 font-medium mb-2"
           >Email Address</label
         >
         <input
@@ -161,7 +162,7 @@
           <div class="relative">
             <label
               for="Contactnum"
-              class="block text-gray-700 text-md dark:text-gray-300 font-medium mb-2"
+              class="block text-gray-700 text-xs dark:text-gray-300 font-medium mb-2"
               >No.</label
             >
           </div>
@@ -185,11 +186,12 @@
         </div>
       </div>
     </div>
-    <div class="grid grid-cols- gap-2 mt-2">
+    <hr class="h-px my-4 bg-gray-200 border-0 dark:bg-gray-700">
+    <div class="grid grid-cols-1 lg:grid-cols-2 gap-2 mt-2">
       <div class="relative">
         <label
           for="Username"
-          class="block text-gray-700 text-md dark:text-gray-300 font-medium mb-2"
+          class="block text-gray-700 text-xs dark:text-gray-300 font-medium mb-2"
           >Username</label
         >
         <input
@@ -213,7 +215,7 @@
       <div class="relative">
         <label
           for="Password"
-          class="block text-gray-700 text-md dark:text-gray-300 font-medium mb-2"
+          class="block text-gray-700 text-xs dark:text-gray-300 font-medium mb-2"
           >Password</label
         >
         <input

@@ -1,0 +1,8 @@
+.mat-header-cell {
+    background-color: white; /* Overrides Tailwind's bg-white if needed */
+  }
+  
+  .bg-white-imp {
+    background-color: white !important;
+  }
+  

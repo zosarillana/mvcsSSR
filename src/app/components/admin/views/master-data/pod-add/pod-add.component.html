@@ -9,9 +9,7 @@
           <mat-icon>barcode_reader</mat-icon>
           <span>{{ podCount }}</span>
         </div>
-        <div class="text-sm font-medium text-gray-400">
-          Number of products
-        </div>
+        <div class="text-sm font-medium text-gray-400">Number of products</div>
       </div>
     </div>
   </div>
@@ -26,9 +24,9 @@
           <!-- Header -->
           <div class="flex items-center">
             <h1 class="font-semibold text-2xl text-blueGray-700 flex-grow">
-             Product on display
+              Product on display
             </h1>
-            <!-- Add button -->          
+            <!-- Add button -->
             <div class="relative inline-block group">
               <button
                 mat-icon-button
@@ -37,8 +35,7 @@
               >
                 <mat-icon>add</mat-icon>
               </button>
-             
-            </div>    
+            </div>
           </div>
           <div class="flex flex-col gap-2 sm:flex-row sm:gap-4">
             <mat-form-field class="sm:min-w-[150px] sm:h-[70px]">
@@ -88,7 +85,7 @@
               *matHeaderCellDef
               class="bg-white-imp uppercase text-xs"
             >
-             Product in Display
+              Product in Display
             </th>
             <td
               mat-cell
@@ -147,7 +144,9 @@
             </td>
           </ng-container>
           <ng-container matColumnDef="image_path">
-            <th mat-header-cell *matHeaderCellDef class="bg-white-imp">Image</th>
+            <th mat-header-cell *matHeaderCellDef class="bg-white-imp">
+              Image
+            </th>
             <td mat-cell *matCellDef="let element" class="bg-white-imp">
               <img
                 [src]="imageUrlBase + element.image_path"
@@ -169,7 +168,7 @@
               *matCellDef="let pod"
               class="bg-white-imp border border-blueGray-100 px-6 py-3 text-sm whitespace-nowrap text-left text-blueGray-700"
             >
-              {{   getFormattedVisitDate(pod.date_created) }}
+              {{ getFormattedVisitDate(pod.date_created) }}
             </td>
           </ng-container>
           <ng-container matColumnDef="action">
@@ -194,7 +193,6 @@
                   >
                     <mat-icon>edit</mat-icon>
                   </button>
-                 
                 </div>
                 <div class="relative inline-block group">
                   <button
@@ -204,9 +202,8 @@
                   >
                     <mat-icon>visibility</mat-icon>
                   </button>
-                  
                 </div>
-                     
+
                 <div class="relative inline-block group">
                   <button
                     mat-icon-button
@@ -214,8 +211,8 @@
                     (click)="openDeleteDialog(user)"
                   >
                     <mat-icon>delete</mat-icon>
-                  </button>                
-                </div>                                               
+                  </button>
+                </div>
               </div>
             </td>
           </ng-container>
@@ -224,6 +221,7 @@
         </table>
         <div>
           <mat-paginator
+            showFirstLastButtons="true"
             class="bg-white-imp"
             [length]="dataSource.data.length"
             [pageSize]="5"
