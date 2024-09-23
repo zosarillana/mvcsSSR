@@ -25,7 +25,6 @@ import { AreaAddComponent } from './components/admin/views/master-data/area-add/
 import { UpdateMarketVisitsComponent } from './components/update-market-visits/update-market-visits.component';
 import { GetMarketVisitsComponent } from './components/get-market-visits/get-market-visits.component';
 import { SidebarComponentComponent } from './components/sidebar-component/sidebar-component.component';
-import { ModalComponent } from './components/modal/modal.component';
 import { ModalCreateDialogComponent } from './components/get-market-visits/modal/modal-create-dialog/modal-create-dialog.component';
 import { ModalEditDialogComponent } from './components/get-market-visits/modal/modal-edit-dialog/modal-edit-dialog.component';
 import { ModalDeleteDialogComponent } from './components/get-market-visits/modal/modal-delete-dialog/modal-delete-dialog.component';
@@ -71,14 +70,14 @@ import { ServerModule } from '@angular/platform-server';
 import { AuthGuard } from './auth/auth.guard';
 import { NoAuthGuard } from './auth/no-authguard.service';
 import { AppServerModule } from './app.module.server';
+import { ImagePreviewComponent } from './components/image-preview/image-preview.component';
 
 @NgModule({
   declarations: [
     AppComponent,
     UpdateMarketVisitsComponent,
     GetMarketVisitsComponent,
-    SidebarComponentComponent,
-    ModalComponent,
+    SidebarComponentComponent,    
     ModalCreateDialogComponent,
     ModalEditDialogComponent,
     ModalDeleteDialogComponent,
@@ -115,6 +114,7 @@ import { AppServerModule } from './app.module.server';
     EditVisitsComponent,
     ViewVisitsComponent,
     NotfoundComponent,
+    ImagePreviewComponent,
     
   ],
   schemas: [CUSTOM_ELEMENTS_SCHEMA],
