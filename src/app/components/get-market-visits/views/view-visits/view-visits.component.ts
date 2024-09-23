@@ -1,4 +1,10 @@
-import { ChangeDetectorRef, Component, EventEmitter, Input, Output } from '@angular/core';
+import {
+  ChangeDetectorRef,
+  Component,
+  EventEmitter,
+  Input,
+  Output,
+} from '@angular/core';
 import { MarketVisits } from '../../../../models/market-visits';
 import { MarketVisitsService } from '../../../../services/market-visits.service';
 import { ActivatedRoute } from '@angular/router';
@@ -86,7 +92,7 @@ export class ViewVisitsComponent {
   }
 
   ngOnInit(): void {
-    this.route.paramMap.subscribe(params => {
+    this.route.paramMap.subscribe((params) => {
       this.visitId = params.get('id');
       if (this.visitId) {
         // Logic to handle the ID, e.g., load data based on the ID
@@ -124,16 +130,29 @@ export class ViewVisitsComponent {
         }
       );
     }
+  }  
+  public imagePreviewNeed: string | null = null;
+  public isPreviewVisible: boolean = false;
+
+  // Function to handle image preview modal
+  showImagePreview(imageSrc: string): void {
+    this.imagePreviewNeed = imageSrc;
+    this.isPreviewVisible = true;
   }
 
-  //for getting of images
+  // Function to close the image preview
+  closeImagePreview(): void {
+    this.isPreviewVisible = false;
+    this.imagePreviewNeed = null;
+  }
+
+  // For getting images
   private url = '/api/api/MarketVisits';
   public imageUrlBase = `${this.url}/image/`;
+
   getImageUrl(imageName: string | undefined): string {
     return imageName ? `${this.imageUrlBase}${imageName}` : '/no_img.jpg';
   }
-  public imagePreviewNeed: string | ArrayBuffer | null = null;
-  public imagePreviewReq: string | ArrayBuffer | null = null;
 
   setInitialValues(): void {
     // Get the selected area IDs as strings
@@ -378,12 +397,12 @@ export class ViewVisitsComponent {
   getFormattedVisitDate(): string {
     if (this.mvisit && this.mvisit.visit_date) {
       const date = new Date(this.mvisit.visit_date);
-      const options: Intl.DateTimeFormatOptions = { 
-        year: 'numeric', 
-        month: '2-digit', 
-        day: '2-digit', 
-        hour: '2-digit', 
-        minute: '2-digit'
+      const options: Intl.DateTimeFormatOptions = {
+        year: 'numeric',
+        month: '2-digit',
+        day: '2-digit',
+        hour: '2-digit',
+        minute: '2-digit',
       };
       return date.toLocaleDateString('en-US', options).replace(',', '');
     }
@@ -398,7 +417,9 @@ export class ViewVisitsComponent {
 
   getAllAccountType(): string {
     return (
-      this.mvisit?.accountTypes.map((accountTypes) => accountTypes.accountType_name).join(', ') || 'No Account Types'
+      this.mvisit?.accountTypes
+        .map((accountTypes) => accountTypes.accountType_name)
+        .join(', ') || 'No Account Types'
     );
   }
 

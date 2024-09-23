@@ -17,7 +17,7 @@
               >
                 Employee ID
               </label>
-              <input                
+              <input
                 readonly
                 [value]="mvisit?.user?.abfi_id"
                 type="text"
@@ -26,7 +26,7 @@
               />
               <input
                 readonly
-                style="display: none;"
+                style="display: none"
                 formControlName="user_id"
                 [ngModel]="mvisit?.user?.user_id"
                 type="text"
@@ -228,7 +228,7 @@
                   [src]="
                     imagePreviewReq
                       ? imagePreviewReq
-                      : getImageUrl(mvisit?.isr_needs_ImgPath)
+                      : getImageUrl(mvisit?.isr_req_ImgPath)
                   "
                   alt="Selected Image"
                   class="mt-2 border-2 bg-gray-700 border-gray-500 rounded-lg h-64 w-96"
@@ -260,7 +260,7 @@
                   [src]="
                     imagePreviewNeed
                       ? imagePreviewNeed
-                      : getImageUrl(mvisit?.isr_req_ImgPath)
+                      : getImageUrl(mvisit?.isr_needs_ImgPath)
                   "
                   alt="Selected Image"
                   class="mt-2 border-2 bg-gray-700 border-gray-500 rounded-lg h-64 w-96"
@@ -366,14 +366,14 @@
                 </div>
               </div>
             </div>
-          </div>
+          </div>        
           <div class="grid grid-cols-2 mt-2">
             <div>
               <input
                 formControlName="pod_canned_other"
                 type="text"
                 id="pod_canned_others"
-                class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-1/2 p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
+                class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
                 [ngModel]="mvisit?.pod_canned_other"
               />
             </div>
@@ -382,7 +382,7 @@
                 formControlName="pod_mpp_other"
                 type="text"
                 id="pod_mpp_others"
-                class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-1/2 p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
+                class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
                 [ngModel]="mvisit?.pod_mpp_other"
               />
             </div>
@@ -411,7 +411,7 @@
                 id="visit_competitorsCheck"
                 [ngModel]="mvisit?.visit_competitorsCheck"
                 name="visit_competitorsCheck"
-                class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-1/2 p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
+                class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
               />
             </div>
           </div>

@@ -1,0 +1,6 @@
+<div class="modal" *ngIf="imageSrc">
+  <div class="modal-content" (click)="$event.stopPropagation()">
+    <span class="close" (click)="closeModal()">&times;</span>
+    <img [src]="imageSrc" alt="Image Preview" class="image-preview" />
+  </div>
+</div>
