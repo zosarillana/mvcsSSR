@@ -41,6 +41,7 @@
               <mat-icon>add_circle</mat-icon>
             </button>
             <button
+              *ngIf="role_id === '1'"
               mat-icon-button
               (click)="exportMarketVisitsToExcel()"
               class="icon-button ml-2"

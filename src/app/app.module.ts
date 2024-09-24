@@ -53,7 +53,6 @@ import { ModalDeleteIsrComponent } from './components/admin/views/master-data/is
 import { ModalCreatePodComponent } from './components/admin/views/master-data/pod-add/modal/modal-create-pod/modal-create-pod.component';
 import { ModalEditPodComponent } from './components/admin/views/master-data/pod-add/modal/modal-edit-pod/modal-edit-pod.component';
 import { ModalViewPodComponent } from './components/admin/views/master-data/pod-add/modal/modal-view-pod/modal-view-pod.component';
-import { RouterModule } from '@angular/router';
 import { ModalDeletePodComponent } from './components/admin/views/master-data/pod-add/modal/modal-delete-pod/modal-delete-pod.component';
 import { PapAddComponent } from './components/admin/views/master-data/pap-add/pap-add.component';
 import { ModalCreatePapComponent } from './components/admin/views/master-data/pap-add/modal/modal-create-pap/modal-create-pap.component';
@@ -69,9 +68,11 @@ import { DatePipe } from '@angular/common';
 import { ServerModule } from '@angular/platform-server';
 import { AuthGuard } from './auth/auth.guard';
 import { NoAuthGuard } from './auth/no-authguard.service';
-import { AppServerModule } from './app.module.server';
 import { ImagePreviewComponent } from './components/image-preview/image-preview.component';
-
+import { DashboardComponent } from './components/dashboard/dashboard.component';
+import { VisitChartComponent } from './components/charts/visit-chart/visit-chart.component';
+import { StatusChartComponent } from './components/charts/status-chart/status-chart.component';
+import { NgApexchartsModule } from 'ng-apexcharts';
 @NgModule({
   declarations: [
     AppComponent,
@@ -115,7 +116,9 @@ import { ImagePreviewComponent } from './components/image-preview/image-preview.
     ViewVisitsComponent,
     NotfoundComponent,
     ImagePreviewComponent,
-    
+    DashboardComponent,
+    VisitChartComponent,
+    StatusChartComponent,        
   ],
   schemas: [CUSTOM_ELEMENTS_SCHEMA],
   imports: [
@@ -142,6 +145,8 @@ import { ImagePreviewComponent } from './components/image-preview/image-preview.
     ServerModule,
     // AppServerModule,
     MatSnackBarModule,
+    NgApexchartsModule,
+    ReactiveFormsModule
   ],
   providers: [
     AuthGuard,

@@ -1,0 +1,123 @@
+<div class="grid grid-cols-1 lg:grid-cols-4 mb-4 gap-2">
+  <div
+    class="bg-white rounded-md border border-gray-100 p-6 shadow-md shadow-black/5"
+  >
+    <div class="flex justify-between mb-6">
+      <div>
+        <div class="flex items-center text-2xl font-semibold mb-1">
+          <!-- SVG icon -->
+          <mat-icon>done_all</mat-icon>
+          <!-- <span>{{ visitCount }}</span> -->
+          <span>5</span>
+        </div>
+        <div class="text-sm font-medium text-gray-400">Number of Visits</div>
+      </div>
+    </div>
+    <a
+      routerLink="/dashboard/visits"
+      class="text-blue-500 font-medium text-sm hover:text-blue-600 cursor-pointer"
+      >Add Visits</a
+    >
+  </div>
+  <div
+    class="bg-white rounded-md border border-gray-100 p-6 shadow-md shadow-black/5"
+  >
+    <div class="flex justify-between mb-6">
+      <div>
+        <div class="flex items-center text-2xl font-semibold mb-1">
+          <!-- SVG icon -->
+          <mat-icon>location_on</mat-icon>
+          <!-- <span>{{ visitCount }}</span> -->
+          <span>7</span>
+        </div>
+        <div class="text-sm font-medium text-gray-400">Number of Locations</div>
+      </div>
+    </div>
+    <a
+      routerLink="/dashboard/areas"
+      class="text-blue-500 font-medium text-sm hover:text-blue-600 cursor-pointer"
+      >Add Location</a
+    >
+  </div>
+  <div
+    class="bg-white rounded-md border border-gray-100 p-6 shadow-md shadow-black/5"
+  >
+    <div class="flex justify-between mb-6">
+      <div>
+        <div class="flex items-center text-2xl font-semibold mb-1">
+          <!-- SVG icon -->
+          <mat-icon>store</mat-icon>
+          <!-- <span>{{ visitCount }}</span> -->
+          <span>5</span>
+        </div>
+        <div class="text-sm font-medium text-gray-400">Number of In Stores Requirements</div>
+      </div>
+    </div>
+    <a
+      routerLink="/dashboard/isrs"
+      class="text-blue-500 font-medium text-sm hover:text-blue-600 cursor-pointer"
+      >Add In Store Requirements</a
+    >
+  </div>
+  <div
+    class="bg-white rounded-md border border-gray-100 p-6 shadow-md shadow-black/5"
+  >
+    <div class="flex justify-between mb-6">
+      <div>
+        <div class="flex items-center text-2xl font-semibold mb-1">
+          <!-- SVG icon -->
+          <mat-icon>barcode_reader</mat-icon>
+          <!-- <span>{{ visitCount }}</span> -->
+          <span>5</span>
+        </div>
+        <div class="text-sm font-medium text-gray-400">Number of Product on Display</div>
+      </div>
+    </div>
+    <a
+      routerLink="/dashboard/pods"
+      class="text-blue-500 font-medium text-sm hover:text-blue-600 cursor-pointer"
+      >Add Product on Display</a
+    >
+  </div> 
+</div>
+<div>
+  <div class="grid grid-cols-1 lg:grid-cols-2 gap-1">
+    <div class="grid grid-cols-1 gap-1">
+      <div
+        class="bg-white rounded-md border border-gray-100 p-6 shadow-md shadow-black/5"
+      >
+      <h1 class="font-bold ml-4">Market Visit Checklist</h1>
+      <app-status-chart></app-status-chart>
+      </div>
+      <div
+        class="bg-white rounded-md border border-gray-100 p-6 shadow-md shadow-black/5"
+      >
+      <h1 class="font-bold ml-4">Market Visit Status</h1>
+       <app-status-chart></app-status-chart>
+      </div>
+    </div>
+
+    <div class="grid grid-cols-1 lg:grid-cols-2 gap-1">
+      <div
+        class="bg-white rounded-md border border-gray-100 p-4 shadow-sm shadow-black/10"
+      >
+            <app-visit-chart></app-visit-chart>
+      </div>
+      <div
+        class="bg-white rounded-md border border-gray-100 p-4 shadow-sm shadow-black/10"
+      >
+           <app-visit-chart></app-visit-chart>
+      </div>
+      <div
+        class="bg-white rounded-md border border-gray-100 p-4 shadow-sm shadow-black/10"
+      >
+            <app-visit-chart></app-visit-chart>
+      </div>
+      <div
+        class="bg-white rounded-md border border-gray-100 p-4 shadow-sm shadow-black/10"
+      >
+        <app-visit-chart></app-visit-chart>
+      </div>
+    </div>
+  </div>
+</div>

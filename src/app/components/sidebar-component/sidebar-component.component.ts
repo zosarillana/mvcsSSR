@@ -13,7 +13,7 @@ import { FormBuilder, Validators } from '@angular/forms';
 export class SidebarComponentComponent implements OnInit, OnDestroy {
   title = 'msvcREST';
   selectedContent = 'content1';
-  isSidebarOpen = true;
+  isSidebarOpen = false;
   username: string | null = null;
   user: any = null;
   selectedId: string | null = null;

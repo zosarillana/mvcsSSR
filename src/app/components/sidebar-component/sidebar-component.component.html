@@ -1,61 +1,80 @@
-  <body class="text-gray-800 font-inter">
-    <!-- Sidebar -->
+<body class="text-gray-800 font-inter">
+  <!-- Sidebar -->
+  <div
+    [ngClass]="{
+      'translate-x-0': isSidebarOpen,
+      '-translate-x-full': !isSidebarOpen
+    }"
+    class="fixed left-0 top-0 w-64 h-full bg-gray-900 p-4 z-50 sidebar-menu transition-transform"
+  >
+    <!-- Sidebar content -->
+    <a href="#" class="flex items-center pb-4 border-b border-b-gray-800">
+      <img
+        class="mx-auto h-auto w-auto"
+        src="new_logo2.png"
+        alt="Your Company"
+      />
+      <!-- <span class="text-lg font-bold text-white ml-3">{{ title }}</span> -->
+    </a>
+    <div class="mt-4 mb-2 text-gray-500 uppercase text-xs tracking-wider">
+      Dashboard
+    </div>
+    <ul>
+      <li class="mb-1">
+        <a
+          routerLink="/dashboard"
+          class="flex items-center py-2 px-4 text-gray-300 hover:bg-gray-950 hover:text-gray-100 rounded-md"
+          routerLinkActive="bg-gray-800 text-white"
+          [routerLinkActiveOptions]="{ exact: true }"
+        >
+          <mat-icon>bar_chart_4_bars</mat-icon>
+          <p class="ml-2 text-sm">Dasboard</p>
+        </a>
+      </li>
+      <!-- Add other main menu items here -->
+    </ul>
+    <!-- Main Menu Label -->
+    <div class="mt-4 mb-2 text-gray-500 uppercase text-xs tracking-wider">
+      Main Menu
+    </div>
+    <!-- Main Menu Items -->
+    <ul>
+      <li class="mb-1">
+        <a
+          routerLink="/dashboard/visits"
+          class="flex items-center py-2 px-4 text-gray-300 hover:bg-gray-950 hover:text-gray-100 rounded-md"
+          routerLinkActive="bg-gray-800 text-white"
+          [routerLinkActiveOptions]="{ exact: true }"
+        >
+          <!-- <mat-icon>dashboard</mat-icon> -->
+          <mat-icon>checklist</mat-icon>
+          <p class="ml-2 text-sm">Market visits</p>
+        </a>
+      </li>
+      <!-- Add other main menu items here -->
+    </ul>
+
+    <!-- Admin Options Label -->
     <div
-      [ngClass]="{
-        'translate-x-0': isSidebarOpen,
-        '-translate-x-full': !isSidebarOpen
-      }"
-      class="fixed left-0 top-0 w-64 h-full bg-gray-900 p-4 z-50 sidebar-menu transition-transform"
+      *ngIf="user.role_id !== '2'"
+      class="mt-6 mb-2 text-gray-500 uppercase text-xs tracking-wider"
     >
-      <!-- Sidebar content -->
-      <a href="#" class="flex items-center pb-4 border-b border-b-gray-800">
-        <img
-          class="mx-auto h-auto w-auto"
-          src="new_logo2.png"
-          alt="Your Company"
-        />
-        <!-- <span class="text-lg font-bold text-white ml-3">{{ title }}</span> -->
-      </a>
+      Admin Options
+    </div>
 
-      <!-- Main Menu Label -->
-      <div class="mt-4 mb-2 text-gray-500 uppercase text-xs tracking-wider">
-        Main Menu
-      </div>
-
-      <!-- Main Menu Items -->
-      <ul>
-        <li class="mb-1">
-          <a
-            routerLink="/dashboard"
-            class="flex items-center py-2 px-4 text-gray-300 hover:bg-gray-950 hover:text-gray-100 rounded-md"
-            routerLinkActive="bg-gray-800 text-white"
-            [routerLinkActiveOptions]="{ exact: true }"  
-          >
-            <mat-icon>dashboard</mat-icon>
-            <p class="ml-2 text-sm">Market visits</p>
-          </a>
-        </li>
-        <!-- Add other main menu items here -->
-      </ul>
-
-      <!-- Admin Options Label -->
-      <div *ngIf="user.role_id !== '2'" class="mt-6 mb-2 text-gray-500 uppercase text-xs tracking-wider">
-        Admin Options
-      </div>
-
-      <!-- Admin Options Items -->
-      <ul>
-        <li *ngIf="user.role_id !== '2'" class="mb-1">
-          <a
-            routerLink="/dashboard/users"
-            class="flex items-center py-2 px-4 text-gray-300 hover:bg-gray-950 hover:text-gray-100 rounded-md"
-            routerLinkActive="bg-gray-800 text-white"
-          >
-            <mat-icon>person_add</mat-icon>
-            <p class="ml-2 text-sm">Users</p>
-          </a>
-        </li>
-        <!-- <li *ngIf="user.role_id !== '2'" class="mb-1">
+    <!-- Admin Options Items -->
+    <ul>
+      <li *ngIf="user.role_id !== '2'" class="mb-1">
+        <a
+          routerLink="/dashboard/users"
+          class="flex items-center py-2 px-4 text-gray-300 hover:bg-gray-950 hover:text-gray-100 rounded-md"
+          routerLinkActive="bg-gray-800 text-white"
+        >
+          <mat-icon>person_add</mat-icon>
+          <p class="ml-2 text-sm">Users</p>
+        </a>
+      </li>
+      <!-- <li *ngIf="user.role_id !== '2'" class="mb-1">
           <a
             routerLink="/dashboard"
             class="flex items-center py-2 px-4 text-gray-300 hover:bg-gray-950 hover:text-gray-100 rounded-md"
@@ -68,70 +87,73 @@
             <p class="ml-2 text-sm">Users</p>
           </a>
         </li> -->
-        <!-- Admin Options Label -->
-        <div *ngIf="user.role_id !== '2'" class="mt-6 mb-2 text-gray-500 uppercase text-xs tracking-wider">
-          Master Data
-        </div>
-        <li *ngIf="user.role_id !== '2'" class="mb-1">
-          <a
-            routerLink="/dashboard/areas"
-            class="flex items-center py-2 px-4 text-gray-300 hover:bg-gray-950 hover:text-gray-100 rounded-md"
-            routerLinkActive="bg-gray-800 text-white"
-          >
-            <mat-icon>add_location_alt</mat-icon>
-            <p class="ml-2 text-sm">Add area</p>
-          </a>
-        </li>
-        <li *ngIf="user.role_id !== '2'" class="mb-1">
-          <a
-            routerLink="/dashboard/isrs"
-            class="flex items-center py-2 px-4 text-gray-300 hover:bg-gray-950 hover:text-gray-100 rounded-md"      
-            routerLinkActive="bg-gray-800 text-white"
-          >
-            <mat-icon>store</mat-icon>
-            <p class="ml-2 text-sm">In store requirements</p>
-          </a>
-        </li>
-        <li *ngIf="user.role_id !== '2'" class="mb-1">
-          <a
-            routerLink="/dashboard/pods"
-            class="flex items-center py-2 px-4 text-gray-300 hover:bg-gray-950 hover:text-gray-100 rounded-md"  
-            routerLinkActive="bg-gray-800 text-white"          
-          >
-            <mat-icon>inventory</mat-icon>
-            <p class="ml-2 text-sm">Product on display</p>
-          </a>
-        </li>
-        <li *ngIf="user.role_id !== '2'" class="mb-1">
-          <a
-            routerLink="/dashboard/paps"
-            class="flex items-center py-2 px-4 text-gray-300 hover:bg-gray-950 hover:text-gray-100 rounded-md"
-            routerLinkActive="bg-gray-800 text-white"
-          >
-            <mat-icon>description</mat-icon>
-            <p class="ml-2 text-sm">Proposed action plan</p>
-          </a>
-        </li>
-        <!-- Add other admin menu items here -->
-      </ul>
       <!-- Admin Options Label -->
-      <div class="mt-6 mb-2 text-gray-500 uppercase text-xs tracking-wider">
-        Logout
+      <div
+        *ngIf="user.role_id !== '2'"
+        class="mt-6 mb-2 text-gray-500 uppercase text-xs tracking-wider"
+      >
+        Master Data
       </div>
-      <li  class="mb-1">
+      <li *ngIf="user.role_id !== '2'" class="mb-1">
         <a
-          routerLink="/dashboard"
+          routerLink="/dashboard/areas"
           class="flex items-center py-2 px-4 text-gray-300 hover:bg-gray-950 hover:text-gray-100 rounded-md"
-          [ngClass]="{
-            'bg-gray-800 text-white': selectedContent === 'content10'
-          }"
-          (click)="logout()"
+          routerLinkActive="bg-gray-800 text-white"
         >
-          <mat-icon>logout</mat-icon>
-          <p class="ml-2 text-sm">Logout</p>
+          <mat-icon>add_location_alt</mat-icon>
+          <p class="ml-2 text-sm">Add area</p>
         </a>
       </li>
+      <li *ngIf="user.role_id !== '2'" class="mb-1">
+        <a
+          routerLink="/dashboard/isrs"
+          class="flex items-center py-2 px-4 text-gray-300 hover:bg-gray-950 hover:text-gray-100 rounded-md"
+          routerLinkActive="bg-gray-800 text-white"
+        >
+          <mat-icon>store</mat-icon>
+          <p class="ml-2 text-sm">In store requirements</p>
+        </a>
+      </li>
+      <li *ngIf="user.role_id !== '2'" class="mb-1">
+        <a
+          routerLink="/dashboard/pods"
+          class="flex items-center py-2 px-4 text-gray-300 hover:bg-gray-950 hover:text-gray-100 rounded-md"
+          routerLinkActive="bg-gray-800 text-white"
+        >
+          <mat-icon>inventory</mat-icon>
+          <p class="ml-2 text-sm">Product on display</p>
+        </a>
+      </li>
+      <li *ngIf="user.role_id !== '2'" class="mb-1">
+        <a
+          routerLink="/dashboard/paps"
+          class="flex items-center py-2 px-4 text-gray-300 hover:bg-gray-950 hover:text-gray-100 rounded-md"
+          routerLinkActive="bg-gray-800 text-white"
+        >
+          <mat-icon>description</mat-icon>
+          <p class="ml-2 text-sm">Proposed action plan</p>
+        </a>
+      </li>
+      <!-- Add other admin menu items here -->
+    </ul>
+    <!-- Admin Options Label -->
+    <div class="mt-6 mb-2 text-gray-500 uppercase text-xs tracking-wider">
+      Logout
     </div>
+    <li class="mb-1">
+      <a
+        routerLink="/dashboard"
+        class="flex items-center py-2 px-4 text-gray-300 hover:bg-gray-950 hover:text-gray-100 rounded-md"
+        [ngClass]="{
+          'bg-gray-800 text-white': selectedContent === 'content10'
+        }"
+        (click)="logout()"
+      >
+        <mat-icon>logout</mat-icon>
+        <p class="ml-2 text-sm">Logout</p>
+      </a>
+    </li>
+  </div>
   <!-- Overlay -->
   <div
     *ngIf="isSidebarOpen"
@@ -163,7 +185,8 @@
       <!-- Sidebar Content -->
       <div>
         <p class="font-semibold text-xs text-gray-600 mr-2">
-          WELCOME, {{ user.fname }} {{ user.mname }} {{ user.lname }} {{user.abfi_id}}
+          WELCOME, {{ user.fname }} {{ user.mname }} {{ user.lname }}
+          {{ user.abfi_id }}
         </p>
       </div>
 
@@ -177,7 +200,6 @@
     </div>
 
     <div class="p-6">
-
       <router-outlet></router-outlet>
 
       <!-- <div *ngIf="selectedContent === 'content1'">

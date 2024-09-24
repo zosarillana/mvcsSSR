@@ -38,7 +38,10 @@
               "src/styles.css",
               "@angular/material/prebuilt-themes/azure-blue.css"
             ],
-            "scripts": ["node_modules/flowbite/dist/flowbite.js"]
+            "scripts": [
+              "node_modules/flowbite/dist/flowbite.js",
+              "node_modules/apexcharts/dist/apexcharts.min.js"
+            ]
           },
           "configurations": {
             "production": {

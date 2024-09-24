@@ -16,6 +16,7 @@ import { RoleGuard } from './auth/role.guard';
 import { EditVisitsComponent } from './components/get-market-visits/views/edit-visits/edit-visits.component';
 import { ViewVisitsComponent } from './components/get-market-visits/views/view-visits/view-visits.component';
 import { TestComponent } from './components/get-market-visits/views/test/test.component';
+import { DashboardComponent } from './components/dashboard/dashboard.component';
 
 const routes: Routes = [
   {
@@ -23,12 +24,13 @@ const routes: Routes = [
     component: SidebarComponentComponent, // Sidebar stays visible here
     canActivate: [AuthGuard],
     children: [
-      { path: '', component: GetMarketVisitsComponent }, // Default view
+      { path: '', component: DashboardComponent }, // Default view
       { path: 'users', component: UserAddComponent, canActivate: [RoleGuard] }, // Users view
       { path: 'areas', component: AreaAddComponent, canActivate: [RoleGuard] }, // Areas view
       { path: 'isrs', component: IsrAddComponent, canActivate: [RoleGuard] }, // Isrs view
       { path: 'pods', component: PodAddComponent, canActivate: [RoleGuard] }, // Pods view
       { path: 'paps', component: PapAddComponent, canActivate: [RoleGuard] }, // Paps view
+      { path: 'visits', component: GetMarketVisitsComponent }, // Create visits view
       { path: 'visits/create', component: TestComponent }, // Create visits view
       { path: 'visits/edit/:id', component: EditVisitsComponent }, // Edit visits view
       { path: 'visits/view/:id', component: ViewVisitsComponent }, // Edit visits view
