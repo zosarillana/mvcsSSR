@@ -1,11 +1,14 @@
 <div id="chart" style="width: 100%; height: 100%">
   <apx-chart
+    #chart
     [series]="chartOptions.series"
     [chart]="chartOptions.chart"
     [xaxis]="chartOptions.xaxis"
     [stroke]="chartOptions.stroke"
     [tooltip]="chartOptions.tooltip"
     [dataLabels]="chartOptions.dataLabels"
+    [title]="chartOptions.title"
+    [responsive]="chartOptions.responsive"
   >
   </apx-chart>
 </div>

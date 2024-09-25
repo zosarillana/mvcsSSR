@@ -371,15 +371,20 @@ export class TestComponent {
         this.marketVisitsService.createMarketVisits(formData).subscribe(
           (response) => {
             console.log('Market visit submitted successfully', response);
-  
+        
             // Show success notification (for example, using MatSnackBar)
-            this.snackBar.open('Market visit submitted successfully!', 'Close', {
+            const snackBarRef = this.snackBar.open('Market visit submitted successfully!', 'Close', {
               duration: 3000, // 3 seconds
             });
-  
+        
             // Optionally, reset the form or navigate to another page
             this.formGroup.reset(); // Clear the form
             this.sharedService.setSelectedContent('content1');
+        
+            // Reload the page after the snackbar is dismissed
+            snackBarRef.afterDismissed().subscribe(() => {
+              window.location.reload();
+            });
           },
           (error) => {
             console.error('Error creating market visit:', error);

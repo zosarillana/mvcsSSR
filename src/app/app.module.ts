@@ -15,7 +15,7 @@ import { MatButtonModule } from '@angular/material/button';
 import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatInputModule } from '@angular/material/input';
 import { MatIconModule } from '@angular/material/icon';
-import { MatDatepickerModule } from '@angular/material/datepicker';
+import { MatDatepickerModule, MatDateRangeInput, MatDateRangePicker  } from '@angular/material/datepicker';
 import { MatNativeDateModule } from '@angular/material/core';
 import { MatTooltipModule } from '@angular/material/tooltip';
 import { MatExpansionModule } from '@angular/material/expansion';
@@ -73,6 +73,7 @@ import { DashboardComponent } from './components/dashboard/dashboard.component';
 import { VisitChartComponent } from './components/charts/visit-chart/visit-chart.component';
 import { StatusChartComponent } from './components/charts/status-chart/status-chart.component';
 import { NgApexchartsModule } from 'ng-apexcharts';
+import { MatAutocompleteModule } from '@angular/material/autocomplete';
 @NgModule({
   declarations: [
     AppComponent,
@@ -146,7 +147,10 @@ import { NgApexchartsModule } from 'ng-apexcharts';
     // AppServerModule,
     MatSnackBarModule,
     NgApexchartsModule,
-    ReactiveFormsModule
+    ReactiveFormsModule,
+    MatDateRangeInput, 
+    MatDateRangePicker ,
+    MatAutocompleteModule
   ],
   providers: [
     AuthGuard,

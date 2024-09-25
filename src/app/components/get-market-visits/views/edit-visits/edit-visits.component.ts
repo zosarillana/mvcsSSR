@@ -144,8 +144,8 @@ export class EditVisitsComponent implements OnInit {
   getImageUrl(imageName: string | undefined): string {
     return imageName ? `${this.imageUrlBase}${imageName}` : '/no_img.jpg';
   }
-  public imagePreviewNeed: string | ArrayBuffer | null = null;
-  public imagePreviewReq: string | ArrayBuffer | null = null;
+  public imagePreviewNeed: string | ArrayBuffer | null = "/no_img.jpg";
+  public imagePreviewReq: string | ArrayBuffer | null = "/no_img.jpg";
 
   setInitialValues(): void {
     // Get the selected area IDs as strings

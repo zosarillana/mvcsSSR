@@ -1,7 +1,12 @@
 <!-- edit-visits.component.html -->
 <div>
   <div *ngIf="visitId">
-    <div class="text-2xl font-semibold mb-1">EDIT MV / {{ mvisit?.mv_id }}</div>
+    <div class="text-2xl font-semibold mb-1">
+      <button mat-icon-button class="ml-5" routerLink="/dashboard/visits">
+        <mat-icon>arrow_back_ios</mat-icon></button
+      > 
+      EDIT MV / {{ mvisit?.mv_id }}
+    </div>
     <mat-stepper orientation="vertical" [linear]="false" #stepper>
       <mat-step [stepControl]="formGroup">
         <form [formGroup]="formGroup">
@@ -366,7 +371,7 @@
                 </div>
               </div>
             </div>
-          </div>        
+          </div>
           <div class="grid grid-cols-2 mt-2">
             <div>
               <input

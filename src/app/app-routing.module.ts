@@ -4,7 +4,6 @@ import { AuthGuard } from './auth/auth.guard'; // Adjust path as needed
 import { NoAuthGuard } from './auth/no-authguard.service';
 import { LoginComponent } from './components/authentication/login/login.component'; // Adjust path as needed
 import { SidebarComponentComponent } from './components/sidebar-component/sidebar-component.component'; // Adjust path as needed
-import { AddVisitsComponent } from './components/get-market-visits/views/add-visits/add-visits.component';
 import { NotfoundComponent } from './components/notfound/notfound.component';
 import { UserAddComponent } from './components/admin/views/user/user-add/user-add.component';
 import { GetMarketVisitsComponent } from './components/get-market-visits/get-market-visits.component'; // Adjust as needed
@@ -32,7 +31,7 @@ const routes: Routes = [
       { path: 'paps', component: PapAddComponent, canActivate: [RoleGuard] }, // Paps view
       { path: 'visits', component: GetMarketVisitsComponent }, // Create visits view
       { path: 'visits/create', component: TestComponent }, // Create visits view
-      { path: 'visits/edit/:id', component: EditVisitsComponent }, // Edit visits view
+      { path: 'visits/edit/:id', component: EditVisitsComponent, canActivate: [RoleGuard]}, // Edit visits view
       { path: 'visits/view/:id', component: ViewVisitsComponent }, // Edit visits view
     ]
   },

@@ -49,47 +49,35 @@
               <mat-icon>save</mat-icon>
             </button>
           </div>
-
-          <div>
-            <div class="col-span-3 flex flex-col gap-2 sm:flex-row sm:gap-4">
-              <!-- Export to Excel Button -->
-              <div
-                *ngIf="role_id === '1'"
-                class="col-span-1 flex items-center justify-center sm:justify-start"
-              ></div>
-              <mat-form-field class="sm:min-w-[150px] sm:h-[70px]">
-                <mat-label class="text-base">Filter by (Start Date)</mat-label>
-                <input
-                  matInput
-                  [matDatepicker]="startPicker"
-                  placeholder="Start Date"
-                  (dateChange)="applyDateFilter('start', $event)"
-                  class="text-xs"
-                />
-                <mat-datepicker-toggle
-                  matSuffix
-                  [for]="startPicker"
-                ></mat-datepicker-toggle>
-                <mat-datepicker #startPicker></mat-datepicker>
+          <div>                       
+            <div class="col-span-3 flex flex-col gap-2 sm:flex-row sm:gap-4">    
+              <form class="example-form">
+                <mat-form-field class="sm:min-w-[150px] sm:h-[70px]">
+                  <mat-label>Search MV ID</mat-label>
+                  <input type="text"
+                         placeholder="Select MV ID"
+                         aria-label="Number"
+                         matInput
+                         [formControl]="myControl"
+                         [matAutocomplete]="auto">
+                  <mat-autocomplete #auto="matAutocomplete">
+                    @for (option of filteredOptions | async; track option) {
+                      <mat-option [value]="option">{{option}}</mat-option>
+                    }
+                  </mat-autocomplete>
+                </mat-form-field>
+              </form>        
+              
+               <mat-form-field class="sm:min-w-[150px] sm:h-[70px]">
+                <mat-label>Enter a date range</mat-label>
+                <mat-date-range-input [rangePicker]="picker">
+                  <input matStartDate placeholder="Start date" (dateChange)="onStartDateChange($event)">
+                  <input matEndDate placeholder="End date" (dateChange)="onEndDateChange($event)">
+                </mat-date-range-input>
+                <mat-hint>MM/DD/YYYY – MM/DD/YYYY</mat-hint>
+                <mat-datepicker-toggle matIconSuffix [for]="picker"></mat-datepicker-toggle>
+                <mat-date-range-picker #picker></mat-date-range-picker>
               </mat-form-field>
-
-              <mat-form-field class="sm:min-w-[150px] sm:h-[70px]">
-                <mat-label class="text-base">Filter by (End Date)</mat-label>
-                <input
-                  matInput
-                  [matDatepicker]="endPicker"
-                  placeholder="End Date"
-                  (dateChange)="applyDateFilter('end', $event)"
-                  class="text-xs"
-                />
-                <mat-datepicker-toggle
-                  matSuffix
-                  [for]="endPicker"
-                ></mat-datepicker-toggle>
-                <mat-datepicker #endPicker></mat-datepicker>
-              </mat-form-field>
-            </div>
-            <!-- Date Pickers -->
           </div>
         </div>
         <div class="block w-full overflow-x-auto">
@@ -99,7 +87,22 @@
             class="items-center bg-transparent w-full border-collapse"
           >
             <!-- Column Definitions -->
-
+            <ng-container matColumnDef="mv_id">
+              <th
+                mat-header-cell
+                *matHeaderCellDef
+                class="bg-white-imp uppercase text-xs"
+              >
+                MarketVisit ID
+              </th>
+              <td
+                mat-cell
+                *matCellDef="let mvisit"
+                class="bg-white-imp border font-bold border-blueGray-100 px-6 py-3 text-sm whitespace-nowrap text-left text-blueGray-700"
+              >
+               MV / {{ mvisit.mv_id }}
+              </td>
+            </ng-container>
             <ng-container matColumnDef="visit_area">
               <th
                 mat-header-cell
@@ -121,7 +124,7 @@
                 <div *ngIf="!mvisit.areas.length">No Areas</div>
               </td>
             </ng-container>
-            >
+            
 
             <ng-container matColumnDef="visit_date">
               <th
@@ -275,6 +278,7 @@
                 <div class="flex space-x-2">
                   <div class="relative inline-block group">
                     <button
+                      *ngIf="role_id === '1'"
                       mat-icon-button
                       class="icon-button-edit"
                       [routerLink]="['/dashboard/visits/edit', mvisit.id]"

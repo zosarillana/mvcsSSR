@@ -6,6 +6,7 @@ import {
   ChangeDetectorRef,
   Input,
 } from '@angular/core';
+import { WebSocketService } from '../../services/websocket.service';
 import { MatPaginator } from '@angular/material/paginator';
 import { MatTableDataSource } from '@angular/material/table';
 import * as ExcelJS from 'exceljs';
@@ -15,21 +16,27 @@ import { MarketVisitsService } from '../../services/market-visits.service';
 import { MatDialog } from '@angular/material/dialog';
 import { ModalDeleteDialogComponent } from './modal/modal-delete-dialog/modal-delete-dialog.component';
 import { SharedService } from '../../services/shared.service';
-import { MatDatepickerInputEvent } from '@angular/material/datepicker';
-import moment from 'moment';
-import { Subscription } from 'rxjs';
+import { map, Observable, Subscription } from 'rxjs';
 import { DatePipe } from '@angular/common';
 import { FlowbiteService } from '../../services/flowbite.service';
 import { TokenService } from '../../services/token.service';
 import { AuthService } from '../../auth/auth.service';
+import { MatSnackBar } from '@angular/material/snack-bar';
+import { FormControl } from '@angular/forms';
+import { startWith } from 'rxjs/operators';
 @Component({
   selector: 'app-get-market-visits',
   templateUrl: './get-market-visits.component.html',
   styleUrls: ['./get-market-visits.component.css'],
 })
 export class GetMarketVisitsComponent implements AfterViewInit, OnInit {
+  myControl = new FormControl('');
+  options: string[] = [];  // Initialize as empty
+  filteredOptions!: Observable<string[]>;
+  private webSocketSubscription: Subscription = new Subscription();
   @Input() mvisit?: MarketVisits;
   displayedColumns: string[] = [
+    'mv_id',
     'visit_area',
     'visit_date',
     'visit_accountName',
@@ -56,12 +63,14 @@ export class GetMarketVisitsComponent implements AfterViewInit, OnInit {
   }
   dataSource = new MatTableDataSource<MarketVisits>();
   @ViewChild(MatPaginator) paginator!: MatPaginator;
+  private previousVisitCount: number | null = null;
   mvisitsToEdit?: MarketVisits;
   startDate: Date | null = null;
   endDate: Date | null = null;
   visitCount: number = 0;
   role_id: string | null = null;
   user_id: string | null = null;
+  mvisits: MarketVisits[] = [];
 
   constructor(
     private authService: AuthService,
@@ -71,64 +80,227 @@ export class GetMarketVisitsComponent implements AfterViewInit, OnInit {
     private marketVisitsService: MarketVisitsService,
     public dialog: MatDialog,
     private sharedService: SharedService, // Inject SharedService
-    private tokenService: TokenService
+    private tokenService: TokenService,
+    private webSocketService: WebSocketService,
+    private matSnackBar: MatSnackBar
   ) {}
 
   ngOnInit(): void {
+    this.loadMarketVisits(); // Load initial data   
+
+    this.marketVisitsService.getMarketVisits().subscribe(
+      (data) => {
+        this.mvisits = data || [];
+        this.setupAutocomplete();
+      },
+      (error) => {
+        console.error('Error fetching market visits', error);
+      }
+    );
+  
     this.tokenService.decodeTokenAndSetUser();
     const user = this.tokenService.getUser();
     this.role_id = user?.role_id ?? null;
     this.user_id = user?.id ?? null;
     this.cdr.detectChanges();
+    this.updateVisitCount();
   
-    this.startPolling();
-    this.marketVisitsService.getMarketVisits().subscribe(
-      (result: MarketVisits[]) => {
-        let dataToDisplay = result;
-  
-        // Apply filtering only if role_id is 2
-        if (this.role_id === '2') {
-          dataToDisplay = result.filter(
-            (visit) => visit.user?.user_id?.toString() === this.user_id
-          );
-          console.log('Filtered Data for role_id 2:', dataToDisplay);
-        } else {
-          console.log('Unfiltered Data for other roles:', dataToDisplay);
+    // Subscribe to WebSocket messages
+    this.webSocketService.messages$.subscribe(message => {
+      console.log('Received WebSocket message:', message);
+      this.matSnackBar.open(message, 'Close', {
+        duration: 3000, // Duration in milliseconds
+      });
+      
+      // Fetch the latest data and update the options
+      this.marketVisitsService.getMarketVisits().subscribe(
+        (result: MarketVisits[]) => {
+          this.mvisits = result || [];
+          this.setupAutocomplete(); // Reinitialize autocomplete with the latest options
+          this.updateDataSource(result);
+          this.updateVisitCount();
+        },
+        (error) => {
+          console.error('Error fetching market visits on WebSocket update:', error);
         }
-  
-        // Assign filtered or unfiltered data to the data source
-        this.dataSource.data = dataToDisplay;
-      },
-      (error) => {
-        console.error('Error fetching market visits:', error);
-      }
-    );
-  
+      );
+    });
+    // Load Flowbite (if needed)
     this.flowbiteService.loadFlowbite((flowbite) => {
       console.log('Flowbite loaded', flowbite);
     });
   }
+  setupAutocomplete() {
+    // Extract mv_id values for the autocomplete options
+    this.options = this.mvisits.map((visit) => visit.mv_id);
+  
+    // Setup autocomplete filtering
+    this.filteredOptions = this.myControl.valueChanges.pipe(
+      startWith(''),
+      map(value => this._filter(value ?? '', this.options))  // Use current options
+    );
+  }
+  
+  private _filter(value: string, options: string[]): string[] {
+    const filterValue = value.toLowerCase();
+    return options.filter(option => option.toLowerCase().includes(filterValue));
+  }
+  
+  private updateVisitCount(): void {
+    if (this.authService.isLoggedIn()) {
+      this.marketVisitsService.getVisitCount().subscribe(
+        (count: number) => {
+          if (count !== this.previousVisitCount) {
+            this.previousVisitCount = count;
+            this.visitCount = count;
+          }
+        },
+        error => {
+          console.error('Error fetching visit count:', error);
+        }
+      );
+    }
+  }
+
+  ngOnDestroy(): void {
+    // Unsubscribe from WebSocket messages
+    if (this.webSocketSubscription) {
+      this.webSocketSubscription.unsubscribe();
+    }
+  }
+
+  private updateDataSource(result: MarketVisits[]): void {
+    let dataToDisplay = result;
+  
+    if (this.role_id === '2') {
+      dataToDisplay = result.filter(
+        (visit) => visit.user?.user_id?.toString() === this.user_id
+      );
+    }
+  
+    if (this.startDate && this.endDate) {
+      dataToDisplay = dataToDisplay.filter((visit) => {
+        const visitDate = new Date(visit.visit_date);
+        // Check if startDate and endDate are not null
+        return this.startDate && this.endDate 
+          ? visitDate >= this.startDate && visitDate <= this.endDate
+          : true; // If either is null, do not filter by date
+      });
+    }
+  
+    this.dataSource.data = dataToDisplay;
+  }
+  
+  onStartDateChange(event: any) {
+    this.startDate = event.value;
+    this.applyDateFilter();
+  }
+
+  onEndDateChange(event: any) {
+    this.endDate = event.value;
+    this.applyDateFilter();
+  }
+
+  applyDateFilter() {
+    this.marketVisitsService.getMarketVisits().subscribe((result: MarketVisits[]) => {
+      let dataToDisplay = result;
+  
+      if (this.role_id === '2') {
+        dataToDisplay = result.filter(
+          (visit) => visit.user?.user_id?.toString() === this.user_id
+        );
+      }
+  
+      if (this.startDate && this.endDate) {
+        dataToDisplay = dataToDisplay.filter((visit) => {
+          const visitDate = new Date(visit.visit_date);
+          // Check if startDate and endDate are not null
+          return this.startDate && this.endDate
+            ? visitDate >= this.startDate && visitDate <= this.endDate
+            : true; // If either is null, do not filter by date
+        });
+      }
+  
+      this.dataSource.data = dataToDisplay;
+    });
+  }
+  
+
+  // applyDateFilter(type: string, event: MatDatepickerInputEvent<Date>): void {
+  //   const date = event.value;
+
+  //   if (type === 'start') {
+  //     this.startDate = date;
+  //   } else {
+  //     this.endDate = date;
+  //   }
+
+  //   this.dataSource.filterPredicate = (data: MarketVisits) => {
+  //     const createdDate = moment(data.date_created);
+  //     const withinStart = this.startDate
+  //       ? createdDate.isSameOrAfter(this.startDate)
+  //       : true;
+  //     const withinEnd = this.endDate
+  //       ? createdDate.isSameOrBefore(this.endDate)
+  //       : true;
+  //     return withinStart && withinEnd;
+  //   };
+  //   this.dataSource.filter = '' + Math.random(); // Trigger filtering
+  // }
+  // applyDateFilter(event: { value: Date[] | null }): void {
+  //   const dateRange = event.value;
+  
+  //   if (dateRange && dateRange.length === 2) {
+  //     this.startDate = dateRange[0];
+  //     this.endDate = dateRange[1];
+  //   } else {
+  //     this.startDate = null;
+  //     this.endDate = null;
+  //   }
+  
+  //   this.dataSource.filterPredicate = (data: MarketVisits) => {
+  //     const createdDate = moment(data.date_created);
+  //     const withinStart = this.startDate
+  //       ? createdDate.isSameOrAfter(this.startDate)
+  //       : true;
+  //     const withinEnd = this.endDate
+  //       ? createdDate.isSameOrBefore(this.endDate)
+  //       : true;
+  //     return withinStart && withinEnd;
+  //   };
+  //   this.dataSource.filter = '' + Math.random(); // Trigger filtering
+  // }
   
   loadMarketVisits(): void {
-    this.marketVisitsService
-      .getMarketVisits()
-      .subscribe((result: MarketVisits[]) => {
-        let dataToDisplay = result;
+    this.marketVisitsService.getMarketVisits().subscribe((result: MarketVisits[]) => {
+      let dataToDisplay = result;
   
-        // Apply filtering only if role_id is 2
-        if (this.role_id === '2') {
-          dataToDisplay = result.filter(
-            (visit) => visit.user?.user_id?.toString() === this.user_id
-          );
-          console.log('Filtered Data for role_id 2:', dataToDisplay);
-        } else {
-          console.log('Unfiltered Data for other roles:', dataToDisplay);
-        }
+      // Apply filtering only if role_id is 2
+      if (this.role_id === '2') {
+        dataToDisplay = result.filter(
+          (visit) => visit.user?.user_id?.toString() === this.user_id
+        );
+        console.log('Filtered Data for role_id 2:', dataToDisplay);
+      } else {
+        console.log('Unfiltered Data for other roles:', dataToDisplay);
+      }
   
-        // Assign filtered or unfiltered data to the data source
-        this.dataSource.data = dataToDisplay;
-      });
+      // Apply date filtering
+      if (this.startDate && this.endDate) {
+        dataToDisplay = dataToDisplay.filter((visit) => {
+          const visitDate = new Date(visit.visit_date);
+          // Check if startDate and endDate are not null
+          return this.startDate && this.endDate 
+            ? visitDate >= this.startDate && visitDate <= this.endDate
+            : true; // If either is null, do not filter by date
+        });
+      }
+  
+      // Assign filtered or unfiltered data to the data source
+      this.dataSource.data = dataToDisplay;
+    });
   }
+  
   
   getFormattedVisitDate(visitDate: string | undefined): string {
     if (visitDate) {
@@ -136,39 +308,43 @@ export class GetMarketVisitsComponent implements AfterViewInit, OnInit {
     }
     return 'No Date';
   }
-  private pollingSubscription: Subscription = new Subscription();
-  // private authSubscription: Subscription = new Subscription();
+  // private pollingSubscription: Subscription = new Subscription();
+  // private previousVisitCount: number | null = null; // To keep track of the previous visit count
+  // private startPolling(): void {
+  //   // Poll every 60 seconds
+  //   this.pollingSubscription.add(
+  //     interval(60000).pipe(
+  //       switchMap(() => {
+  //         if (this.authService.isLoggedIn()) {
+  //           return this.marketVisitsService.getVisitCount();
+  //         } else {
+  //           return of(null);
+  //         }
+  //       })
+  //     ).subscribe(
+  //       (count: number | null) => {
+  //         if (count !== null && count !== this.previousVisitCount) {
+  //           this.previousVisitCount = count;
+  //           this.visitCount = count;
+  //         }
+  //       },
+  //       error => {
+  //         console.error('Error fetching visit count:', error);
+  //       }
+  //     )
+  //   );
+  // }
+  
+  // This method could be triggered by some event in your application
+  // refreshData() {
+  //   this.refreshDataEvent.next();
+  // }
+    
 
-  private startPolling(): void {
-    this.pollingSubscription.add(
-      this.marketVisitsService.getVisitCount().subscribe(
-        (count: number) => (this.visitCount = count),
-        // Handle error if needed
-      )
-    );
-
-    // Poll every 3 seconds
-    setInterval(() => {
-      if (this.authService.isLoggedIn()) {
-        this.fetchUserCount();
-      }
-    }, 3000);
-  }
-
-  private fetchUserCount(): void {
-    this.marketVisitsService.getVisitCount().subscribe(
-      (count: number) => (this.visitCount = count),
-      error => {
-        // Handle error if needed
-        console.error('Error fetching visit count:', error);
-      }
-    );
-  }
-
-  ngOnDestroy(): void {
-    // Clean up subscriptions to prevent memory leaks
-    this.pollingSubscription.unsubscribe();
-  }
+  // ngOnDestroy(): void {
+  //   // Clean up subscriptions to prevent memory leaks
+  //   this.pollingSubscription.unsubscribe();
+  // }
 
   ngAfterViewInit(): void {
     this.dataSource.paginator = this.paginator;
@@ -208,27 +384,6 @@ export class GetMarketVisitsComponent implements AfterViewInit, OnInit {
   //   });
   // }
 
-  applyDateFilter(type: string, event: MatDatepickerInputEvent<Date>): void {
-    const date = event.value;
-
-    if (type === 'start') {
-      this.startDate = date;
-    } else {
-      this.endDate = date;
-    }
-
-    this.dataSource.filterPredicate = (data: MarketVisits) => {
-      const createdDate = moment(data.date_created);
-      const withinStart = this.startDate
-        ? createdDate.isSameOrAfter(this.startDate)
-        : true;
-      const withinEnd = this.endDate
-        ? createdDate.isSameOrBefore(this.endDate)
-        : true;
-      return withinStart && withinEnd;
-    };
-    this.dataSource.filter = '' + Math.random(); // Trigger filtering
-  }
 
   public async exportMarketVisitsToExcel(): Promise<void> {
     try {
@@ -389,3 +544,6 @@ export class GetMarketVisitsComponent implements AfterViewInit, OnInit {
     }
   }
 }
+// function StartWith(arg0: string): import("rxjs").OperatorFunction<string | null, unknown> {
+//   throw new Error('Function not implemented.');
+// }

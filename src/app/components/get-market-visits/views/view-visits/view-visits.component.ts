@@ -131,8 +131,10 @@ export class ViewVisitsComponent {
       );
     }
   }  
-  public imagePreviewNeed: string | null = null;
-  public isPreviewVisible: boolean = false;
+  
+  imagePreviewNeed: string | null = '/no_img.jpg'; // Replace with actual path or logic
+  fallbackImage: string = '/no_img.jpg';
+  isPreviewVisible: boolean = false;
 
   // Function to handle image preview modal
   showImagePreview(imageSrc: string): void {
@@ -152,6 +154,12 @@ export class ViewVisitsComponent {
 
   getImageUrl(imageName: string | undefined): string {
     return imageName ? `${this.imageUrlBase}${imageName}` : '/no_img.jpg';
+  }
+
+  // Method to handle image load error
+  handleImageError(event: Event): void {
+    const target = event.target as HTMLImageElement;
+    target.src = '/no_img.jpg';
   }
 
   setInitialValues(): void {

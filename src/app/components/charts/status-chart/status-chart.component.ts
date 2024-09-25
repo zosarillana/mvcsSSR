@@ -1,4 +1,4 @@
-import { Component, ViewChild } from "@angular/core";
+import { Component, ViewChild, OnInit, OnDestroy } from "@angular/core";
 import {
   ChartComponent,
   ApexAxisChartSeries,
@@ -10,6 +10,7 @@ import {
   ApexTitleSubtitle,
   ApexResponsive
 } from "ng-apexcharts";
+import { interval, Subscription } from 'rxjs';
 
 export type ChartOptions = {
   series: ApexAxisChartSeries;
@@ -18,8 +19,8 @@ export type ChartOptions = {
   stroke: ApexStroke;
   tooltip: ApexTooltip;
   dataLabels: ApexDataLabels;
-  title: ApexTitleSubtitle; // Added for the title
-  responsive: ApexResponsive[]; // Added for responsive behavior
+  title: ApexTitleSubtitle;
+  responsive: ApexResponsive[];
 };
 
 @Component({
