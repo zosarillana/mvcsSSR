@@ -2,17 +2,19 @@ import { Component, OnInit, ViewChild, OnDestroy } from '@angular/core';
 import { MatDialog } from '@angular/material/dialog';
 import { MatPaginator } from '@angular/material/paginator';
 import { MatTableDataSource } from '@angular/material/table';
-import { Subscription } from 'rxjs';
+import { map, Observable, startWith, Subscription } from 'rxjs';
 import { Area } from '../../../../../models/area';
 import { AreaService } from '../../../../../services/area.service';
 import { ModalCreateAreaComponent } from './modal/modal-create-area/modal-create-area.component';
-import { MatDatepickerInputEvent } from '@angular/material/datepicker';
-import moment from 'moment';
 import { ModalViewAreaComponent } from './modal/modal-view-area/modal-view-area.component';
 import { ModalDeleteAreaComponent } from './modal/modal-delete-area/modal-delete-area.component';
 import { ModalEditAreaComponent } from './modal/modal-edit-area/modal-edit-area.component';
 import { DatePipe } from '@angular/common';
 import { AuthService } from '../../../../../auth/auth.service';
+import { FormControl } from '@angular/forms';
+import { FlowbiteService } from '../../../../../services/flowbite.service';
+import { MatSnackBar } from '@angular/material/snack-bar';
+import { SseService } from '../../../../../services/sse.service';
 @Component({
   selector: 'app-area-add',
   templateUrl: './area-add.component.html',
@@ -27,44 +29,159 @@ export class AreaAddComponent implements OnInit, OnDestroy {
   ];
   dataSource = new MatTableDataSource<Area>();
   @ViewChild(MatPaginator) paginator!: MatPaginator;
+  myControl = new FormControl('');
+  options: string[] = []; // Initialize as empty
+  filteredOptions!: Observable<string[]>;
   areaCount: number = 0;
   startDate: Date | null = null;
   endDate: Date | null = null;
-
-  private pollingSubscription: Subscription = new Subscription();
+  areas: Area[] = [];
+  private subscription: Subscription = new Subscription();
+  // private pollingSubscription: Subscription = new Subscription();
   private intervalId: any;
 
   constructor(
     private authService: AuthService,
     private areaService: AreaService,
     public dialog: MatDialog,
-    private datePipe: DatePipe
+    private datePipe: DatePipe,
+    private matSnackBar: MatSnackBar,
+    private flowbiteService: FlowbiteService,
+    private sseService: SseService
   ) {}
   ngOnInit(): void {
+    this.subscribeToSseMessages();
     this.loadAreas();
-    this.startPolling();
+    // this.startPolling();
+    this.areaService.getAreas().subscribe(
+      (data) => {
+        this.areas = data || [];
+        this.setupAutocomplete();
+      },
+      (error) => {
+        console.error('Error fetching Areas', error);
+      }
+    );
+
+    // const eventSource = new EventSource('/api/api/sse/subscribe'); // Replace with your API URL for SSE
+
+    //   eventSource.onmessage = (event) => {
+    //     const message = event.data;
+    //     console.log('Received SSE message:', message);
+
+    //     // Display the message using MatSnackBar
+    //     this.matSnackBar.open(message, 'Close', {
+    //       duration: 3000, // Duration in milliseconds
+    //     });
+
+    //     // Fetch the latest data and update the options
+    //     this.areaService.getAreas().subscribe(
+    //       (result: Area[]) => {
+    //         this.areas = result || [];
+    //         this.setupAutocomplete(); // Reinitialize autocomplete with the latest options
+    //       },
+    //       (error) => {
+    //         console.error('Error fetching market visits on SSE update:', error);
+    //       }
+    //     );
+    //   };
+
+    //   eventSource.onerror = (error) => {
+    //     console.error('SSE error:', error);
+    //     eventSource.close();
+    //   };
+
+    //   // Load Flowbite (if needed)
+    //   this.flowbiteService.loadFlowbite((flowbite) => {
+    //     console.log('Flowbite loaded', flowbite);
+    //   });
+  }
+  // applyDateFilter(type: string, event: MatDatepickerInputEvent<Date>): void {
+  //   const date = event.value;
+
+  //   if (type === 'start') {
+  //     this.startDate = date;
+  //   } else {
+  //     this.endDate = date;
+  //   }
+
+  //   this.dataSource.filterPredicate = (data: Area) => {
+  //     const createdDate = moment(data.date_created);
+  //     const withinStart = this.startDate
+  //       ? createdDate.isSameOrAfter(this.startDate)
+  //       : true;
+  //     const withinEnd = this.endDate
+  //       ? createdDate.isSameOrBefore(this.endDate)
+  //       : true;
+  //     return withinStart && withinEnd;
+  //   };
+  //   this.dataSource.filter = '' + Math.random(); // Trigger filtering
+  // }
+  setupAutocomplete() {
+    // Extract mv_id values for the autocomplete options
+    this.options = this.areas.map((area) => area.area);
+
+    // Setup autocomplete filtering
+    this.filteredOptions = this.myControl.valueChanges.pipe(
+      startWith(''),
+      map((value) => this._filter(value ?? '', this.options)) // Use current options
+    );
   }
 
-  applyDateFilter(type: string, event: MatDatepickerInputEvent<Date>): void {
-    const date = event.value;
+  private _filter(value: string, options: string[]): string[] {
+    const filterValue = value.toLowerCase();
+    return options.filter((option) =>
+      option.toLowerCase().includes(filterValue)
+    );
+  }
 
-    if (type === 'start') {
-      this.startDate = date;
-    } else {
-      this.endDate = date;
+  applyFilter(event: Event, filterType: string): void {
+    const input = event.target as HTMLInputElement;
+    const value = input.value;
+
+    if (filterType === 'area') {
+      this.dataSource.filterPredicate = (data: Area) => {
+        return data.area.toLowerCase().includes(value.trim().toLowerCase());
+      };
+      this.dataSource.filter = value.trim().toLowerCase(); // Apply the filter
     }
-
+  }
+  applyFilterOnSelect(selectedOption: string): void {
+    // Define the filter predicate
     this.dataSource.filterPredicate = (data: Area) => {
-      const createdDate = moment(data.date_created);
-      const withinStart = this.startDate
-        ? createdDate.isSameOrAfter(this.startDate)
-        : true;
-      const withinEnd = this.endDate
-        ? createdDate.isSameOrBefore(this.endDate)
-        : true;
-      return withinStart && withinEnd;
+      return data.area.toLowerCase().includes(selectedOption.toLowerCase());
     };
-    this.dataSource.filter = '' + Math.random(); // Trigger filtering
+
+    // Apply the new filter
+    this.dataSource.filter = selectedOption.toLowerCase();
+  }
+
+  applyDateFilter() {
+    this.areaService.getAreas().subscribe((result: Area[]) => {
+      let dataToDisplay = result;
+
+      if (this.startDate && this.endDate) {
+        dataToDisplay = dataToDisplay.filter((user) => {
+          const dateCreated = new Date(user.date_created);
+          // Check if startDate and endDate are not null
+          return this.startDate && this.endDate
+            ? dateCreated >= this.startDate && dateCreated <= this.endDate
+            : true; // If either is null, do not filter by date
+        });
+      }
+
+      this.dataSource.data = dataToDisplay;
+    });
+  }
+
+  onStartDateChange(event: any) {
+    this.startDate = event.value;
+    this.applyDateFilter();
+  }
+
+  onEndDateChange(event: any) {
+    this.endDate = event.value;
+    this.applyDateFilter();
   }
 
   loadAreas(): void {
@@ -74,10 +191,49 @@ export class AreaAddComponent implements OnInit, OnDestroy {
       this.fetchAreaCount();
 
       // Start polling for area count
-      this.startPolling();
+      // this.startPolling();
     });
   }
+  // Subscribe to SSE messages instead of WebSocket
+  private subscribeToSseMessages(): void {
+    this.subscription.add(
+      this.sseService.messages$.subscribe((event) => {
+        const message = event.data; // Extract the message from the event
+        console.log('Received SSE message:', message);
 
+        // Display the message using MatSnackBar
+        this.matSnackBar.open(message, 'Close', {
+          duration: 3000, // Duration in milliseconds
+        });
+
+        // Fetch the latest data and update the options
+        this.areaService.getAreas().subscribe(
+          (result: Area[]) => {
+            this.areas = result || []; // Update the local data
+            this.setupAutocomplete(); // Reinitialize autocomplete
+            this.updateDataSource(result); // Update data source for your table or list
+            this.fetchAreaCount(); // Update visit count if applicable
+          },
+          (error) => {
+            console.error('Error fetching market visits on SSE update:', error);
+          }
+        );
+      })
+    );
+  }
+  private updateDataSource(result: Area[]): void {
+    let dataToDisplay = result;
+
+    if (this.startDate && this.endDate) {
+      dataToDisplay = dataToDisplay.filter((visit) => {
+        const visitDate = new Date(visit.date_created);
+        // Check if startDate and endDate are not null
+        return this.startDate && this.endDate
+          ? visitDate >= this.startDate && visitDate <= this.endDate
+          : true; // If either is null, do not filter by date
+      });
+    }
+  }
   private fetchAreaCount(): void {
     if (this.authService.isLoggedIn()) {
       this.areaService.getAreaCount().subscribe(
@@ -91,28 +247,28 @@ export class AreaAddComponent implements OnInit, OnDestroy {
     }
   }
 
-  private startPolling(): void {
-    // Clear any existing interval
-    if (this.intervalId) {
-      clearInterval(this.intervalId);
-    }
+  // private startPolling(): void {
+  //   // Clear any existing interval
+  //   // if (this.intervalId) {
+  //   //   clearInterval(this.intervalId);
+  //   // }
 
-    // Set up polling every 3 seconds
-    this.intervalId = setInterval(() => {
-      if (this.authService.isLoggedIn()) {
-        this.fetchAreaCount();
-      }
-    }, 3000);
-  }
+  //   // // Set up polling every 3 seconds
+  //   // this.intervalId = setInterval(() => {
+  //   //   if (this.authService.isLoggedIn()) {
+  //   //     this.fetchAreaCount();
+  //   //   }
+  //   // }, 3000);
+  // }
 
   ngOnDestroy(): void {
     // Clean up polling interval and subscriptions
-    if (this.intervalId) {
-      clearInterval(this.intervalId);
-    }
-    if (this.pollingSubscription) {
-      this.pollingSubscription.unsubscribe();
-    }
+    // if (this.intervalId) {
+    //   clearInterval(this.intervalId);
+    // }
+    // if (this.pollingSubscription) {
+    //   this.pollingSubscription.unsubscribe();
+    // }
   }
 
   getFormattedVisitDate(visitDate: string | undefined): string {
@@ -121,7 +277,6 @@ export class AreaAddComponent implements OnInit, OnDestroy {
     }
     return 'No Date';
   }
-  
 
   private fetchUserCount(): void {
     this.areaService.getAreaCount().subscribe(

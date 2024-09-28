@@ -1,9 +1,15 @@
 {
-    "/api": {
-      "target": "https://localhost:7296",
-      "secure": false,
-      "logLevel": "debug",
-      "changeOrigin": true,
-      "pathRewrite": {"^/api" : ""}
-    }
+  "/api": {
+    "target": "https://localhost:7296",
+    "secure": false,
+    "logLevel": "debug",
+    "changeOrigin": true,     
+    "pathRewrite": { "^/api": "" }
+  },
+  "/ws": {
+    "target": "https://localhost:7296", 
+    "secure": false,
+    "ws": true, 
+    "pathRewrite": { "^/ws": "" } 
   }
+}

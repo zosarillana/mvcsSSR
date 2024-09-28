@@ -1,7 +1,7 @@
 import { Component, EventEmitter, Inject, Input, Output } from '@angular/core';
-import { MatDialog, MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
+import { MatDialogRef, MAT_DIALOG_DATA, MatDialog } from '@angular/material/dialog';
+import { UserService } from '../../../../../../../services/user.service';
 import { User } from '../../../../../../../models/user';
-import { UserService } from '../../../../../../../services/user.service'; 
 import { ConfirmDialogComponent } from './confirm-dialog/confirm-dialog.component';
 
 @Component({
@@ -13,13 +13,7 @@ export class ModalEditUserDialogComponent {
   @Input() user?: User;
   @Output() userUpdated = new EventEmitter<User[]>();
   isPasswordEnabled = false; // Default is disabled
-  passwordValue = ""; 
-  onPasswordInput(event: Event) {
-    const input = event.target as HTMLInputElement;
-    // Handle the input change here
-    this.passwordValue = input.value;  // Update local variable
-    // You can add logic here if needed to handle password updates
-  }
+  passwordValue = ''; 
   errorMessages: { [key: string]: string[] } = {};
 
   constructor(
@@ -29,13 +23,14 @@ export class ModalEditUserDialogComponent {
     private dialog: MatDialog // Inject MatDialog service
   ) {}
 
+  // Handles closing the modal dialog without saving
   onNoClick(): void {
     this.dialogRef.close();
   }
 
+  // Confirmation dialog before saving
   openConfirmationDialog(): void {
     const dialogRef = this.dialog.open(ConfirmDialogComponent);
-
     dialogRef.afterClosed().subscribe(result => {
       if (result) {
         this.save(); // Proceed with saving if the user confirmed
@@ -43,18 +38,28 @@ export class ModalEditUserDialogComponent {
     });
   }
 
+  // Save method to update user data
   save(): void {
-    console.log('Password Value:', this.passwordValue);
+    console.log('User Data:', this.data);  // Check the user data
 
     // Include password in the data object, or set it to an empty string if passwordValue is empty
-    this.data.user_password = this.passwordValue || "";
+    this.data.user_password = this.passwordValue || '';
     
-    this.userService.updateUser(this.data).subscribe({
+    // Ensure the user_id exists and create an updatedUser object
+    const updatedUser: User = { id: this.data.user_id, ...this.data };
+
+    if (!updatedUser.id) {
+      console.error('User ID is missing, cannot update.');
+      return;
+    }
+
+    // Call the updateUser method from the UserService
+    this.userService.updateUser(updatedUser).subscribe({
       next: (response) => {
+        console.log('User updated successfully', response);
         this.dialogRef.close(this.data);
       },
       error: (errorResponse) => {
-        // Log the error response for debugging
         console.log('Error Response:', errorResponse);
 
         // Clear previous error messages
@@ -62,18 +67,11 @@ export class ModalEditUserDialogComponent {
 
         if (errorResponse && typeof errorResponse === 'object') {
           if (errorResponse.errors) {
-            // Handle validation errors
             for (const [key, value] of Object.entries(errorResponse.errors)) {
-              if (Array.isArray(value)) {
-                this.errorMessages[key] = value; // Map field to its errors
-              } else if (typeof value === 'string') {
-                this.errorMessages[key] = [value]; // Single error message as an array
-              } else {
-                this.errorMessages[key] = ['Unexpected error format.'];
-              }
+              this.errorMessages[key] = Array.isArray(value) ? value : [value];
             }
           } else if (errorResponse.message) {
-            this.errorMessages['general'] = [errorResponse.message]; // General error message
+            this.errorMessages['general'] = [errorResponse.message];
           } else {
             this.errorMessages['general'] = ['Unexpected error format.'];
           }
@@ -84,15 +82,19 @@ export class ModalEditUserDialogComponent {
     });
   }
 
-
+  // Method to handle password input changes
+  onPasswordInput(event: Event): void {
+    const input = event.target as HTMLInputElement;
+    this.passwordValue = input.value;  // Update the password value based on user input
+  }
 
   // Method to toggle password field enabled state
-  togglePasswordField(event: any) {
+  togglePasswordField(event: any): void {
     this.isPasswordEnabled = event.target.checked;
   }
 
-  //for editing and updating
-  private fetchMarketVisits() {
+  // Fetch users for updating and emit the event when the user list changes
+  fetchMarketVisits(): void {
     this.userService.getUsers().subscribe((users: User[]) => {
       this.userUpdated.emit(users);
     });

@@ -1,18 +1,7 @@
 import { Component, ViewChild } from '@angular/core';
-import { MatDatepickerInputEvent } from '@angular/material/datepicker';
 import { MatDialog } from '@angular/material/dialog';
 import { MatPaginator } from '@angular/material/paginator';
 import { MatTableDataSource } from '@angular/material/table';
-import { initFlowbite } from 'flowbite';
-import moment from 'moment';
-import { Subscription } from 'rxjs';
-import { environment } from '../../../../../../environments/environment';
-import { Isr } from '../../../../../models/isr';
-import { PodService } from '../../../../../services/pod.service';
-import { ModalCreatePodComponent } from '../pod-add/modal/modal-create-pod/modal-create-pod.component';
-import { ModalDeletePodComponent } from '../pod-add/modal/modal-delete-pod/modal-delete-pod.component';
-import { ModalEditPodComponent } from '../pod-add/modal/modal-edit-pod/modal-edit-pod.component';
-import { ModalViewPodComponent } from '../pod-add/modal/modal-view-pod/modal-view-pod.component';
 import { PapService } from '../../../../../services/pap.service';
 import { Pap } from '../../../../../models/pap';
 import { ModalCreatePapComponent } from './modal/modal-create-pap/modal-create-pap.component';
@@ -22,11 +11,15 @@ import { ModalDeletePapComponent } from './modal/modal-delete-pap/modal-delete-p
 import { DatePipe } from '@angular/common';
 import { FlowbiteService } from '../../../../../services/flowbite.service';
 import { AuthService } from '../../../../../auth/auth.service';
+import { SseService } from '../../../../../services/sse.service';
+import { FormControl } from '@angular/forms';
+import { map, Observable, startWith, Subscription } from 'rxjs';
+import { MatSnackBar } from '@angular/material/snack-bar';
 
 @Component({
   selector: 'app-pap-add',
   templateUrl: './pap-add.component.html',
-  styleUrl: './pap-add.component.css'
+  styleUrl: './pap-add.component.css',
 })
 export class PapAddComponent {
   displayedColumns: string[] = [
@@ -38,17 +31,29 @@ export class PapAddComponent {
   ];
   dataSource = new MatTableDataSource<Pap>();
   @ViewChild(MatPaginator) paginator!: MatPaginator;
+  myControl = new FormControl('');
+  options: string[] = []; // Initialize as empty
+  paps: Pap[] = []; // Initialize as empty
+  filteredOptions!: Observable<string[]>;
+  private subscription: Subscription = new Subscription();
   podCount: number = 0;
   startDate: Date | null = null;
   endDate: Date | null = null;
   private intervalId: any;
 
-
   // Construct the base API URL
   private url = '/api/api/Pap';
-  public imageUrlBase = `${this.url}/image/`;  // <-- Use the environment API URL
+  public imageUrlBase = `${this.url}/image/`; // <-- Use the environment API URL
 
-  constructor(private authService: AuthService, private papService: PapService, public dialog: MatDialog, private datePipe: DatePipe, private flowbiteService: FlowbiteService) {}
+  constructor(
+    private sseService: SseService,
+    private authService: AuthService,
+    private papService: PapService,
+    public dialog: MatDialog,
+    private datePipe: DatePipe,
+    private flowbiteService: FlowbiteService,
+    private matSnackBar: MatSnackBar
+  ) {}
 
   getFormattedVisitDate(visitDate: string | undefined): string {
     if (visitDate) {
@@ -58,49 +63,144 @@ export class PapAddComponent {
   }
 
   ngOnInit(): void {
-    this.loadPods();
-    this.startPolling();
-    this.flowbiteService.loadFlowbite(flowbite => {
+    this.loadPaps();   
+    this.subscribeToSseMessages();
+    this.papService.getPaps().subscribe(
+      (data) => {
+        this.paps = data || [];
+        this.setupAutocomplete();
+      },
+      (error) => {
+        console.error('Error fetching Paps', error);
+      }
+    );
+    this.flowbiteService.loadFlowbite((flowbite) => {
       // Your custom code here
       console.log('Flowbite loaded', flowbite);
     });
   }
 
-  
-  
-  applyDateFilter(type: string, event: MatDatepickerInputEvent<Date>): void {
-    const date = event.value;
-  
-    if (type === 'start') {
-      this.startDate = date;
-    } else {
-      this.endDate = date;
-    }
-  
-    this.dataSource.filterPredicate = (data: Pap) => {
-      const createdDate = moment(data.date_created);
-      const withinStart = this.startDate ? createdDate.isSameOrAfter(this.startDate) : true;
-      const withinEnd = this.endDate ? createdDate.isSameOrBefore(this.endDate) : true;
-      return withinStart && withinEnd;
-    };
-    this.dataSource.filter = '' + Math.random(); // Trigger filtering
-  }
-  
+  setupAutocomplete() {
+    // Extract mv_id values for the autocomplete options
+    this.options = this.paps.map((pap) => pap.pap_name);
 
-  loadPods(): void {
+    // Setup autocomplete filtering
+    this.filteredOptions = this.myControl.valueChanges.pipe(
+      startWith(''),
+      map((value) => this._filter(value ?? '', this.options)) // Use current options
+    );
+  }
+
+  private _filter(value: string, options: string[]): string[] {
+    const filterValue = value.toUpperCase();
+    return options.filter((option) =>
+      option.toUpperCase().includes(filterValue)
+    );
+  }
+
+  applyFilter(event: Event, filterType: string): void {
+    const input = event.target as HTMLInputElement;
+    const value = input.value;
+
+    if (filterType === 'pap') {
+      this.dataSource.filterPredicate = (data: Pap) => {
+        return data.pap_name.toLowerCase().includes(value.trim().toLowerCase());
+      };
+      this.dataSource.filter = value.trim().toLowerCase(); // Apply the filter
+    }
+  }
+  applyFilterOnSelect(selectedOption: string): void {
+    // Define the filter predicate
+    this.dataSource.filterPredicate = (data: Pap) => {
+      return data.pap_name.toUpperCase().includes(selectedOption.toUpperCase());
+    };
+
+    // Apply the new filter
+    this.dataSource.filter = selectedOption.toUpperCase();
+  } 
+  
+  applyDateFilter() {
+    this.papService.getPaps().subscribe((result: Pap[]) => {
+      let dataToDisplay = result;
+
+      if (this.startDate && this.endDate) {
+        dataToDisplay = dataToDisplay.filter((pap) => {
+          const dateCreated = new Date(pap.date_created);
+          // Check if startDate and endDate are not null
+          return this.startDate && this.endDate
+            ? dateCreated >= this.startDate && dateCreated <= this.endDate
+            : true; // If either is null, do not filter by date
+        });
+      }
+
+      this.dataSource.data = dataToDisplay;
+    });
+  }
+
+  onStartDateChange(event: any) {
+    this.startDate = event.value;
+    this.applyDateFilter();
+  }
+
+  onEndDateChange(event: any) {
+    this.endDate = event.value;
+    this.applyDateFilter();
+  }
+
+  loadPaps(): void {
     this.papService.getPaps().subscribe((result: Pap[]) => {
       this.dataSource.data = result;
       this.dataSource.paginator = this.paginator; // Set paginator after data is loaded
 
       // Fetch pod count initially
-      this.fetchPodCount();
+      this.fetchPapCount();                
 
-      // Start polling for pod count
-      this.startPolling();
     });
+    
   }
 
-  private fetchPodCount(): void {
+ // Subscribe to SSE messages instead of WebSocket
+ private subscribeToSseMessages(): void {
+  this.subscription.add(
+    this.sseService.messages$.subscribe((event) => {
+      const message = event.data; // Extract the message from the event
+      console.log('Received SSE message:', message);
+
+      // Display the message using MatSnackBar
+      this.matSnackBar.open(message, 'Close', {
+        duration: 3000, // Duration in milliseconds
+      });
+
+      // Fetch the latest data and update the options
+      this.papService.getPaps().subscribe(
+        (result: Pap[]) => {
+          this.paps = result || []; // Update the local data
+          this.setupAutocomplete(); // Reinitialize autocomplete
+          this.updateDataSource(result); // Update data source for your table or list
+          this.fetchPapCount(); // Update visit count if applicable
+        },
+        (error) => {
+          console.error('Error fetching market visits on SSE update:', error);
+        }
+      );
+    })
+  );
+}
+private updateDataSource(result: Pap[]): void {
+  let dataToDisplay = result;
+
+  if (this.startDate && this.endDate) {
+    dataToDisplay = dataToDisplay.filter((visit) => {
+      const visitDate = new Date(visit.date_created);
+      // Check if startDate and endDate are not null
+      return this.startDate && this.endDate
+        ? visitDate >= this.startDate && visitDate <= this.endDate
+        : true; // If either is null, do not filter by date
+    });
+  }
+}
+
+  private fetchPapCount(): void {
     if (this.authService.isLoggedIn()) {
       this.papService.getPapsCount().subscribe(
         (count: number) => {
@@ -112,26 +212,7 @@ export class PapAddComponent {
       );
     }
   }
-
-  private startPolling(): void {
-    // Clear any existing interval
-    if (this.intervalId) {
-      clearInterval(this.intervalId);
-    }
-
-    // Set up polling every 3 seconds
-    this.intervalId = setInterval(() => {
-      if (this.authService.isLoggedIn()) {
-        this.fetchPodCount();
-      }
-    }, 3000);
-  }
-
   ngOnDestroy(): void {
-    // Clean up polling interval
-    if (this.intervalId) {
-      clearInterval(this.intervalId);
-    }
   }
 
   openViewDialog(pap: Pap): void {
@@ -140,7 +221,7 @@ export class PapAddComponent {
       data: pap,
     });
 
-    dialogRef.afterClosed().subscribe(() => this.loadPods());
+    dialogRef.afterClosed().subscribe(() => this.loadPaps());
   }
 
   openEditDialog(pap: Pap): void {
@@ -149,7 +230,7 @@ export class PapAddComponent {
       data: pap,
     });
 
-    dialogRef.afterClosed().subscribe(() => this.loadPods());
+    dialogRef.afterClosed().subscribe(() => this.loadPaps());
   }
 
   openAddDialog(): void {
@@ -159,9 +240,9 @@ export class PapAddComponent {
       data: {},
     });
 
-    dialogRef.afterClosed().subscribe(result => {
+    dialogRef.afterClosed().subscribe((result) => {
       if (result) {
-        this.loadPods();
+        this.loadPaps();
       }
     });
   }
@@ -172,7 +253,6 @@ export class PapAddComponent {
       data: pap,
     });
 
-    dialogRef.afterClosed().subscribe(() => this.loadPods());
+    dialogRef.afterClosed().subscribe(() => this.loadPaps());
   }
-
 }

@@ -37,8 +37,53 @@
               </button>
             </div>
           </div>
-          <div class="flex flex-col gap-2 sm:flex-row sm:gap-4">
-            <mat-form-field class="sm:min-w-[150px] sm:h-[70px]">
+          <div class="mt-2 flex flex-col gap-2 sm:flex-row sm:gap-4">
+            <mat-form-field class="w-full min-w-[150px] sm:h-[70px]">
+              <mat-label>Search Isr</mat-label>
+              <input
+                type="text"
+                placeholder="Search Isr"
+                aria-label="Search Isr"
+                matInput
+                [formControl]="myControl"
+                [matAutocomplete]="auto"
+                (input)="applyFilter($event, 'isr')"
+              />
+              <mat-autocomplete #auto="matAutocomplete">
+                <mat-option
+                  *ngFor="let option of filteredOptions | async"
+                  [value]="option"
+                  (onSelectionChange)="applyFilterOnSelect(option)"
+                  class="uppercase"
+                  style="font-size: 0.75rem; line-height: 1.5"
+                >
+                  {{ option }}
+                </mat-option>
+              </mat-autocomplete>
+            </mat-form-field>
+
+            <mat-form-field class="w-full sm:min-w-[150px] sm:h-[70px]">
+              <mat-label>Enter a date range</mat-label>
+              <mat-date-range-input [rangePicker]="picker">
+                <input
+                  matStartDate
+                  placeholder="Start date"
+                  (dateChange)="onStartDateChange($event)"
+                />
+                <input
+                  matEndDate
+                  placeholder="End date"
+                  (dateChange)="onEndDateChange($event)"
+                />
+              </mat-date-range-input>
+              <mat-hint>MM/DD/YYYY – MM/DD/YYYY</mat-hint>
+              <mat-datepicker-toggle
+                matIconSuffix
+                [for]="picker"
+              ></mat-datepicker-toggle>
+              <mat-date-range-picker #picker></mat-date-range-picker>
+            </mat-form-field>
+            <!-- <mat-form-field class="sm:min-w-[150px] sm:h-[70px]">
               <mat-label class="text-base">Filter by (Start Date)</mat-label>
               <input
                 matInput
@@ -67,7 +112,7 @@
                 [for]="endPicker"
               ></mat-datepicker-toggle>
               <mat-datepicker #endPicker></mat-datepicker>
-            </mat-form-field>
+            </mat-form-field> -->
           </div>
         </div>
       </div>
@@ -228,10 +273,10 @@
         <!-- MatPaginator added here -->
         <div class="mt-4">
           <mat-paginator
-          showFirstLastButtons="true"
+            showFirstLastButtons="true"
             class="bg-white-imp"
             [length]="dataSource.data.length"
-            [pageSize]="5"
+            [pageSize]="10"
             [pageSizeOptions]="[5, 10, 25, 100]"
             aria-label="Select page"
           ></mat-paginator>

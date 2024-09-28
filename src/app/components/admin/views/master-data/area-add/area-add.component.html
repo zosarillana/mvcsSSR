@@ -28,16 +28,58 @@
               Area
             </h1>
             <!-- Add button -->
-            <button
-              mat-icon-button
-              class="ml-2 mb-2"
-              (click)="openAddDialog()"              
-            >
+            <button mat-icon-button class="ml-2 mb-2" (click)="openAddDialog()">
               <mat-icon class="mb-5">add_location_alt</mat-icon>
             </button>
           </div>
+
           <div class="flex flex-col gap-2 sm:flex-row sm:gap-4">
-            <mat-form-field class="sm:min-w-[150px] sm:h-[70px]">
+            <mat-form-field class="w-full min-w-[150px] sm:h-[70px]">
+              <mat-label>Search Area</mat-label>
+              <input
+                type="text"
+                placeholder="Search Area"
+                aria-label="Search Area"
+                matInput
+                [formControl]="myControl"
+                [matAutocomplete]="auto"
+                (input)="applyFilter($event, 'area')"
+              />
+              <mat-autocomplete #auto="matAutocomplete">
+                <mat-option
+                  *ngFor="let option of filteredOptions | async"
+                  [value]="option"
+                  (onSelectionChange)="applyFilterOnSelect(option)"
+                  class="uppercase"
+                  style="font-size: 0.75rem; line-height: 1.5"
+                >
+                  {{ option }}
+                </mat-option>
+              </mat-autocomplete>
+            </mat-form-field>
+
+            <mat-form-field class="w-full sm:min-w-[150px] sm:h-[70px]">
+              <mat-label>Enter a date range</mat-label>
+              <mat-date-range-input [rangePicker]="picker">
+                <input
+                  matStartDate
+                  placeholder="Start date"
+                  (dateChange)="onStartDateChange($event)"
+                />
+                <input
+                  matEndDate
+                  placeholder="End date"
+                  (dateChange)="onEndDateChange($event)"
+                />
+              </mat-date-range-input>
+              <mat-hint>MM/DD/YYYY – MM/DD/YYYY</mat-hint>
+              <mat-datepicker-toggle
+                matIconSuffix
+                [for]="picker"
+              ></mat-datepicker-toggle>
+              <mat-date-range-picker #picker></mat-date-range-picker>
+            </mat-form-field>
+            <!-- <mat-form-field class="sm:min-w-[150px] sm:h-[70px]">
               <mat-label class="text-base">Filter by (Start Date)</mat-label>
               <input
                 matInput
@@ -51,9 +93,8 @@
                 [for]="startPicker"
               ></mat-datepicker-toggle>
               <mat-datepicker #startPicker></mat-datepicker>
-            </mat-form-field>
-
-            <mat-form-field class="sm:min-w-[150px] sm:h-[70px]">
+            </mat-form-field> -->
+            <!-- <mat-form-field class="sm:min-w-[150px] sm:h-[70px]">
               <mat-label class="text-base">Filter by (End Date)</mat-label>
               <input
                 matInput
@@ -67,7 +108,7 @@
                 [for]="endPicker"
               ></mat-datepicker-toggle>
               <mat-datepicker #endPicker></mat-datepicker>
-            </mat-form-field>
+            </mat-form-field> -->
           </div>
         </div>
       </div>
@@ -139,38 +180,36 @@
               *matCellDef="let user"
               class="bg-white-imp border border-blueGray-100 px-6 py-3 text-sm whitespace-nowrap text-left text-blueGray-700"
             >
-            <div class="flex space-x-2">
-              <div class="relative inline-block group">
-                <button
-                  mat-icon-button
-                  class="icon-button-edit"
-                  (click)="openEditDialog(user)"
-                >
-                  <mat-icon>edit</mat-icon>
-                </button>
-               
+              <div class="flex space-x-2">
+                <div class="relative inline-block group">
+                  <button
+                    mat-icon-button
+                    class="icon-button-edit"
+                    (click)="openEditDialog(user)"
+                  >
+                    <mat-icon>edit</mat-icon>
+                  </button>
+                </div>
+                <div class="relative inline-block group">
+                  <button
+                    mat-icon-button
+                    class="icon-button-edit"
+                    (click)="openViewDialog(user)"
+                  >
+                    <mat-icon>visibility</mat-icon>
+                  </button>
+                </div>
+
+                <div class="relative inline-block group">
+                  <button
+                    mat-icon-button
+                    class="icon-button-edit"
+                    (click)="openDeleteDialog(user)"
+                  >
+                    <mat-icon>delete</mat-icon>
+                  </button>
+                </div>
               </div>
-              <div class="relative inline-block group">
-                <button
-                  mat-icon-button
-                  class="icon-button-edit"
-                  (click)="openViewDialog(user)"
-                >
-                  <mat-icon>visibility</mat-icon>
-                </button>
-                
-              </div>
-                   
-              <div class="relative inline-block group">
-                <button
-                  mat-icon-button
-                  class="icon-button-edit"
-                  (click)="openDeleteDialog(user)"
-                >
-                  <mat-icon>delete</mat-icon>
-                </button>                
-              </div>                                               
-            </div>
             </td>
           </ng-container>
           <!-- Table Header and Rows -->

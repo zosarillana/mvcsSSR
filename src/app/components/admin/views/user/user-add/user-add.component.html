@@ -40,233 +40,226 @@
               User's
             </h1>
             <!-- Add button -->
-            <button
-              mat-icon-button
-              class="ml-4"
-              (click)="openAddDialog()"             
-            >
-            <mat-icon>add</mat-icon>
+            <button mat-icon-button class="ml-4" (click)="openAddDialog()">
+              <mat-icon>add</mat-icon>
             </button>
           </div>
           <!-- Filters -->
           <div class="flex flex-col gap-2 sm:flex-row sm:gap-4">
-            <mat-form-field
-              appearance="fill"
-              class="sm:min-w-[200px] sm:h-[70px]"
-            >
-              <mat-label class="text-base">Filter by username</mat-label>
+            <mat-form-field class="w-full min-w-[150px] sm:h-[70px]">
+              <mat-label>Search fullname</mat-label>
               <input
+                type="text"
+                placeholder="Select fullname"
+                aria-label="Fullname"
                 matInput
-                (input)="applyFilter($event, 'username')"
-                class="text-xs"
+                [formControl]="myControl"
+                [matAutocomplete]="auto"
+                (input)="applyFilter($event, 'fullname')"
               />
-              <mat-icon matSuffix>search</mat-icon>
+              <mat-autocomplete #auto="matAutocomplete" (optionSelected)="applyFilterOnSelect($event.option.value)">
+                <mat-option
+                  *ngFor="let option of filteredOptions | async"
+                  [value]="option"
+                  class="uppercase"
+                  style="font-size: 0.75rem; line-height: 1.5"
+                >
+                  {{ option }}
+                </mat-option>
+              </mat-autocomplete>
             </mat-form-field>
-
-            <mat-form-field class="sm:min-w-[150px] sm:h-[70px]">
-              <mat-label class="text-base">Filter by (Start Date)</mat-label>
-              <input
-                matInput
-                [matDatepicker]="startPicker"
-                placeholder="Start Date"
-                (dateChange)="applyDateFilter('start', $event)"
-                class="text-xs"
-              />
+            
+            <mat-form-field class="w-full sm:min-w-[150px] sm:h-[70px]">
+              <mat-label>Enter a date range</mat-label>
+              <mat-date-range-input [rangePicker]="picker">
+                <input
+                  matStartDate
+                  placeholder="Start date"
+                  (dateChange)="onStartDateChange($event)"
+                />
+                <input
+                  matEndDate
+                  placeholder="End date"
+                  (dateChange)="onEndDateChange($event)"
+                />
+              </mat-date-range-input>
+              <mat-hint>MM/DD/YYYY – MM/DD/YYYY</mat-hint>
               <mat-datepicker-toggle
-                matSuffix
-                [for]="startPicker"
+                matIconSuffix
+                [for]="picker"
               ></mat-datepicker-toggle>
-              <mat-datepicker #startPicker></mat-datepicker>
-            </mat-form-field>
-
-            <mat-form-field class="sm:min-w-[150px] sm:h-[70px]">
-              <mat-label class="text-base">Filter by (End Date)</mat-label>
-              <input
-                matInput
-                [matDatepicker]="endPicker"
-                placeholder="End Date"
-                (dateChange)="applyDateFilter('end', $event)"
-                class="text-xs"
-              />
-              <mat-datepicker-toggle
-                matSuffix
-                [for]="endPicker"
-              ></mat-datepicker-toggle>
-              <mat-datepicker #endPicker></mat-datepicker>
+              <mat-date-range-picker #picker></mat-date-range-picker>
             </mat-form-field>
           </div>
         </div>
-      </div>
 
-      <div class="block w-full overflow-x-auto">
-        <table
-          mat-table
-          [dataSource]="dataSource"
-          class="items-center bg-transparent w-full border-collapse"
-        >
-          <!-- Column Definitions -->
-          <ng-container matColumnDef="id">
-            <th
-              mat-header-cell
-              *matHeaderCellDef
-              class="bg-white-imp uppercase text-xs"
-            >
-              Abfi Id
-            </th>
-            <td
-              mat-cell
-              *matCellDef="let user"
-              class="bg-white-imp border border-blueGray-100 px-6 py-3 text-sm whitespace-nowrap text-left text-blueGray-700"
-            >
-              {{ user.abfi_id }}
-            </td>
-          </ng-container>
-          <ng-container matColumnDef="fullname">
-            <th
-              mat-header-cell
-              *matHeaderCellDef
-              class="bg-white-imp uppercase text-xs"
-            >
-              Name
-            </th>
-            <td
-              mat-cell
-              *matCellDef="let user"
-              class="bg-white-imp border border-blueGray-100 px-6 py-3 text-sm whitespace-nowrap text-left text-blueGray-700"
-            >
-              {{ user.fname }} {{ user.mname }} {{ user.lname }}
-            </td>
-          </ng-container>
-          <ng-container matColumnDef="username">
-            <th
-              mat-header-cell
-              *matHeaderCellDef
-              class="bg-white-imp uppercase text-xs"
-            >
-              Username
-            </th>
-            <td
-              mat-cell
-              *matCellDef="let user"
-              class="bg-white-imp border border-blueGray-100 px-6 py-3 text-sm whitespace-nowrap text-left text-blueGray-700"
-            >
-              {{ user.username }}
-            </td>
-          </ng-container>
+        <div class="block w-full overflow-x-auto">
+          <table
+            mat-table
+            [dataSource]="dataSource"
+            class="items-center bg-transparent w-full border-collapse"
+          >
+            <!-- Column Definitions -->
+            <ng-container matColumnDef="id">
+              <th
+                mat-header-cell
+                *matHeaderCellDef
+                class="bg-white-imp uppercase text-xs"
+              >
+                Abfi Id
+              </th>
+              <td
+                mat-cell
+                *matCellDef="let user"
+                class="bg-white-imp border border-blueGray-100 px-6 py-3 text-sm whitespace-nowrap text-left text-blueGray-700"
+              >
+                {{ user.abfi_id }}
+              </td>
+            </ng-container>
+            <ng-container matColumnDef="fullname">
+              <th
+                mat-header-cell
+                *matHeaderCellDef
+                class="bg-white-imp uppercase text-xs"
+              >
+                Name
+              </th>
+              <td
+                mat-cell
+                *matCellDef="let user"
+                class="bg-white-imp border border-blueGray-100 px-6 py-3 text-sm uppercase whitespace-nowrap text-left text-blueGray-700"
+              >
+                {{ user.fname }} {{ user.mname }} {{ user.lname }}
+              </td>
+            </ng-container>
+            <ng-container matColumnDef="username">
+              <th
+                mat-header-cell
+                *matHeaderCellDef
+                class="bg-white-imp uppercase text-xs"
+              >
+                Username
+              </th>
+              <td
+                mat-cell
+                *matCellDef="let user"
+                class="bg-white-imp border border-blueGray-100 px-6 py-3 text-sm whitespace-nowrap text-left text-blueGray-700"
+              >
+                {{ user.username }}
+              </td>
+            </ng-container>
 
-          <ng-container matColumnDef="email_add">
-            <th
-              mat-header-cell
-              *matHeaderCellDef
-              class="bg-white-imp uppercase text-xs"
-            >
-              Email Address
-            </th>
-            <td
-              mat-cell
-              *matCellDef="let user"
-              class="bg-white-imp border border-blueGray-100 px-6 py-3 text-sm whitespace-nowrap text-left text-blueGray-700"
-            >
-              {{ user.email_add }}
-            </td>
-          </ng-container>
+            <ng-container matColumnDef="email_add">
+              <th
+                mat-header-cell
+                *matHeaderCellDef
+                class="bg-white-imp uppercase text-xs"
+              >
+                Email Address
+              </th>
+              <td
+                mat-cell
+                *matCellDef="let user"
+                class="bg-white-imp border border-blueGray-100 px-6 py-3 text-sm whitespace-nowrap text-left text-blueGray-700"
+              >
+                {{ user.email_add }}
+              </td>
+            </ng-container>
 
-          <ng-container matColumnDef="contact_num">
-            <th
-              mat-header-cell
-              *matHeaderCellDef
-              class="bg-white-imp uppercase text-xs"
-            >
-              Contact number
-            </th>
-            <td
-              mat-cell
-              *matCellDef="let user"
-              class="bg-white-imp border border-blueGray-100 px-6 py-3 text-sm whitespace-nowrap text-left text-blueGray-700"
-            >
-              {{ user.contact_num }}
-            </td>
-          </ng-container>
-          <ng-container matColumnDef="date_created">
-            <th
-              mat-header-cell
-              *matHeaderCellDef
-              class="bg-white-imp uppercase text-xs"
-            >
-              Date created
-            </th>
-            <td
-              mat-cell
-              *matCellDef="let user"
-              class="bg-white-imp border border-blueGray-100 px-6 py-3 text-sm whitespace-nowrap text-left text-blueGray-700"
-            >
-              {{ user.dateCreated | date : "short" }}
-            </td>
-          </ng-container>
-          <ng-container matColumnDef="action">
-            <th
-              mat-header-cell
-              *matHeaderCellDef
-              class="bg-white-imp uppercase text-xs"
-            >
-              Action
-            </th>
-            <td
-              mat-cell
-              *matCellDef="let user"
-              class="bg-white-imp border border-blueGray-100 px-6 py-3 text-sm whitespace-nowrap text-left text-blueGray-700"
-            >
-            <div class="flex space-x-2">
-              <div class="relative inline-block group">
-                <button
-                  mat-icon-button
-                  class="icon-button-edit"
-                  (click)="openEditDialog(user)"
-                >
-                  <mat-icon>edit</mat-icon>
-                </button>
-               
-              </div>
-              <div class="relative inline-block group">
-                <button
-                  mat-icon-button
-                  class="icon-button-edit"
-                  (click)="openViewDialog(user)"
-                >
-                  <mat-icon>visibility</mat-icon>
-                </button>
-                
-              </div>
-                   
-              <div class="relative inline-block group">
-                <button
-                  mat-icon-button
-                  class="icon-button-edit"
-                  (click)="openDeleteDialog(user)"
-                >
-                  <mat-icon>delete</mat-icon>
-                </button>                
-              </div>                                               
-            </div>
-            </td>
-          </ng-container>
-          <!-- Table Header and Rows -->
-          <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
-          <tr mat-row *matRowDef="let row; columns: displayedColumns"></tr>
-        </table>
-      </div>
-      <div>
-        <mat-paginator
-          class="bg-white-imp"
-          showFirstLastButtons="true"
-          [length]="dataSource.data.length"
-          [pageSize]="10"
-          [pageSizeOptions]="[5, 10, 25, 100]"
-          aria-label="Select page"
-        >
-        </mat-paginator>
+            <ng-container matColumnDef="contact_num">
+              <th
+                mat-header-cell
+                *matHeaderCellDef
+                class="bg-white-imp uppercase text-xs"
+              >
+                Contact number
+              </th>
+              <td
+                mat-cell
+                *matCellDef="let user"
+                class="bg-white-imp border border-blueGray-100 px-6 py-3 text-sm whitespace-nowrap text-left text-blueGray-700"
+              >
+                {{ user.contact_num }}
+              </td>
+            </ng-container>
+            <ng-container matColumnDef="date_created">
+              <th
+                mat-header-cell
+                *matHeaderCellDef
+                class="bg-white-imp uppercase text-xs"
+              >
+                Date created
+              </th>
+              <td
+                mat-cell
+                *matCellDef="let user"
+                class="bg-white-imp border border-blueGray-100 px-6 py-3 text-sm whitespace-nowrap text-left text-blueGray-700"
+              >
+                {{ user.dateCreated | date : "short" }}
+              </td>
+            </ng-container>
+            <ng-container matColumnDef="action">
+              <th
+                mat-header-cell
+                *matHeaderCellDef
+                class="bg-white-imp uppercase text-xs"
+              >
+                Action
+              </th>
+              <td
+                mat-cell
+                *matCellDef="let user"
+                class="bg-white-imp border border-blueGray-100 px-6 py-3 text-sm whitespace-nowrap text-left text-blueGray-700"
+              >
+                <div class="flex space-x-2">
+                  <div class="relative inline-block group">
+                    <button
+                      mat-icon-button
+                      class="icon-button-edit"
+                      (click)="openEditDialog(user)"
+                    >
+                      <mat-icon>edit</mat-icon>
+                    </button>
+                  </div>
+                  <div class="relative inline-block group">
+                    <button
+                      mat-icon-button
+                      class="icon-button-edit"
+                      (click)="openViewDialog(user)"
+                    >
+                      <mat-icon>visibility</mat-icon>
+                    </button>
+                  </div>
+
+                  <div class="relative inline-block group">
+                    <button
+                      mat-icon-button
+                      class="icon-button-edit"
+                      (click)="openDeleteDialog(user)"
+                    >
+                      <mat-icon>delete</mat-icon>
+                    </button>
+                  </div>
+                </div>
+              </td>
+            </ng-container>
+            <!-- Table Header and Rows -->
+            <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
+            <tr mat-row *matRowDef="let row; columns: displayedColumns"></tr>
+          </table>
+        </div>
+        <div>
+          <mat-paginator
+            class="bg-white-imp"
+            showFirstLastButtons="true"
+            [length]="dataSource.data.length"
+            [pageSize]="10"
+            [pageSizeOptions]="[5, 10, 25, 100]"
+            aria-label="Select page"
+          >
+          </mat-paginator>
+        </div>
       </div>
     </div>
   </div>
 </div>
-

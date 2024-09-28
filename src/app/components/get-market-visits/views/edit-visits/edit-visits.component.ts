@@ -541,11 +541,17 @@ export class EditVisitsComponent implements OnInit {
     this.marketVisitsService.updateMarketVisits(visitId, formData).subscribe(
       (response) => {
         console.log('Market visit updated successfully', response);
-        this.snackBar.open('Market visit updated successfully!', 'Close', {
+        const snackBarRef = this.snackBar.open('Market visit updated successfully!', 'Close', {
           duration: 3000, // 3 seconds
         });
+        // Optionally, reset the form or navigate to another page
         this.formGroup.reset(); // Clear the form
         this.sharedService.setSelectedContent('content1');
+    
+        // Reload the page after the snackbar is dismissed
+        snackBarRef.afterDismissed().subscribe(() => {
+          window.location.reload();
+        });
       },
       (error) => {
         console.error('Error updating market visit:', error);

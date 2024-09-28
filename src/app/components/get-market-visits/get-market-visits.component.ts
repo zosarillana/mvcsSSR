@@ -6,7 +6,7 @@ import {
   ChangeDetectorRef,
   Input,
 } from '@angular/core';
-import { WebSocketService } from '../../services/websocket.service';
+// import { WebSocketService } from '../../services/websocket.service';
 import { MatPaginator } from '@angular/material/paginator';
 import { MatTableDataSource } from '@angular/material/table';
 import * as ExcelJS from 'exceljs';
@@ -24,6 +24,7 @@ import { AuthService } from '../../auth/auth.service';
 import { MatSnackBar } from '@angular/material/snack-bar';
 import { FormControl } from '@angular/forms';
 import { startWith } from 'rxjs/operators';
+import { SseService } from '../../services/sse.service';
 @Component({
   selector: 'app-get-market-visits',
   templateUrl: './get-market-visits.component.html',
@@ -31,9 +32,8 @@ import { startWith } from 'rxjs/operators';
 })
 export class GetMarketVisitsComponent implements AfterViewInit, OnInit {
   myControl = new FormControl('');
-  options: string[] = [];  // Initialize as empty
+  options: string[] = []; // Initialize as empty
   filteredOptions!: Observable<string[]>;
-  private webSocketSubscription: Subscription = new Subscription();
   @Input() mvisit?: MarketVisits;
   displayedColumns: string[] = [
     'mv_id',
@@ -71,6 +71,7 @@ export class GetMarketVisitsComponent implements AfterViewInit, OnInit {
   role_id: string | null = null;
   user_id: string | null = null;
   mvisits: MarketVisits[] = [];
+  private subscription: Subscription = new Subscription();
 
   constructor(
     private authService: AuthService,
@@ -81,13 +82,14 @@ export class GetMarketVisitsComponent implements AfterViewInit, OnInit {
     public dialog: MatDialog,
     private sharedService: SharedService, // Inject SharedService
     private tokenService: TokenService,
-    private webSocketService: WebSocketService,
+    // private webSocketService: WebSocketService,
+    private sseService: SseService,
     private matSnackBar: MatSnackBar
   ) {}
 
-  ngOnInit(): void {
-    this.loadMarketVisits(); // Load initial data   
-
+  ngOnInit(): void {  
+    this.loadMarketVisits(); // Load initial data
+    this.subscribeToSseMessages();
     this.marketVisitsService.getMarketVisits().subscribe(
       (data) => {
         this.mvisits = data || [];
@@ -97,55 +99,79 @@ export class GetMarketVisitsComponent implements AfterViewInit, OnInit {
         console.error('Error fetching market visits', error);
       }
     );
-  
+
     this.tokenService.decodeTokenAndSetUser();
     const user = this.tokenService.getUser();
     this.role_id = user?.role_id ?? null;
     this.user_id = user?.id ?? null;
     this.cdr.detectChanges();
     this.updateVisitCount();
-  
+
     // Subscribe to WebSocket messages
-    this.webSocketService.messages$.subscribe(message => {
-      console.log('Received WebSocket message:', message);
-      this.matSnackBar.open(message, 'Close', {
-        duration: 3000, // Duration in milliseconds
-      });
-      
-      // Fetch the latest data and update the options
-      this.marketVisitsService.getMarketVisits().subscribe(
-        (result: MarketVisits[]) => {
-          this.mvisits = result || [];
-          this.setupAutocomplete(); // Reinitialize autocomplete with the latest options
-          this.updateDataSource(result);
-          this.updateVisitCount();
-        },
-        (error) => {
-          console.error('Error fetching market visits on WebSocket update:', error);
-        }
-      );
-    });
-    // Load Flowbite (if needed)
+    // this.webSocketService.messages$.subscribe(message => {
+    //   console.log('Received WebSocket message:', message);
+    //   this.matSnackBar.open(message, 'Close', {
+    //duration: 3000, // Duration in milliseconds
+    // });
+
+    // Fetch the latest data and update the options
+    // this.marketVisitsService.getMarketVisits().subscribe(
+    //   (result: MarketVisits[]) => {
+    //     this.mvisits = result || [];
+    //     this.setupAutocomplete(); // Reinitialize autocomplete with the latest options
+    //     this.updateDataSource(result);
+    //     this.updateVisitCount();
+    //   },
+    //   (error) => {
+    //     console.error('Error fetching market visits on WebSocket update:', error);
+    //   }
+    // );
+    // });
+
     this.flowbiteService.loadFlowbite((flowbite) => {
       console.log('Flowbite loaded', flowbite);
     });
   }
+
   setupAutocomplete() {
     // Extract mv_id values for the autocomplete options
     this.options = this.mvisits.map((visit) => visit.mv_id);
-  
+
     // Setup autocomplete filtering
     this.filteredOptions = this.myControl.valueChanges.pipe(
       startWith(''),
-      map(value => this._filter(value ?? '', this.options))  // Use current options
+      map((value) => this._filter(value ?? '', this.options)) // Use current options
     );
   }
-  
+
   private _filter(value: string, options: string[]): string[] {
     const filterValue = value.toLowerCase();
-    return options.filter(option => option.toLowerCase().includes(filterValue));
+    return options.filter((option) =>
+      option.toLowerCase().includes(filterValue)
+    );
   }
-  
+
+  applyFilter(event: Event, filterType: string): void {
+    const input = event.target as HTMLInputElement;
+    const value = input.value;
+
+    if (filterType === 'mvId') {
+      this.dataSource.filterPredicate = (data: MarketVisits) => {
+        return data.mv_id.toLowerCase().includes(value.trim().toLowerCase());
+      };
+      this.dataSource.filter = value.trim().toLowerCase(); // Apply the filter
+    }
+  }
+  applyFilterOnSelect(selectedOption: string): void {
+    // Define the filter predicate
+    this.dataSource.filterPredicate = (data: MarketVisits) => {
+      return data.mv_id.toLowerCase().includes(selectedOption.toLowerCase());
+    };
+
+    // Apply the new filter
+    this.dataSource.filter = selectedOption.toLowerCase();
+  }
+
   private updateVisitCount(): void {
     if (this.authService.isLoggedIn()) {
       this.marketVisitsService.getVisitCount().subscribe(
@@ -155,42 +181,75 @@ export class GetMarketVisitsComponent implements AfterViewInit, OnInit {
             this.visitCount = count;
           }
         },
-        error => {
+        (error) => {
           console.error('Error fetching visit count:', error);
         }
       );
     }
   }
+  // Subscribe to SSE messages instead of WebSocket
+  private subscribeToSseMessages(): void {
+    this.subscription.add(
+      this.sseService.messages$.subscribe((event) => {
+        const message = event.data; // Extract the message from the event
+        console.log('Received SSE message:', message);
 
+        // Display the message using MatSnackBar
+        this.matSnackBar.open(message, 'Close', {
+          duration: 3000, // Duration in milliseconds
+        });
+
+        // Fetch the latest data and update the options
+        this.marketVisitsService.getMarketVisits().subscribe(
+          (result: MarketVisits[]) => {
+            this.mvisits = result || []; // Update the local data
+            this.setupAutocomplete(); // Reinitialize autocomplete
+            this.updateDataSource(result); // Update data source for your table or list
+            this.updateVisitCount(); // Update visit count if applicable
+          },
+          (error) => {
+            console.error('Error fetching market visits on SSE update:', error);
+          }
+        );
+      })
+    );
+  }
+
+  // eventSource.onerror = (error) => {
+  //   console.error('SSE error:', error);
+  //   eventSource.close();
+  // };
+
+  // Load Flowbite (if needed)
   ngOnDestroy(): void {
     // Unsubscribe from WebSocket messages
-    if (this.webSocketSubscription) {
-      this.webSocketSubscription.unsubscribe();
-    }
+    // if (this.webSocketSubscription) {
+    //   this.webSocketSubscription.unsubscribe();
+    // }
   }
 
   private updateDataSource(result: MarketVisits[]): void {
     let dataToDisplay = result;
-  
+
     if (this.role_id === '2') {
       dataToDisplay = result.filter(
         (visit) => visit.user?.user_id?.toString() === this.user_id
       );
     }
-  
+
     if (this.startDate && this.endDate) {
       dataToDisplay = dataToDisplay.filter((visit) => {
         const visitDate = new Date(visit.visit_date);
         // Check if startDate and endDate are not null
-        return this.startDate && this.endDate 
+        return this.startDate && this.endDate
           ? visitDate >= this.startDate && visitDate <= this.endDate
           : true; // If either is null, do not filter by date
       });
     }
-  
+
     this.dataSource.data = dataToDisplay;
   }
-  
+
   onStartDateChange(event: any) {
     this.startDate = event.value;
     this.applyDateFilter();
@@ -202,29 +261,30 @@ export class GetMarketVisitsComponent implements AfterViewInit, OnInit {
   }
 
   applyDateFilter() {
-    this.marketVisitsService.getMarketVisits().subscribe((result: MarketVisits[]) => {
-      let dataToDisplay = result;
-  
-      if (this.role_id === '2') {
-        dataToDisplay = result.filter(
-          (visit) => visit.user?.user_id?.toString() === this.user_id
-        );
-      }
-  
-      if (this.startDate && this.endDate) {
-        dataToDisplay = dataToDisplay.filter((visit) => {
-          const visitDate = new Date(visit.visit_date);
-          // Check if startDate and endDate are not null
-          return this.startDate && this.endDate
-            ? visitDate >= this.startDate && visitDate <= this.endDate
-            : true; // If either is null, do not filter by date
-        });
-      }
-  
-      this.dataSource.data = dataToDisplay;
-    });
+    this.marketVisitsService
+      .getMarketVisits()
+      .subscribe((result: MarketVisits[]) => {
+        let dataToDisplay = result;
+
+        if (this.role_id === '2') {
+          dataToDisplay = result.filter(
+            (visit) => visit.user?.user_id?.toString() === this.user_id
+          );
+        }
+
+        if (this.startDate && this.endDate) {
+          dataToDisplay = dataToDisplay.filter((visit) => {
+            const visitDate = new Date(visit.visit_date);
+            // Check if startDate and endDate are not null
+            return this.startDate && this.endDate
+              ? visitDate >= this.startDate && visitDate <= this.endDate
+              : true; // If either is null, do not filter by date
+          });
+        }
+
+        this.dataSource.data = dataToDisplay;
+      });
   }
-  
 
   // applyDateFilter(type: string, event: MatDatepickerInputEvent<Date>): void {
   //   const date = event.value;
@@ -249,7 +309,7 @@ export class GetMarketVisitsComponent implements AfterViewInit, OnInit {
   // }
   // applyDateFilter(event: { value: Date[] | null }): void {
   //   const dateRange = event.value;
-  
+
   //   if (dateRange && dateRange.length === 2) {
   //     this.startDate = dateRange[0];
   //     this.endDate = dateRange[1];
@@ -257,7 +317,7 @@ export class GetMarketVisitsComponent implements AfterViewInit, OnInit {
   //     this.startDate = null;
   //     this.endDate = null;
   //   }
-  
+
   //   this.dataSource.filterPredicate = (data: MarketVisits) => {
   //     const createdDate = moment(data.date_created);
   //     const withinStart = this.startDate
@@ -270,38 +330,39 @@ export class GetMarketVisitsComponent implements AfterViewInit, OnInit {
   //   };
   //   this.dataSource.filter = '' + Math.random(); // Trigger filtering
   // }
-  
+
   loadMarketVisits(): void {
-    this.marketVisitsService.getMarketVisits().subscribe((result: MarketVisits[]) => {
-      let dataToDisplay = result;
-  
-      // Apply filtering only if role_id is 2
-      if (this.role_id === '2') {
-        dataToDisplay = result.filter(
-          (visit) => visit.user?.user_id?.toString() === this.user_id
-        );
-        console.log('Filtered Data for role_id 2:', dataToDisplay);
-      } else {
-        console.log('Unfiltered Data for other roles:', dataToDisplay);
-      }
-  
-      // Apply date filtering
-      if (this.startDate && this.endDate) {
-        dataToDisplay = dataToDisplay.filter((visit) => {
-          const visitDate = new Date(visit.visit_date);
-          // Check if startDate and endDate are not null
-          return this.startDate && this.endDate 
-            ? visitDate >= this.startDate && visitDate <= this.endDate
-            : true; // If either is null, do not filter by date
-        });
-      }
-  
-      // Assign filtered or unfiltered data to the data source
-      this.dataSource.data = dataToDisplay;
-    });
+    this.marketVisitsService
+      .getMarketVisits()
+      .subscribe((result: MarketVisits[]) => {
+        let dataToDisplay = result;
+
+        // Apply filtering only if role_id is 2
+        if (this.role_id === '2') {
+          dataToDisplay = result.filter(
+            (visit) => visit.user?.user_id?.toString() === this.user_id
+          );
+          console.log('Filtered Data for role_id 2:', dataToDisplay);
+        } else {
+          console.log('Unfiltered Data for other roles:', dataToDisplay);
+        }
+
+        // Apply date filtering
+        if (this.startDate && this.endDate) {
+          dataToDisplay = dataToDisplay.filter((visit) => {
+            const visitDate = new Date(visit.visit_date);
+            // Check if startDate and endDate are not null
+            return this.startDate && this.endDate
+              ? visitDate >= this.startDate && visitDate <= this.endDate
+              : true; // If either is null, do not filter by date
+          });
+        }
+
+        // Assign filtered or unfiltered data to the data source
+        this.dataSource.data = dataToDisplay;
+      });
   }
-  
-  
+
   getFormattedVisitDate(visitDate: string | undefined): string {
     if (visitDate) {
       return this.datePipe.transform(new Date(visitDate), 'short') || 'No Date';
@@ -334,12 +395,11 @@ export class GetMarketVisitsComponent implements AfterViewInit, OnInit {
   //     )
   //   );
   // }
-  
+
   // This method could be triggered by some event in your application
   // refreshData() {
   //   this.refreshDataEvent.next();
   // }
-    
 
   // ngOnDestroy(): void {
   //   // Clean up subscriptions to prevent memory leaks
@@ -383,7 +443,6 @@ export class GetMarketVisitsComponent implements AfterViewInit, OnInit {
   //     }
   //   });
   // }
-
 
   public async exportMarketVisitsToExcel(): Promise<void> {
     try {

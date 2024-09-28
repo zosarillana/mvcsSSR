@@ -3,26 +3,21 @@ import { MatDatepickerInputEvent } from '@angular/material/datepicker';
 import { MatDialog } from '@angular/material/dialog';
 import { MatPaginator } from '@angular/material/paginator';
 import { MatTableDataSource } from '@angular/material/table';
-import { initFlowbite } from 'flowbite';
 import moment from 'moment';
-import { Subscription } from 'rxjs';
-import { environment } from '../../../../../../environments/environment';
-import { Isr } from '../../../../../models/isr';
-import { IsrService } from '../../../../../services/isr.service';
-import { ModalCreateIsrComponent } from '../isr-add/modal/modal-create-isr/modal-create-isr.component';
-import { ModalDeleteIsrComponent } from '../isr-add/modal/modal-delete-isr/modal-delete-isr.component';
-import { ModalEditIsrComponent } from '../isr-add/modal/modal-edit-isr/modal-edit-isr.component';
-import { ModalViewIsrComponent } from '../isr-add/modal/modal-view-isr/modal-view-isr.component';
+import { map, Observable, startWith, Subscription } from 'rxjs';
 import { ModalCreatePodComponent } from './modal/modal-create-pod/modal-create-pod.component';
 import { PodService } from '../../../../../services/pod.service';
 import { ModalEditPodComponent } from './modal/modal-edit-pod/modal-edit-pod.component';
 import { ModalViewPodComponent } from './modal/modal-view-pod/modal-view-pod.component';
 import { ModalDeletePodComponent } from './modal/modal-delete-pod/modal-delete-pod.component';
-import { ModalDeletePapComponent } from '../pap-add/modal/modal-delete-pap/modal-delete-pap.component';
 import { Pod } from '../../../../../models/pod';
 import { DatePipe } from '@angular/common';
 import { FlowbiteService } from '../../../../../services/flowbite.service';
 import { AuthService } from '../../../../../auth/auth.service';
+import { FormControl } from '@angular/forms';
+import { SseService } from '../../../../../services/sse.service';
+import { MatSnackBar } from '@angular/material/snack-bar';
+import { Area } from '../../../../../models/area';
 @Component({
   selector: 'app-pod-add',
   templateUrl: './pod-add.component.html',
@@ -33,7 +28,6 @@ export class PodAddComponent {
     'pod_name',
     'others',
     'type',
-    // 'image_path',
     'description',
     'date_created',
     'action',
@@ -43,16 +37,22 @@ export class PodAddComponent {
   podCount: number = 0;
   startDate: Date | null = null;
   endDate: Date | null = null;
-
+  myControl = new FormControl('');
+  options: string[] = []; // Initialize as empty
+  filteredOptions!: Observable<string[]>;
+  pods: Pod[] = [];
+  private subscription: Subscription = new Subscription();
   private pollingSubscription: Subscription = new Subscription();
   private intervalId: any;
 
 
   // Construct the base API URL
   private url = '/api/api/Pod';
-  public imageUrlBase = `${this.url}/image/`; // <-- Use the environment API URL
+  public imageUrlBase = `${this.url}/image/`; 
 
-  constructor(
+  constructor(    
+    private sseService: SseService,
+    private matSnackBar: MatSnackBar,
     private authService: AuthService,
     private flowbiteService: FlowbiteService,
     private podService: PodService,
@@ -68,8 +68,17 @@ export class PodAddComponent {
   }
   
   ngOnInit(): void {
+    this.subscribeToSseMessages();
     this.loadPods();
-    this.startPolling();
+    this.podService.getPods().subscribe(
+      (data) => {
+        this.pods = data || [];
+        this.setupAutocomplete();
+      },
+      (error) => {
+        console.error('Error fetching Product on Display', error);
+      }
+    );
     this.flowbiteService.loadFlowbite(flowbite => {
       // Your custom code here
       console.log('Flowbite loaded', flowbite);
@@ -77,27 +86,73 @@ export class PodAddComponent {
   
   }
 
-  applyDateFilter(type: string, event: MatDatepickerInputEvent<Date>): void {
-    const date = event.value;
+  setupAutocomplete() {
+    // Extract mv_id values for the autocomplete options
+    this.options = this.pods.map((pod) => pod.pod_name);
 
-    if (type === 'start') {
-      this.startDate = date;
-    } else {
-      this.endDate = date;
-    }
-
-    this.dataSource.filterPredicate = (data: Pod) => {
-      const createdDate = moment(data.date_created);
-      const withinStart = this.startDate
-        ? createdDate.isSameOrAfter(this.startDate)
-        : true;
-      const withinEnd = this.endDate
-        ? createdDate.isSameOrBefore(this.endDate)
-        : true;
-      return withinStart && withinEnd;
-    };
-    this.dataSource.filter = '' + Math.random(); // Trigger filtering
+    // Setup autocomplete filtering
+    this.filteredOptions = this.myControl.valueChanges.pipe(
+      startWith(''),
+      map((value) => this._filter(value ?? '', this.options)) // Use current options
+    );
   }
+
+  private _filter(value: string, options: string[]): string[] {
+    const filterValue = value.toLowerCase();
+    return options.filter((option) =>
+      option.toLowerCase().includes(filterValue)
+    );
+  }
+
+  applyFilter(event: Event, filterType: string): void {
+    const input = event.target as HTMLInputElement;
+    const value = input.value;
+
+    if (filterType === 'pod') {
+      this.dataSource.filterPredicate = (data: Pod) => {
+        return data.pod_name.toLowerCase().includes(value.trim().toLowerCase());
+      };
+      this.dataSource.filter = value.trim().toLowerCase(); // Apply the filter
+    }
+  }
+  applyFilterOnSelect(selectedOption: string): void {
+    // Define the filter predicate
+    this.dataSource.filterPredicate = (data: Pod) => {
+      return data.pod_name.toLowerCase().includes(selectedOption.toLowerCase());
+    };
+
+    // Apply the new filter
+    this.dataSource.filter = selectedOption.toLowerCase();
+  }
+
+  applyDateFilter() {
+    this.podService.getPods().subscribe((result: Pod[]) => {
+      let dataToDisplay = result;
+
+      if (this.startDate && this.endDate) {
+        dataToDisplay = dataToDisplay.filter((pod) => {
+          const dateCreated = new Date(pod.date_created);
+          // Check if startDate and endDate are not null
+          return this.startDate && this.endDate
+            ? dateCreated >= this.startDate && dateCreated <= this.endDate
+            : true; // If either is null, do not filter by date
+        });
+      }
+
+      this.dataSource.data = dataToDisplay;
+    });
+  }
+
+  onStartDateChange(event: any) {
+    this.startDate = event.value;
+    this.applyDateFilter();
+  }
+
+  onEndDateChange(event: any) {
+    this.endDate = event.value;
+    this.applyDateFilter();
+  }
+
 
   loadPods(): void {
     this.podService.getPods().subscribe((result: Pod[]) => {
@@ -105,11 +160,49 @@ export class PodAddComponent {
       this.dataSource.paginator = this.paginator; // Set paginator after data is loaded
 
       // Fetch pod count initially
-      this.fetchPodCount();
-
-      // Start polling for pod count
-      this.startPolling();
+      this.fetchPodCount();      
     });
+  }
+
+  // Subscribe to SSE messages instead of WebSocket
+  private subscribeToSseMessages(): void {
+    this.subscription.add(
+      this.sseService.messages$.subscribe((event) => {
+        const message = event.data; // Extract the message from the event
+        console.log('Received SSE message:', message);
+
+        // Display the message using MatSnackBar
+        this.matSnackBar.open(message, 'Close', {
+          duration: 3000, // Duration in milliseconds
+        });
+
+        // Fetch the latest data and update the options
+        this.podService.getPods().subscribe(
+          (result: Pod[]) => {
+            this.pods = result || []; // Update the local data
+            this.setupAutocomplete(); // Reinitialize autocomplete
+            this.updateDataSource(result); // Update data source for your table or list
+            this.fetchPodCount(); // Update visit count if applicable
+          },
+          (error) => {
+            console.error('Error fetching market visits on SSE update:', error);
+          }
+        );
+      })
+    );
+  }
+  private updateDataSource(result: Pod[]): void {
+    let dataToDisplay = result;
+
+    if (this.startDate && this.endDate) {
+      dataToDisplay = dataToDisplay.filter((visit) => {
+        const visitDate = new Date(visit.date_created);
+        // Check if startDate and endDate are not null
+        return this.startDate && this.endDate
+          ? visitDate >= this.startDate && visitDate <= this.endDate
+          : true; // If either is null, do not filter by date
+      });
+    }
   }
 
   private fetchPodCount(): void {
@@ -125,28 +218,7 @@ export class PodAddComponent {
     }
   }
 
-  private startPolling(): void {
-    // Clear any existing interval
-    if (this.intervalId) {
-      clearInterval(this.intervalId);
-    }
-
-    // Set up polling every 3 seconds
-    this.intervalId = setInterval(() => {
-      if (this.authService.isLoggedIn()) {
-        this.fetchPodCount();
-      }
-    }, 3000);
-  }
-
-  ngOnDestroy(): void {
-    // Clean up polling interval and subscriptions
-    if (this.intervalId) {
-      clearInterval(this.intervalId);
-    }
-    if (this.pollingSubscription) {
-      this.pollingSubscription.unsubscribe();
-    }
+  ngOnDestroy(): void {   
   }
 
 

@@ -34,10 +34,9 @@ export class UserService {
     );
   }
 
-  public deleteUser(user: User): Observable<User[]> {
-    return this.http.delete<User[]>(
-      `${this.url}/${user.id}`
-    ).pipe(
+  // Method to delete a user by ID
+  public deleteUser(userId: number): Observable<User[]> {
+    return this.http.delete<User[]>(`${this.url}/${userId}`).pipe(
       catchError(this.handleError) // Use catchError inside pipe
     );
   }

@@ -38,6 +38,7 @@ export class ModalEditAreaComponent {
   }
 
   save(): void {
+    console.log(this.data);
     this.areaService.updateAreas(this.data).subscribe({
       next: (response) => {
         this.dialogRef.close(this.data);
