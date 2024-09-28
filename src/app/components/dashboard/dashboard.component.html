@@ -8,8 +8,8 @@
           <!-- SVG icon -->
           <mat-icon>person</mat-icon>
           <!-- <span>{{ visitCount }}</span> -->
-          <span>{{userCount}}</span>
-        </div> 
+          <span>{{ userCount }}</span>
+        </div>
         <div class="text-sm font-medium text-gray-400">Number of Users</div>
       </div>
     </div>
@@ -20,7 +20,7 @@
     >
   </div>
   <div
-  *ngIf="role_id == '2'"
+    *ngIf="role_id == '2'"
     class="bg-white rounded-md border border-gray-100 p-6 shadow-md shadow-black/5"
   >
     <div class="flex justify-between mb-6">
@@ -28,9 +28,9 @@
         <div class="flex items-center text-2xl font-semibold mb-1">
           <!-- SVG icon -->
           <mat-icon>done_all</mat-icon>
-          
-          <span>{{visitCountUser}}</span>
-        </div> 
+
+          <span>{{ visitCountUser }}</span>
+        </div>
         <div class="text-sm font-medium text-gray-400">Number of Visits</div>
       </div>
     </div>
@@ -41,7 +41,7 @@
     >
   </div>
   <div
-  *ngIf="role_id === '1'"
+    *ngIf="role_id === '1'"
     class="bg-white rounded-md border border-gray-100 p-6 shadow-md shadow-black/5"
   >
     <div class="flex justify-between mb-6">
@@ -49,9 +49,9 @@
         <div class="flex items-center text-2xl font-semibold mb-1">
           <!-- SVG icon -->
           <mat-icon>done_all</mat-icon>
-          
-          <span>{{visitCount}}</span>
-        </div> 
+
+          <span>{{ visitCount }}</span>
+        </div>
         <div class="text-sm font-medium text-gray-400">Number of Visits</div>
       </div>
     </div>
@@ -71,7 +71,7 @@
           <!-- SVG icon -->
           <mat-icon>location_on</mat-icon>
           <!-- <span>{{ visitCount }}</span> -->
-          <span>{{areaCount}}</span>
+          <span>{{ areaCount }}</span>
         </div>
         <div class="text-sm font-medium text-gray-400">Number of Locations</div>
       </div>
@@ -82,7 +82,8 @@
       >Add Location</a
     >
   </div>
-  <div *ngIf="role_id === '1'"
+  <div
+    *ngIf="role_id === '1'"
     class="bg-white rounded-md border border-gray-100 p-6 shadow-md shadow-black/5"
   >
     <div class="flex justify-between mb-6">
@@ -91,9 +92,11 @@
           <!-- SVG icon -->
           <mat-icon>store</mat-icon>
           <!-- <span>{{ visitCount }}</span> -->
-          <span>5</span>
+          <span>{{ isrCount }}</span>
         </div>
-        <div class="text-sm font-medium text-gray-400">Number of In Stores Requirements</div>
+        <div class="text-sm font-medium text-gray-400">
+          Number of In Stores Requirements
+        </div>
       </div>
     </div>
     <a
@@ -102,7 +105,8 @@
       >Add In Store Requirements</a
     >
   </div>
-  <div *ngIf="role_id === '1'"
+  <div
+    *ngIf="role_id === '1'"
     class="bg-white rounded-md border border-gray-100 p-6 shadow-md shadow-black/5"
   >
     <div class="flex justify-between mb-6">
@@ -111,9 +115,11 @@
           <!-- SVG icon -->
           <mat-icon>barcode_reader</mat-icon>
           <!-- <span>{{ visitCount }}</span> -->
-          <span>5</span>
+          <span>{{ podCount }}</span>
         </div>
-        <div class="text-sm font-medium text-gray-400">Number of Product on Display</div>
+        <div class="text-sm font-medium text-gray-400">
+          Number of Product on Display
+        </div>
       </div>
     </div>
     <a
@@ -121,45 +127,62 @@
       class="text-blue-500 font-medium text-sm hover:text-blue-600 cursor-pointer"
       >Add Product on Display</a
     >
-  </div> 
+  </div>
 </div>
 <div>
   <div class="grid grid-cols-1 lg:grid-cols-2 gap-1">
     <div class="grid grid-cols-1 gap-1">
-      <div
+      <!-- <div
         class="bg-white rounded-md border border-gray-100 p-6 shadow-md shadow-black/5"
-      >
-      <!-- <h1 class="font-bold ml-4">Market Visit Checklist</h1> -->
+      >     
       <app-status-chart></app-status-chart>
-      </div>
-      <div *ngIf="role_id === '1'"
+      </div> -->
+      <div
+        *ngIf="role_id === '1'"
         class="bg-white rounded-md border border-gray-100 p-6 shadow-md shadow-black/5"
       >
-      <!-- <h1 class="font-bold ml-4">Market Visit Status</h1> -->
-       <app-status-chart></app-status-chart>
+        <app-status-chart
+          [statusData]="[visitCount]"
+          [chartTitle]="'Market Visit Status'"
+        ></app-status-chart>
       </div>
     </div>
 
-    <div  class="grid grid-cols-1 lg:grid-cols-2 gap-1">
+    <div class="grid grid-col-1 md:grid-cols-2 lg:grid-cols-2 gap-1">
       <div
         class="bg-white rounded-md border border-gray-100 p-4 shadow-sm shadow-black/10"
       >
-            <app-visit-chart></app-visit-chart>
+        <app-visit-chart
+          [chartName]="'Visit Count'"
+          [visitCount]="marketVisits.length"  
+          [dateCreated]="dateCreated"
+        ></app-visit-chart>
       </div>
-      <div 
+      <div
         class="bg-white rounded-md border border-gray-100 p-4 shadow-sm shadow-black/10"
       >
-           <app-visit-chart></app-visit-chart>
+        <app-visit-chart
+          [chartName]="'Created Locations'"
+          [areaCount]="areaCount"
+        ></app-visit-chart>
       </div>
-      <div *ngIf="role_id === '1'"
+      <div
+        *ngIf="role_id === '1'"
         class="bg-white rounded-md border border-gray-100 p-4 shadow-sm shadow-black/10"
       >
-            <app-visit-chart></app-visit-chart>
+        <app-visit-chart
+          [chartName]="'Created In Store Requirements'"
+          [areaCount]="isrCount"
+        ></app-visit-chart>
       </div>
-      <div *ngIf="role_id === '1'"
+      <div
+        *ngIf="role_id === '1'"
         class="bg-white rounded-md border border-gray-100 p-4 shadow-sm shadow-black/10"
       >
-        <app-visit-chart></app-visit-chart>
+        <app-visit-chart
+          [chartName]="'Created Product on Display'"
+          [areaCount]="podCount"
+        ></app-visit-chart>
       </div>
     </div>
   </div>

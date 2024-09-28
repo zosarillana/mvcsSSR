@@ -1,4 +1,4 @@
-import { Component, ViewChild, OnInit, OnDestroy } from "@angular/core";
+import { Component, ViewChild, OnInit, OnDestroy, Input, OnChanges } from "@angular/core";
 import {
   ChartComponent,
   ApexAxisChartSeries,
@@ -10,7 +10,6 @@ import {
   ApexTitleSubtitle,
   ApexResponsive
 } from "ng-apexcharts";
-import { interval, Subscription } from 'rxjs';
 
 export type ChartOptions = {
   series: ApexAxisChartSeries;
@@ -28,22 +27,16 @@ export type ChartOptions = {
   templateUrl: './status-chart.component.html',
   styleUrls: ['./status-chart.component.css']
 })
-export class StatusChartComponent {
+export class StatusChartComponent implements OnInit, OnChanges {
   @ViewChild("chart") chart!: ChartComponent;
   public chartOptions: Partial<ChartOptions>;
 
+  @Input() statusData: number[] = []; // Array to receive data from parent
+  @Input() chartTitle: string = 'Default Title'; // Title of the chart
+
   constructor() {
     this.chartOptions = {
-      series: [
-        {
-          name: "Series 1",
-          data: [31, 40, 28, 51, 42, 109, 100]
-        },
-        {
-          name: "Series 2",
-          data: [11, 32, 45, 32, 34, 52, 41]
-        }
-      ],
+      series: [],
       chart: {
         height: 350,
         type: "area",
@@ -51,15 +44,15 @@ export class StatusChartComponent {
           show: true
         },
         zoom: {
-          enabled: false // Disable zoom to avoid passive event issues
+          enabled: false
         }
       },
       title: {
-        text: "Markets", // Chart title added
-        align: 'left', // Title alignment
+        text: this.chartTitle,
+        align: 'left',
         style: {
-          fontSize: '20px', // Customize title font size
-          fontWeight: 'bold' // Customize title font weight
+          fontSize: '20px',
+          fontWeight: 'bold'
         }
       },
       dataLabels: {
@@ -71,13 +64,13 @@ export class StatusChartComponent {
       xaxis: {
         type: "datetime",
         categories: [
-          "2018-09-19T00:00:00.000Z",
-          "2018-09-19T01:30:00.000Z",
-          "2018-09-19T02:30:00.000Z",
-          "2018-09-19T03:30:00.000Z",
-          "2018-09-19T04:30:00.000Z",
-          "2018-09-19T05:30:00.000Z",
-          "2018-09-19T06:30:00.000Z"
+          "2024-09-19T00:00:00.000Z",
+          "2024-09-19T01:30:00.000Z",
+          "2024-09-19T02:30:00.000Z",
+          "2024-09-19T03:30:00.000Z",
+          "2024-09-19T04:30:00.000Z",
+          "2024-09-19T05:30:00.000Z",
+          "2024-09-19T06:30:00.000Z"
         ]
       },
       tooltip: {
@@ -90,7 +83,7 @@ export class StatusChartComponent {
           breakpoint: 1000,
           options: {
             chart: {
-              height: 300 // Height adjustment for screens smaller than 1000px
+              height: 300
             }
           }
         },
@@ -98,16 +91,36 @@ export class StatusChartComponent {
           breakpoint: 600,
           options: {
             chart: {
-              height: 250 // Height adjustment for screens smaller than 600px
+              height: 250
             },
             xaxis: {
               labels: {
-                show: false // Hide labels on very small screens
+                show: false
               }
             }
           }
         }
       ]
     };
+  }
+
+  ngOnInit() {
+    // Update chart options with initial data
+    this.updateChart();
+  }
+
+  ngOnChanges(): void {
+    // Handle changes to the input properties and update the chart
+    this.updateChart();
+  }
+
+  private updateChart(): void {
+    this.chartOptions.series = [
+      {
+        name: this.chartTitle,
+        data: this.statusData // Use the latest statusData passed
+      }
+    ];
+   
   }
 }

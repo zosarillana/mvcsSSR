@@ -28,8 +28,15 @@ export class DashboardComponent {
   podCount: number = 0;
   visitCount: number = 0;
   visitCountUser: number = 0;
+  chartData: any[] = []; // Using any[]
+  previousMarketVisits: MarketVisits[] = []; 
+  public dateCreated: string[] = []; // Declare the dateCreated property
+  public marketVisits: MarketVisits[] = []; // Already initialized as empty
+  private _chartName: string = 'Default Chart Name';
   private subscription: Subscription = new Subscription();
-
+  public getChartTitle(): string {
+    return this._chartName;
+  }
   constructor(
     private marketVisitsService: MarketVisitsService,
     private cdr: ChangeDetectorRef,
@@ -56,6 +63,7 @@ export class DashboardComponent {
     this.fetchAllCount();
     this.updateVisitCount();
     this.updateVisitCountUser();
+    this.getMarketVisitsDataAll();
   }
   // Subscribe to SSE messages instead of WebSocket
   private previousVisitCount: number | null = null;
@@ -78,6 +86,7 @@ export class DashboardComponent {
             this.fetchAllCount();
             this.updateVisitCount();
             this.updateVisitCountUser();
+            this.getMarketVisitsDataAll();
           },
           (error) => {
             console.error('Error fetching market visits on SSE update:', error);
@@ -116,6 +125,41 @@ export class DashboardComponent {
       );
     }
   }
+  
+  private getMarketVisitsDataAll(): void {
+    if (this.authService.isLoggedIn()) {
+        this.marketVisitsService.getMarketVisits().subscribe(
+            (data: MarketVisits[]) => { 
+                console.log('Fetched market visits:', data); // Debugging line
+                if (data.length !== this.previousMarketVisits.length) {
+                    this.previousMarketVisits = data;
+                    this.marketVisits = data; // Store the fetched data
+                    
+                    // Extract date_created into the dateCreated array
+                    this.dateCreated = data.map(visit => visit.date_created); // Assuming date_created exists in MarketVisits
+                }
+            },
+            (error) => {
+                console.error('Error fetching market visits:', error);
+            }
+        );
+    }
+}
+
+// Example method to process the data for the chart
+private processMarketVisitsForChart(data: MarketVisits[]): void {
+    // Create an array of date and count pairs
+    const chartData = data.map(visit => ({
+        date: visit.date_created,
+        count: this.marketVisits.length // Replace with actual count property from your MarketVisits model
+    }));
+
+    // Now you can pass `chartData` to your chart component
+    this.chartData = chartData; // Ensure you have a property to hold this data
+}
+
+
+  
   private fetchAllCount(): void {
     if (this.authService.isLoggedIn()) {
       this.userService.getUserCount().subscribe(
