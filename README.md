@@ -29,4 +29,4 @@ To get more help on the Angular CLI use `ng help` or go check out the [Angular C
 =======
 # msvc-client
 Angular and TS practice with RESTFUL API CRUD (SINGLE PAGE APPLICATION)
-
+Update 28/09/24 building for deployment and live sending of data.
