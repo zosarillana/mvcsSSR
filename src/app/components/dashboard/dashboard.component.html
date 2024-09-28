@@ -6,9 +6,51 @@
       <div>
         <div class="flex items-center text-2xl font-semibold mb-1">
           <!-- SVG icon -->
-          <mat-icon>done_all</mat-icon>
+          <mat-icon>person</mat-icon>
           <!-- <span>{{ visitCount }}</span> -->
-          <span>5</span>
+          <span>{{userCount}}</span>
+        </div> 
+        <div class="text-sm font-medium text-gray-400">Number of Users</div>
+      </div>
+    </div>
+    <a
+      routerLink="/dashboard/users"
+      class="text-blue-500 font-medium text-sm hover:text-blue-600 cursor-pointer"
+      >Add Users</a
+    >
+  </div>
+  <div
+  *ngIf="role_id == '2'"
+    class="bg-white rounded-md border border-gray-100 p-6 shadow-md shadow-black/5"
+  >
+    <div class="flex justify-between mb-6">
+      <div>
+        <div class="flex items-center text-2xl font-semibold mb-1">
+          <!-- SVG icon -->
+          <mat-icon>done_all</mat-icon>
+          
+          <span>{{visitCountUser}}</span>
+        </div> 
+        <div class="text-sm font-medium text-gray-400">Number of Visits</div>
+      </div>
+    </div>
+    <a
+      routerLink="/dashboard/visits"
+      class="text-blue-500 font-medium text-sm hover:text-blue-600 cursor-pointer"
+      >Add Visits</a
+    >
+  </div>
+  <div
+  *ngIf="role_id === '1'"
+    class="bg-white rounded-md border border-gray-100 p-6 shadow-md shadow-black/5"
+  >
+    <div class="flex justify-between mb-6">
+      <div>
+        <div class="flex items-center text-2xl font-semibold mb-1">
+          <!-- SVG icon -->
+          <mat-icon>done_all</mat-icon>
+          
+          <span>{{visitCount}}</span>
         </div> 
         <div class="text-sm font-medium text-gray-400">Number of Visits</div>
       </div>
@@ -29,7 +71,7 @@
           <!-- SVG icon -->
           <mat-icon>location_on</mat-icon>
           <!-- <span>{{ visitCount }}</span> -->
-          <span>7</span>
+          <span>{{areaCount}}</span>
         </div>
         <div class="text-sm font-medium text-gray-400">Number of Locations</div>
       </div>

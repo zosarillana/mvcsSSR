@@ -50,6 +50,15 @@ export class MarketVisitsService {
       })
     );
   }
+  public getVisitCountUser(): Observable<number> {
+    // This endpoint does not require authentication
+    return this.http.get<number>(`${this.url}/count/user`).pipe(
+      catchError(error => {
+        // Handle errors if needed
+        return throwError(() => new Error(error.message));
+      })
+    );
+  }
   
 
   private createAuthorizationHeader(): HttpHeaders {
