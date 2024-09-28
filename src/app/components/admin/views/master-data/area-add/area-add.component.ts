@@ -37,8 +37,6 @@ export class AreaAddComponent implements OnInit, OnDestroy {
   endDate: Date | null = null;
   areas: Area[] = [];
   private subscription: Subscription = new Subscription();
-  // private pollingSubscription: Subscription = new Subscription();
-  private intervalId: any;
 
   constructor(
     private authService: AuthService,

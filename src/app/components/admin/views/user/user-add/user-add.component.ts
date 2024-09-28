@@ -52,9 +52,7 @@ export class UserAddComponent {
 
   ngOnInit(): void {
     this.subscribeToSseMessages();
-    
-    this.fetchUserCount();
-    this.fetchUsers();
+    this.fetchUserCount();   
     this.loadUsers();
     this.userService.getUsers().subscribe(
       (data) => {
@@ -180,6 +178,7 @@ export class UserAddComponent {
           (result: User[]) => {
             this.users = result || []; // Update the local data
             this.setupAutocomplete(); // Reinitialize autocomplete
+            this.fetchUserCount();
             this.updateDataSource(result); // Update data source for your table or list
           },
           (error) => {
