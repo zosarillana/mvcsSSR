@@ -1,11 +1,6 @@
-<apx-chart style="font-size: 10px; font-weight: 200;"
-  [series]="chartOptions.series"
-  [chart]="chartOptions.chart"
-  [xaxis]="chartOptions.xaxis"
-  [yaxis]="chartOptions.yaxis"
-  [title]="{ text: chartName }"
-  [tooltip]="chartOptions.tooltip"
-  [stroke]="chartOptions.stroke"
-  [grid]="chartOptions.grid"
->
-</apx-chart>
+<div id="chart" class="mt-2">
+  <apx-chart [series]="chartOptions.series" [chart]="chartOptions.chart" 
+             [xaxis]="chartOptions.xaxis" [tooltip]="chartOptions.tooltip" 
+             [title]="chartOptions.title">
+  </apx-chart>
+</div>

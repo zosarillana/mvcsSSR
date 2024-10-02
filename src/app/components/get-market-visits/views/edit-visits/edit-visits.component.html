@@ -7,7 +7,7 @@
       > 
       EDIT MV / {{ mvisit?.mv_id }}
     </div>
-    <mat-stepper orientation="vertical" [linear]="false" #stepper>
+    <mat-stepper orientation="vertical" [linear]="false" #stepper  style="background: #fff;"> 
       <mat-step [stepControl]="formGroup">
         <form [formGroup]="formGroup">
           <ng-template matStepLabel
@@ -192,7 +192,7 @@
                 <div *ngFor="let isr of isrNeeds; let i = index">
                   <input
                     type="checkbox"
-                    [formControlName]="i + isrNeeds.length"
+                    [formControlName]="i"
                     [value]="isr.id"
                     class="h-5 w-5 text-blue-500 bg-gray-100 border-gray-300 rounded focus:ring-blue-500"
                   />
@@ -231,6 +231,14 @@
                 </div>
                 <img
                   [src]="
+                   getImageUrl(mvisit?.isr_req_ImgPath)
+                  "
+                  alt="Selected Image"
+                  class="mt-2 border-2 bg-gray-700 border-gray-500 rounded-lg h-64 w-96"
+                />
+              </div>
+                <!-- <img
+                  [src]="
                     imagePreviewReq
                       ? imagePreviewReq
                       : getImageUrl(mvisit?.isr_req_ImgPath)
@@ -238,7 +246,7 @@
                   alt="Selected Image"
                   class="mt-2 border-2 bg-gray-700 border-gray-500 rounded-lg h-64 w-96"
                 />
-              </div>
+              </div> -->
             </div>
             <div>
               <div class="relative col-span-2">
@@ -263,13 +271,20 @@
                 </div>
                 <img
                   [src]="
+                     getImageUrl(mvisit?.isr_needs_ImgPath)
+                  "
+                  alt="Selected Image"
+                  class="mt-2 border-2 bg-gray-700 border-gray-500 rounded-lg h-64 w-96"
+                />
+                <!-- <img
+                  [src]="
                     imagePreviewNeed
                       ? imagePreviewNeed
                       : getImageUrl(mvisit?.isr_needs_ImgPath)
                   "
                   alt="Selected Image"
                   class="mt-2 border-2 bg-gray-700 border-gray-500 rounded-lg h-64 w-96"
-                />
+                /> -->
               </div>
             </div>
           </div>
@@ -309,6 +324,21 @@
                 id="visit_payolaSupervisor"
                 [ngModel]="mvisit?.visit_payolaMerchandiser"
                 name="visit_payolaSupervisor"
+                class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
+              />
+            </div>
+
+            <div class="relative">
+              <label
+                for="visit_payolaContactNumber"
+                class="block text-gray-700 text-md dark:text-gray-300 font-medium mb-2"
+                >Contact Number</label
+              >
+              <input
+                formControlName="visit_payolaContactNumber"
+                id="visit_payolaContactNumber"
+                [ngModel]="mvisit?.visit_payolaContactNumber"
+                name="visit_payolaContactNumber"
                 class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
               />
             </div>

@@ -201,12 +201,12 @@
                     </label>
                     <img
                       id="imageDisplay"
-                      [src]="getImageUrl(mvisit.isr_req_ImgPath)"
+                      [src]="getImageUrl(mvisit.isr_needs_ImgPath)"
                       alt="Visit Image"
                       class="border rounded-lg text-sm h-52 w-1/2 cursor-pointer mt-2"
                       (error)="handleImageError($event)"
                       (click)="
-                        showImagePreview(getImageUrl(mvisit.isr_req_ImgPath))
+                        showImagePreview(getImageUrl(mvisit.isr_needs_ImgPath))
                       "
                     />
                     <input
@@ -303,7 +303,7 @@
                 />
               </div>
 
-              <!-- User Full Name input -->
+            
               <div class="relative">
                 <label
                   for="supervisor"
@@ -319,7 +319,23 @@
                 />
               </div>
 
-              <!-- User Email input -->
+           
+              <div class="relative">
+                <label
+                  for="cont_num"
+                  class="block text-gray-700 text-md dark:text-gray-300 font-medium mb-2"
+                  >Payola Contact number</label
+                >
+                <input
+                  id="cont_num"
+                  type="text"
+                  [value]="mvisit.visit_payolaContactNumber"
+                  readonly
+                  class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
+                />
+              </div>
+
+           
               <div class="relative">
                 <label
                   for="avgo"

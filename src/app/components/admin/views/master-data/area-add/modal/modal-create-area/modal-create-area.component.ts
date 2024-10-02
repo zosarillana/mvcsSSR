@@ -32,7 +32,7 @@ export class ModalCreateAreaComponent {
       },
       error: (errorResponse) => {
         // Log the error response for debugging
-        console.log('Error Response:', errorResponse);
+        // console.log('Error Response:', errorResponse);
 
         // Clear previous error messages
         this.errorMessages = {};

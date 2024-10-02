@@ -65,7 +65,7 @@ export class UserAddComponent {
     );
     this.flowbiteService.loadFlowbite((flowbite) => {
       // Your custom code here
-      console.log('Flowbite loaded', flowbite);
+      // console.log('Flowbite loaded', flowbite);
     });
   }
 
@@ -193,7 +193,7 @@ export class UserAddComponent {
 
     if (this.startDate && this.endDate) {
       dataToDisplay = dataToDisplay.filter((user) => {
-        const visitDate = new Date(user.dateUpdated);
+        const visitDate = new Date(user.date_updated);
         // Check if startDate and endDate are not null
         return this.startDate && this.endDate
           ? visitDate >= this.startDate && visitDate <= this.endDate
@@ -220,7 +220,7 @@ export class UserAddComponent {
 
       if (this.startDate && this.endDate) {
         dataToDisplay = dataToDisplay.filter((visit) => {
-          const visitDate = new Date(visit.dateCreated);
+          const visitDate = new Date(visit.date_created);
           // Check if startDate and endDate are not null
           return this.startDate && this.endDate
             ? visitDate >= this.startDate && visitDate <= this.endDate

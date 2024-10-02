@@ -1,6 +1,7 @@
-/* Example styles, adjust as needed */
-apx-chart {
-    display: block;
-    margin: auto;
-  }
-  
+#chart {
+  display: block;
+  margin: auto;
+  max-width: 380px;
+  margin: 10px auto;
+  padding: 0;
+}

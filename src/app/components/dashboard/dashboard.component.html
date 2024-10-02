@@ -1,9 +1,11 @@
-<div class="grid grid-cols-1 lg:grid-cols-4 mb-4 gap-2">
+<!-- {{user_id}} -->
+ <div class="grid grid-cols-1 lg:grid-cols-4 mb-4 gap-2"> 
   <div
     class="bg-white rounded-md border border-gray-100 p-6 shadow-md shadow-black/5"
+    *ngIf="role_id == '1'"
   >
-    <div class="flex justify-between mb-6">
-      <div>
+    <div class="flex justify-between mb-6" >
+      <div>        
         <div class="flex items-center text-2xl font-semibold mb-1">
           <!-- SVG icon -->
           <mat-icon>person</mat-icon>
@@ -130,7 +132,7 @@
   </div>
 </div>
 <div>
-  <div class="grid grid-cols-1 lg:grid-cols-2 gap-1">
+  <div class="grid grid-cols-1 lg:grid-cols-1 gap-1">
     <div class="grid grid-cols-1 gap-1">
       <!-- <div
         class="bg-white rounded-md border border-gray-100 p-6 shadow-md shadow-black/5"
@@ -141,49 +143,37 @@
         *ngIf="role_id === '1'"
         class="bg-white rounded-md border border-gray-100 p-6 shadow-md shadow-black/5"
       >
-        <app-status-chart
-          [statusData]="[visitCount]"
-          [chartTitle]="'Market Visit Status'"
-        ></app-status-chart>
+        <app-visit-chart [chartData]="chartData"></app-visit-chart>
       </div>
+      <div
+        *ngIf="role_id === '2'"
+        class="bg-white rounded-md border border-gray-100 p-6 shadow-md shadow-black/5"
+      >
+        <app-visit-chart [chartData]="chartDataUser"></app-visit-chart>
+      </div>
+      <!-- <div
+      *ngIf="role_id === '2'"
+      class="bg-white rounded-md border border-gray-100 p-6 shadow-md shadow-black/5"
+    >
+      <app-visit-chart [chartData]="chartData"></app-visit-chart>
+    </div> -->
     </div>
+    <!-- <div class="grid grid-col-1 md:grid-cols-2 lg:grid-cols-2 gap-1">
+      <div *ngIf="role_id === '1'" class="bg-white rounded-md border border-gray-100 p-6 shadow-md shadow-black/5">
+        <app-status-chart 
+            *ngIf="isDataReady()" 
+            [data]="getStatusData()" 
+            [chartName]="'Master Data Count'">
+        </app-status-chart>  
+    </div>
+    
+      
+      <div
+        class="bg-white rounded-md border border-gray-100 p-6 shadow-md shadow-black/5"
+      >
+      <app-status-chart [data]="getStatusData()" [chartName]="'User Count'"></app-status-chart>
+      </div>
+    </div> -->
 
-    <div class="grid grid-col-1 md:grid-cols-2 lg:grid-cols-2 gap-1">
-      <div
-        class="bg-white rounded-md border border-gray-100 p-4 shadow-sm shadow-black/10"
-      >
-        <app-visit-chart
-          [chartName]="'Visit Count'"
-          [visitCount]="marketVisits.length"  
-          [dateCreated]="dateCreated"
-        ></app-visit-chart>
-      </div>
-      <div
-        class="bg-white rounded-md border border-gray-100 p-4 shadow-sm shadow-black/10"
-      >
-        <app-visit-chart
-          [chartName]="'Created Locations'"
-          [areaCount]="areaCount"
-        ></app-visit-chart>
-      </div>
-      <div
-        *ngIf="role_id === '1'"
-        class="bg-white rounded-md border border-gray-100 p-4 shadow-sm shadow-black/10"
-      >
-        <app-visit-chart
-          [chartName]="'Created In Store Requirements'"
-          [areaCount]="isrCount"
-        ></app-visit-chart>
-      </div>
-      <div
-        *ngIf="role_id === '1'"
-        class="bg-white rounded-md border border-gray-100 p-4 shadow-sm shadow-black/10"
-      >
-        <app-visit-chart
-          [chartName]="'Created Product on Display'"
-          [areaCount]="podCount"
-        ></app-visit-chart>
-      </div>
-    </div>
   </div>
 </div>

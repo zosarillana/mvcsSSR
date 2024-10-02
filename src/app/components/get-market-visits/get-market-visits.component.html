@@ -52,6 +52,37 @@
           <div>
             <div class="flex flex-col gap-2 mt-2 sm:flex-row sm:gap-4">
               <mat-form-field class="w-full min-w-[150px] sm:h-[70px]">
+                <mat-label>Search name</mat-label>
+                <input
+                  type="text"
+                  placeholder="Select fullname"
+                  aria-label="Fullname"
+                  matInput
+                  [formControl]="myControl"
+                  [matAutocomplete]="autoFullName"
+                  (input)="applyFilterForName($event, 'fullname')"
+                />
+                <mat-autocomplete
+                  #autoFullName="matAutocomplete"
+                  (optionSelected)="
+                    applyFilterOnSelectForName($event.option.value)
+                  "
+                >
+                  <!-- Updated to correct method name -->
+                  <mat-option
+                    *ngFor="
+                      let optionsForName of filteredOptionsForName | async
+                    "
+                    [value]="optionsForName"
+                    class="uppercase"
+                    style="font-size: 0.75rem; line-height: 1.5"
+                  >
+                    {{ optionsForName }}
+                  </mat-option>
+                </mat-autocomplete>
+              </mat-form-field>
+
+              <mat-form-field class="w-full min-w-[150px] sm:h-[70px]">
                 <mat-label>Search MV ID</mat-label>
                 <input
                   type="text"
@@ -59,21 +90,23 @@
                   aria-label="MV ID"
                   matInput
                   [formControl]="myControl"
-                  [matAutocomplete]="auto"
+                  [matAutocomplete]="autoMvId"
                   (input)="applyFilter($event, 'mvId')"
                 />
-                <mat-autocomplete #auto="matAutocomplete">
+                <mat-autocomplete
+                  #autoMvId="matAutocomplete"
+                  (optionSelected)="applyFilterOnSelect($event.option.value)"
+                >
                   <mat-option
                     *ngFor="let option of filteredOptions | async"
                     [value]="option"
                     (onSelectionChange)="applyFilterOnSelect(option)"
-                    class="uppercase"                  
+                    class="uppercase"
                   >
                     {{ option }}
                   </mat-option>
                 </mat-autocomplete>
               </mat-form-field>
-
               <mat-form-field class="w-full sm:min-w-[150px] sm:h-[70px]">
                 <mat-label>Enter a date range</mat-label>
                 <mat-date-range-input [rangePicker]="picker">
@@ -108,9 +141,9 @@
                 <th
                   mat-header-cell
                   *matHeaderCellDef
-                  class="bg-white-imp uppercase text-xs"
+                  class="bg-white-imp text-xs"
                 >
-                  MarketVisit ID
+                  MV Code
                 </th>
                 <td
                   mat-cell
@@ -120,11 +153,28 @@
                   MV / {{ mvisit.mv_id }}
                 </td>
               </ng-container>
+              <ng-container matColumnDef="fullname">
+                <th
+                  mat-header-cell
+                  *matHeaderCellDef
+                  class="bg-white-imp text-xs"
+                >
+                  Submitted By
+                </th>
+                <td
+                  mat-cell
+                  *matCellDef="let mvisit"
+                  class="bg-white-imp border border-blueGray-100 px-6 py-3 text-sm whitespace-nowrap text-left text-blueGray-700"
+                >
+                  {{ mvisit.user.fname }} {{ mvisit.user.mname }}
+                  {{ mvisit.user.lname }}
+                </td>
+              </ng-container>
               <ng-container matColumnDef="visit_area">
                 <th
                   mat-header-cell
                   *matHeaderCellDef
-                  class="bg-white-imp uppercase text-xs"
+                  class="bg-white-imp text-xs"
                 >
                   Areas
                 </th>
@@ -146,9 +196,9 @@
                 <th
                   mat-header-cell
                   *matHeaderCellDef
-                  class="bg-white-imp uppercase text-xs"
+                  class="bg-white-imp text-xs"
                 >
-                  Visit time and date
+                  Visit Time and Date
                 </th>
                 <td
                   mat-cell
@@ -163,7 +213,7 @@
                 <th
                   mat-header-cell
                   *matHeaderCellDef
-                  class="bg-white-imp uppercase text-xs"
+                  class="bg-white-imp text-xs"
                 >
                   Account
                 </th>
@@ -179,7 +229,7 @@
                 <th
                   mat-header-cell
                   *matHeaderCellDef
-                  class="bg-white-imp uppercase text-xs"
+                  class="bg-white-imp text-xs"
                 >
                   Distributor
                 </th>
@@ -196,7 +246,7 @@
                 <th
                   mat-header-cell
                   *matHeaderCellDef
-                  class="bg-white-imp uppercase text-xs"
+                  class="bg-white-imp text-xs"
                 >
                   Sales Personnel In Charge
                 </th>
@@ -212,7 +262,7 @@
                 <th
                   mat-header-cell
                   *matHeaderCellDef
-                  class="bg-white-imp uppercase text-xs"
+                  class="bg-white-imp text-xs"
                 >
                   Account Type
                 </th>
@@ -268,7 +318,7 @@
                 <th
                   mat-header-cell
                   *matHeaderCellDef
-                  class="bg-white-imp uppercase text-xs"
+                  class="bg-white-imp text-xs"
                 >
                   Date Created
                 </th>
@@ -280,11 +330,50 @@
                   {{ getFormattedVisitDate(mvisit.date_created) }}
                 </td>
               </ng-container>
+              <ng-container matColumnDef="status">
+                <th
+                  mat-header-cell
+                  *matHeaderCellDef
+                  class="bg-white-imp text-xs"
+                >
+                  Status
+                </th>
+                <td
+                  mat-cell
+                  *matCellDef="let mvisit"
+                  class="bg-white-imp border border-blueGray-100 px-6 py-3 text-sm whitespace-nowrap items-center justify-center"
+                >
+                  <span
+                    *ngIf="mvisit.status === 'Draft'"
+                    class="bg-gray-100 text-gray-800 text-sm font-medium me-2 px-3 py-0.5 rounded dark:bg-gray-700 dark:text-gray-300"
+                  >
+                    {{ mvisit.status }}
+                  </span>
+                  <span
+                    *ngIf="mvisit.status === 'Submitted'"
+                    class="bg-indigo-100 text-indigo-800 text-sm font-medium me-2 px-2.5 py-0.5 rounded dark:bg-indigo-900 dark:text-indigo-300"
+                  >
+                    {{ mvisit.status }}
+                  </span>
+                  <span
+                    *ngIf="mvisit.status === 'Approved'"
+                    class="bg-green-100 text-green-800 text-sm font-medium me-2 px-2.5 py-0.5 rounded dark:bg-green-900 dark:text-green-300"
+                  >
+                    {{ mvisit.status }}
+                  </span>
+                  <span
+                    *ngIf="mvisit.status === 'Recalled'"
+                    class="bg-yellow-100 text-yellow-800 text-sm font-medium me-2 px-2.5 py-0.5 rounded dark:bg-yellow-900 dark:text-yellow-300"
+                  >
+                    {{ mvisit.status }}
+                  </span>
+                </td>
+              </ng-container>
               <ng-container matColumnDef="action">
                 <th
                   mat-header-cell
                   *matHeaderCellDef
-                  class="bg-white-imp uppercase text-xs"
+                  class="bg-white-imp text-xs"
                 >
                   Action
                 </th>
@@ -296,13 +385,19 @@
                   <div class="flex space-x-2">
                     <div class="relative inline-block group">
                       <button
-                        *ngIf="role_id === '1'"
+                        *ngIf="
+                          role_id === '2' && 
+                          mvisit.status !== 'Submitted' &&
+                          mvisit.status !== 'Approved'
+                        "
                         mat-icon-button
                         class="icon-button-edit"
                         [routerLink]="['/dashboard/visits/edit', mvisit.id]"
                       >
                         <mat-icon>edit</mat-icon>
-                      </button>
+                      </button>                    
+                    </div>
+                    <div>
                       <button
                         mat-icon-button
                         class="icon-button-edit"
@@ -320,7 +415,48 @@
                   <mat-icon>visibility</mat-icon>
                 </button>                
               </div> -->
-                    <div class="relative inline-block group">
+                    <div                      
+                      *ngIf="role_id === '2' && mvisit.status !== 'Approved' && mvisit.status !== 'Submitted'"
+                      class="relative inline-block group"
+                    >
+                      <button
+                        mat-icon-button
+                        class="icon-button-edit"
+                        (click)="openSubmitDialog(mvisit)"
+                      >
+                        <mat-icon>check_circle</mat-icon>
+                      </button>
+                    </div>
+                    <div
+                      *ngIf="role_id === '1'  && mvisit.status !== 'Approved' && mvisit.status !== 'Recalled'"
+                      class="relative inline-block group"
+                    >
+                      <button
+                        mat-icon-button
+                        class="icon-button-edit"
+                        (click)="openApproveModal(mvisit)"
+                      >
+                        <mat-icon>thumb_up</mat-icon>
+                      </button>
+                    </div>
+
+                    <div
+                      *ngIf="role_id === '1' && mvisit.status !== 'Recalled' && mvisit.status !== 'Approved'"
+                      class="relative inline-block group"
+                    >
+                      <button
+                        mat-icon-button
+                        class="icon-button-edit"
+                        (click)="openRecallModal(mvisit)"
+                      >
+                        <mat-icon>undo</mat-icon>
+                      </button>
+                    </div>
+
+                    <div
+                      *ngIf="role_id === '1'"
+                      class="relative inline-block group"
+                    >
                       <button
                         mat-icon-button
                         class="icon-button-edit"

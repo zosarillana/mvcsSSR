@@ -1,5 +1,4 @@
-import { Component, Input } from '@angular/core';
-import { DatePipe } from '@angular/common';
+import { Component, Input, OnChanges } from '@angular/core';
 import {
   ApexChart,
   ApexAxisChartSeries,
@@ -27,84 +26,140 @@ export type ChartOptions = {
   templateUrl: './visit-chart.component.html',
   styleUrls: ['./visit-chart.component.css'],
 })
-export class VisitChartComponent {
-  public chartOptions: Partial<ChartOptions>;
-  // Input properties to receive counts from the parent component
-  @Input() userCount: number = 0;
-  @Input() isrCount: number = 0;
-  @Input() areaCount: number = 0;
-  @Input() visitCount: number = 0;
-  @Input() chartName: string = 'Count';
-  @Input() dateCreated: string[] = [];
-  constructor(private datePipe: DatePipe) {
+export class VisitChartComponent implements OnChanges {
+  @Input() chartData: { year: number; month: number; count: number }[] = [];
+  @Input() chartName: string = 'Market Visits Per Month'; // New Input for dynamic chart name
+  public chartOptions: ChartOptions; // Use ChartOptions type
+
+  constructor() {
+    // Initialize chartOptions with a default value
     this.chartOptions = {
-      series: [
-        {
-          name: this.chartName,
-          data: [10, 20, 15, 25, 30, 45, 50], // Sample data
-        },
-      ],
+      series: [],
       chart: {
-        height: 150,
         type: 'line',
+        height: 350,
+        width: '100%', // Set width to 100% for responsiveness
         zoom: {
-          enabled: false,
+          enabled: false, // Disable zooming
         },
-        background: 'transparent', // Set the background to transparent
-      },
-      title: {
-        text: 'Area',
-        align: 'left',
-        style: {
-          fontSize: '10px', // Set the font size
-          
-          color: '#333', // Set the font color
+        toolbar: {
+          tools: {
+            zoom: false, // Disable zoom tool
+            selection: false, // Disable selection tool
+          },
         },
       },
       xaxis: {
-        categories: ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul'], // X-axis labels
-        labels: {
-          show: true, // Hide the x-axis labels
-        },
-        axisBorder: {
-          show: false, // Hide the x-axis border line
-        },
-        axisTicks: {
-          show: false, // Hide the x-axis ticks
-        },
+        categories: [],
         title: {
-          text: '', // Remove the x-axis title
+          text: 'Date (Year-Month)',
+        },
+        labels: {
+          show: true, // Ensure labels are shown
+          rotate: -45, // Optionally rotate labels for better visibility
+          hideOverlappingLabels: true, // Hide overlapping labels
         },
       },
       yaxis: {
-        title: {},
+        title: {
+          text: 'Count',
+        },
+        min: 0,
       },
-      tooltip: {
-        enabled: true,
+      title: {
+        text: this.chartName, // Set dynamic chart name
+        align: 'left',
       },
+      tooltip: {},
       stroke: {
-        curve: 'smooth', // Smooth line curve
+        curve: 'smooth',
       },
       grid: {
         show: false, // Hide the grid lines
       },
     };
   }
-  ngOnChanges(): void {
-    // Convert date strings to short date format
-    const shortDates = this.dateCreated.map(date => this.datePipe.transform(date, 'shortDate'));
 
-    console.log('Short Dates:', shortDates); // Debugging line
-    this.chartOptions.series = [
-      {
-        name: this.chartName,
-        data: [this.userCount, this.isrCount, this.areaCount, this.visitCount, this.userCount],
+  ngOnChanges(): void {
+    if (this.chartData.length > 0) {
+      this.updateChartOptions();
+    }
+  }
+
+  // Updated method to set up the chart options
+  private updateChartOptions(): void {
+    const categories: string[] = [];
+    const seriesData: number[] = [];
+
+    // Create a map for easy access to the counts by month
+    const countMap: { [key: string]: number } = {};
+
+    // Populate the map with existing data
+    this.chartData.forEach((item) => {
+      const monthKey = `${item.year}-${('0' + item.month).slice(-2)}`;
+      countMap[monthKey] = item.count;
+    });
+
+    // Define the range of months you want to display
+    const startYear = Math.min(...this.chartData.map((item) => item.year));
+    const endYear = Math.max(...this.chartData.map((item) => item.year));
+
+    for (let year = startYear; year <= endYear; year++) {
+      for (let month = 1; month <= 12; month++) {
+        const monthKey = `${year}-${('0' + month).slice(-2)}`;
+        categories.push(monthKey);
+        // Set count to 0 if there is no data for that month
+        seriesData.push(countMap[monthKey] || 0);
       }
-    ];
-    
-    // You may also want to set the x-axis categories to short dates
-    this.chartOptions.xaxis = {
-      categories: shortDates // Use the converted dates here
+    }
+
+    this.chartOptions = {
+      series: [
+        {
+          name: 'Market Visits',
+          data: seriesData,
+        },
+      ],
+      chart: {
+        type: 'area',
+        height: 350,
+        width: '100%', // Ensure it takes full width
+        zoom: {
+          enabled: false, // Disable zooming
+        },
+        toolbar: {
+          tools: {
+            zoom: false, // Disable zoom tool
+            selection: false, // Disable selection tool
+          },
+        },
+      },
+      xaxis: {
+        categories: categories, // formatted 'Year-Month'
+        labels: {
+          show: true,
+          rotate: -45, // Rotate for better fit
+          hideOverlappingLabels: true, // Prevent overlap
+        },
+      },
+      yaxis: {
+        title: {
+          text: 'Count',
+        },
+        min: 0,
+        max: seriesData.length > 0 ? Math.max(...seriesData) + 10 : 10, // Ensure seriesData is not empty
+      },
+      title: {
+        text: this.chartName, // Ensure title reflects the input property
+        align: 'left',
+      },
+      tooltip: {},
+      stroke: {
+        curve: 'smooth',
+      },
+      grid: {
+        show: false,
+      },
     };
   }
 }

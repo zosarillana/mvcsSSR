@@ -1,126 +1,58 @@
-import { Component, ViewChild, OnInit, OnDestroy, Input, OnChanges } from "@angular/core";
+
+import { Component, Input, ViewChild } from "@angular/core";
 import {
-  ChartComponent,
-  ApexAxisChartSeries,
+  ApexNonAxisChartSeries,
+  ApexResponsive,
   ApexChart,
-  ApexXAxis,
-  ApexDataLabels,
-  ApexTooltip,
-  ApexStroke,
-  ApexTitleSubtitle,
-  ApexResponsive
+  ChartComponent,
 } from "ng-apexcharts";
 
 export type ChartOptions = {
-  series: ApexAxisChartSeries;
+  series: ApexNonAxisChartSeries;
   chart: ApexChart;
-  xaxis: ApexXAxis;
-  stroke: ApexStroke;
-  tooltip: ApexTooltip;
-  dataLabels: ApexDataLabels;
-  title: ApexTitleSubtitle;
   responsive: ApexResponsive[];
+  labels: any;
 };
 
 @Component({
-  selector: 'app-status-chart',
-  templateUrl: './status-chart.component.html',
-  styleUrls: ['./status-chart.component.css']
+  selector: "app-status-chart",
+  templateUrl: "./status-chart.component.html",
+  styleUrls: ["./status-chart.component.css"],
 })
-export class StatusChartComponent implements OnInit, OnChanges {
-  @ViewChild("chart") chart!: ChartComponent;
+export class StatusChartComponent {
+  @ViewChild("chart") chart!: ChartComponent; // Use '!' to indicate it will be assigned later
+  @Input() data: number[] = []; // Input property to receive data (should exclude user count)
+  @Input() chartName: string = 'Default Title'; // Title of the chart
   public chartOptions: Partial<ChartOptions>;
-
-  @Input() statusData: number[] = []; // Array to receive data from parent
-  @Input() chartTitle: string = 'Default Title'; // Title of the chart
 
   constructor() {
     this.chartOptions = {
-      series: [],
+      series: this.data, // Initialize series with received data
       chart: {
-        height: 350,
-        type: "area",
-        toolbar: {
-          show: true
-        },
-        zoom: {
-          enabled: false
-        }
+        width: 380,
+        type: "pie",
       },
-      title: {
-        text: this.chartTitle,
-        align: 'left',
-        style: {
-          fontSize: '20px',
-          fontWeight: 'bold'
-        }
-      },
-      dataLabels: {
-        enabled: false
-      },
-      stroke: {
-        curve: "smooth"
-      },
-      xaxis: {
-        type: "datetime",
-        categories: [
-          "2024-09-19T00:00:00.000Z",
-          "2024-09-19T01:30:00.000Z",
-          "2024-09-19T02:30:00.000Z",
-          "2024-09-19T03:30:00.000Z",
-          "2024-09-19T04:30:00.000Z",
-          "2024-09-19T05:30:00.000Z",
-          "2024-09-19T06:30:00.000Z"
-        ]
-      },
-      tooltip: {
-        x: {
-          format: "dd/MM/yy HH:mm"
-        }
-      },
+      labels: ["ISR Count", "Area Count", "Pod Count", "User Count"], // Update labels to exclude user count
       responsive: [
         {
-          breakpoint: 1000,
+          breakpoint: 480,
           options: {
             chart: {
-              height: 300
-            }
-          }
-        },
-        {
-          breakpoint: 600,
-          options: {
-            chart: {
-              height: 250
+              width: 200,
             },
-            xaxis: {
-              labels: {
-                show: false
-              }
-            }
-          }
-        }
-      ]
+            legend: {
+              position: "bottom",
+            },
+          },
+        },
+      ],
     };
   }
 
-  ngOnInit() {
-    // Update chart options with initial data
-    this.updateChart();
-  }
-
   ngOnChanges(): void {
-    // Handle changes to the input properties and update the chart
-    this.updateChart();
-  }
-
-  private updateChart(): void {
-    this.chartOptions.series = [
-      {
-        name: this.chartTitle,
-        data: this.statusData // Use the latest statusData passed
-      }
-    ];
-   
+    // Update chart data whenever input changes
+    if (this.data.length > 0) {
+      this.chartOptions.series = this.data; // Update series with new data
+    }
   }
 }

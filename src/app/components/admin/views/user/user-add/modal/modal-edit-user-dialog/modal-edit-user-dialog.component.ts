@@ -40,7 +40,7 @@ export class ModalEditUserDialogComponent {
 
   // Save method to update user data
   save(): void {
-    console.log('User Data:', this.data);  // Check the user data
+    // console.log('User Data:', this.data);  // Check the user data
 
     // Include password in the data object, or set it to an empty string if passwordValue is empty
     this.data.user_password = this.passwordValue || '';
@@ -56,11 +56,11 @@ export class ModalEditUserDialogComponent {
     // Call the updateUser method from the UserService
     this.userService.updateUser(updatedUser).subscribe({
       next: (response) => {
-        console.log('User updated successfully', response);
+        // console.log('User updated successfully', response);
         this.dialogRef.close(this.data);
       },
       error: (errorResponse) => {
-        console.log('Error Response:', errorResponse);
+        // console.log('Error Response:', errorResponse);
 
         // Clear previous error messages
         this.errorMessages = {};

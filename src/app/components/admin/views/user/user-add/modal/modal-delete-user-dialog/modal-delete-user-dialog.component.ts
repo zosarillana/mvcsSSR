@@ -35,7 +35,7 @@ export class ModalDeleteUserDialogComponent {
         this.dialogRef.close(); // Close the dialog
       },
       error: (errorResponse) => {
-        console.log('Error Response:', errorResponse);
+        // console.log('Error Response:', errorResponse);
         // Handle error response if necessary
       },
     });

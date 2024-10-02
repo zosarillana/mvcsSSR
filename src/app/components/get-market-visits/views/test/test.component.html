@@ -1,10 +1,10 @@
-<div class="text-2xl font-semibold mb-1">
+<div class="text-2xl font-semibold mb-1" >
   <button mat-icon-button class="ml-5" routerLink="/dashboard/visits">
     <mat-icon>arrow_back_ios</mat-icon>
   </button>
   ADD VISITS
 </div>
-<mat-stepper orientation="vertical" [linear]="false" #stepper>
+<mat-stepper orientation="vertical" [linear]="false" #stepper  style="background: #fff;">
   <mat-step [stepControl]="formGroup">
     <form [formGroup]="formGroup">
       <ng-template matStepLabel>Fill out Time and Date of Visit</ng-template>
@@ -358,6 +358,29 @@
             Payola Supervisor required.
           </div>
         </div>
+        <div class="relative">
+          <label
+            for="visit_payolaContactNumber"
+            class="block text-gray-700 text-md dark:text-gray-300 font-medium mb-2"
+            >Contact Number</label
+          >
+          <input
+            formControlName="visit_payolaContactNumber"
+            id="visit_payolaContactNumber"
+            placeholder="Contact Number"
+            name="visit_payolaContactNumber"
+            class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
+          />
+          <div
+            class="mt-2 text-red-700 text-xs"
+            *ngIf="
+              formGroup.get('visit_payolaContactNumber')?.invalid &&
+              formGroup.get('visit_payolaContactNumber')?.touched
+            "
+          >
+            Payola Contact Number required.
+          </div>
+        </div>
 
         <div class="relative">
           <label
@@ -534,7 +557,7 @@
         (click)="onSubmit()"
         [disabled]="stepper.selectedIndex < stepper.steps.length - 1"
       >
-        Submit
+        Save
       </button>
     </div>
   </mat-step>

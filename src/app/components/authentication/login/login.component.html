@@ -1,80 +1,95 @@
 <app-loading-screen *ngIf="isLoading"></app-loading-screen>
 <div
   class="min-h-screen flex flex-col items-center justify-center bg-cover bg-center"
-  style="background-image: url('bg.jpg');" 
+  style="background-image: url('bg.jpg')"
 >
-  <div
-    class="flex flex-col bg-white shadow-lg px-4 sm:px-6 md:px-8 lg:px-3 py-8 rounded-md w-full max-w-sm"
-  >
-    <div class="flex min-h-full flex-col justify-center lg:px-8">
-      <div class="sm:mx-auto sm:w-full sm:max-w-sm">
-        <img class="mx-auto h-48 w-auto" src="new_logo1.png" alt="Your Company" />
-      </div>
+  <div class="m-3">
+    <div
+      class="flex flex-col lg:mx-0 bg-white px-4 sm:px-6 md:px-8 lg:px-3 py-8 rounded-md w-full max-w-sm"         
+    >      
+      <div class="flex min-h-full flex-col justify-center lg:px-8">
+        <div class="sm:mx-auto sm:w-full sm:max-w-sm mb-4">
+          <img
+            class="mx-auto h-48 w-auto"
+            src="new_logo1.png"
+            alt="Your Company"
+          />
+        </div>
 
-      <div class="sm:mx-auto sm:w-full sm:max-w-sm">
-        <form
-          (ngSubmit)="onSubmit(username.value, password.value)"
-          #loginForm="ngForm"
-          class="space-y-6"
-        >
-          <mat-form-field appearance="fill" class="w-full">
-            <mat-label>Username</mat-label>
-            <input
-              matInput
-              #username="ngModel"
-              ngModel
-              name="username"
-              required
-              placeholder="Enter your username"
-            />
-            <mat-icon matSuffix>supervised_user_circle</mat-icon>
-            <mat-error *ngIf="username.invalid && (username.dirty || username.touched)">
-              <ng-container *ngIf="username.errors?.['required']">Username is required</ng-container>
-            </mat-error>
-          </mat-form-field>
+        <div class="sm:mx-auto sm:w-full sm:max-w-sm">
+          <form
+            (ngSubmit)="onSubmit(username.value, password.value)"
+            #loginForm="ngForm"
+            class="space-y-6"
+          >
+            <mat-form-field appearance="fill" class="w-full">
+              <mat-label>Username</mat-label>
+              <input
+                matInput
+                #username="ngModel"
+                ngModel
+                name="username"
+                required
+                placeholder="Enter your username"
+              />
+              <mat-icon matSuffix>supervised_user_circle</mat-icon>
+              <mat-error
+                *ngIf="username.invalid && (username.dirty || username.touched)"
+              >
+                <ng-container *ngIf="username.errors?.['required']">
+                  Username is required
+                </ng-container>
+              </mat-error>
+            </mat-form-field>
 
-          <mat-form-field class="w-full">
-            <mat-label>Password</mat-label>
-            <input
-              matInput
-              [type]="hide ? 'password' : 'text'"
-              #password="ngModel" 
-              ngModel
-              name="password"
-              required
-              (keydown.enter)="onEnter($event)"
-              placeholder="Enter your password"
-            />
-            <button
-              mat-icon-button
-              matSuffix
-              type="button"
-              (click)="togglePasswordVisibility()"
-              [attr.aria-label]="hide ? 'Show password' : 'Hide password'"
-              [attr.aria-pressed]="!hide"
-            >
-              <mat-icon>{{ hide ? 'visibility_off' : 'visibility' }}</mat-icon>
-            </button>
-            <mat-error *ngIf="password.invalid && (password.dirty || password.touched)">
-              <ng-container *ngIf="password.errors?.['required']">
-                Password is required
-              </ng-container>
-            </mat-error>
-          </mat-form-field>
+            <mat-form-field class="w-full">
+              <mat-label>Password</mat-label>
+              <input
+                matInput
+                [type]="hide ? 'password' : 'text'"
+                #password="ngModel"
+                ngModel
+                name="password"
+                required
+                (keydown.enter)="onEnter($event)"
+                placeholder="Enter your password"
+              />
+              <button
+                mat-icon-button
+                matSuffix
+                type="button"
+                (click)="togglePasswordVisibility()"
+                [attr.aria-label]="hide ? 'Show password' : 'Hide password'"
+                [attr.aria-pressed]="!hide"
+              >
+                <mat-icon>{{
+                  hide ? "visibility_off" : "visibility"
+                }}</mat-icon>
+              </button>
+              <mat-error
+                *ngIf="password.invalid && (password.dirty || password.touched)"
+              >
+                <ng-container *ngIf="password.errors?.['required']">
+                  Password is required
+                </ng-container>
+              </mat-error>
+            </mat-form-field>
+            <div *ngIf="errorMessage" class="text-red-500 text-center">
+              {{ errorMessage }}
+            </div>
 
-          <div *ngIf="errorMessage" class="text-red-500 text-center">{{ errorMessage }}</div>
-
-          <div>
-            <button
-              type="submit"
-              style="background-color: #102c57; color: #ffffff"
-              class="mb-5 flex w-full justify-center rounded-md px-3 py-3 text-sm font-semibold leading-6 shadow-sm hover:bg-indigo-500 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600"
-              [disabled]="loginForm.invalid || loading"
-            >
-              Sign in
-            </button>
-          </div>
-        </form>
+            <div>
+              <button
+                type="submit"
+                style="background-color: #9A1915; color: #ffffff"
+                class="mb-5 flex w-full justify-center rounded-md px-3 py-3 text-sm font-semibold leading-6 shadow-sm hover:bg-indigo-500 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600"
+                [disabled]="loginForm.invalid || loading"
+              >
+                Sign in
+              </button>
+            </div>
+          </form>
+        </div>
       </div>
     </div>
   </div>

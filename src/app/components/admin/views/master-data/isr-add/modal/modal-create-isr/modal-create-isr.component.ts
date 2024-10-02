@@ -59,7 +59,7 @@ export class ModalCreateIsrComponent {
           });
       }
     } else {
-      console.log('No data provided.');
+      // console.log('No data provided.');
     }
   }
   
@@ -69,7 +69,7 @@ export class ModalCreateIsrComponent {
         this.dialogRef.close(this.data);
       },
       error: (errorResponse) => {
-        console.log('Error Response:', errorResponse);
+        // console.log('Error Response:', errorResponse);
         this.errorMessages = {};
   
         if (errorResponse && typeof errorResponse === 'object') {

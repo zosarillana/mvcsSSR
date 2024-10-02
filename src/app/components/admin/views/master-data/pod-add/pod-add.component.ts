@@ -81,7 +81,7 @@ export class PodAddComponent {
     );
     this.flowbiteService.loadFlowbite(flowbite => {
       // Your custom code here
-      console.log('Flowbite loaded', flowbite);
+      // console.log('Flowbite loaded', flowbite);
     });
   
   }
@@ -169,7 +169,7 @@ export class PodAddComponent {
     this.subscription.add(
       this.sseService.messages$.subscribe((event) => {
         const message = event.data; // Extract the message from the event
-        console.log('Received SSE message:', message);
+        // console.log('Received SSE message:', message);
 
         // Display the message using MatSnackBar
         this.matSnackBar.open(message, 'Close', {

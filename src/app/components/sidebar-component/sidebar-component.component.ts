@@ -17,7 +17,10 @@ export class SidebarComponentComponent implements OnInit, OnDestroy {
   username: string | null = null;
   user: any = null;
   selectedId: string | null = null;
-
+  isActive(route: string): boolean {
+    return this.router.url === route;
+  }
+  
   private _formBuilder = inject(FormBuilder);
 
   firstFormGroup = this._formBuilder.group({

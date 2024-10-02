@@ -1,4 +1,7 @@
-@import url('https://fonts.googleapis.com/css2?family=SUSE:wght@100..800&display=swap');
+/* @import url('https://fonts.googleapis.com/css2?family=SUSE:wght@100..800&display=swap');? */
+
+@import url('https://fonts.googleapis.com/css2?family=Lato:ital,wght@0,100;0,300;0,400;0,700;0,900;1,100;1,300;1,400;1,700;1,900&family=Montserrat:ital,wght@0,100..900;1,100..900&display=swap');
+
 /* You can add global styles to this file, and also import other style files */
 @tailwind base;
 @tailwind components;
@@ -53,7 +56,7 @@ body {
   /* 1 */
   line-height: inherit;
   /* 2 */
-    font-family: "SUSE", sans-serif;
+    font-family: "LATO", sans-serif;
 }
 
 /*
@@ -67,7 +70,7 @@ body {
 .mat-elevation-z3,
 .mat-elevation-z4,
 .mat-elevation-z5 {
-  font-family: "SUSE", sans-serif !important;
+  font-family: "LATO", sans-serif !important;
 }
 
 .mat-button,
@@ -80,7 +83,7 @@ body {
 .mat-card,
 .mat-form-field,
 .mat-input-element {
-  font-family: "SUSE", sans-serif !important;
+  font-family: "LATO", sans-serif !important;
 }
 
 hr {
@@ -142,7 +145,8 @@ code,
 kbd,
 samp,
 pre {
-  font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono", "Courier New", monospace;
+  /* font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono", "Courier New", monospace; */
+  font-family: "Lato", ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono", "Courier New", monospace !important;
   /* 1 */
   font-size: 1em;
   /* 2 */
@@ -1143,6 +1147,12 @@ video {
   color: rgb(255 255 255 / var(--tw-text-opacity));
 }
 
+.text-red {
+  --tw-text-opacity: 1;
+  color: rgb(255, 0, 0 / var(--tw-text-opacity)); /* Pure red */
+}
+
+
 .shadow-md{
   --tw-shadow: 0 4px 6px -1px rgb(0 0 0 / 0.1), 0 2px 4px -2px rgb(0 0 0 / 0.1);
   --tw-shadow-colored: 0 4px 6px -1px var(--tw-shadow-color), 0 2px 4px -2px var(--tw-shadow-color);
@@ -1236,6 +1246,11 @@ video {
 .hover\:bg-gray-50:hover{
   --tw-bg-opacity: 1;
   background-color: rgb(249 250 251 / var(--tw-bg-opacity));
+}
+
+.hover\:bg-red-950:hover {
+  --tw-bg-opacity: 1;
+  background-color: rgb(127, 29, 29 / var(--tw-bg-opacity)); /* This is the rgb equivalent of #7F1D1D */
 }
 
 .hover\:bg-gray-950:hover{

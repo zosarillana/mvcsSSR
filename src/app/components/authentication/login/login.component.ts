@@ -40,29 +40,50 @@ export class LoginComponent implements OnInit {
   public onSubmit(username: string, user_password: string): void {
     if (this.loading) return;
     this.loading = true;
+  
     this.authService.login(username, user_password).subscribe(
       (response) => {
         if (response && response.token) {
           localStorage.setItem('jwtToken', response.token);
-
-          this.router
-            .navigate(['/dashboard'])
-            .then(() => {
-              this.loading = false;
-            })
-            .catch(() => {
-              this.errorMessage = 'An error occurred during navigation.';
-              this.loading = false;
-            });
+  
+          const decodedToken = this.authService.decodeToken(response.token);
+          const userRoleId = decodedToken?.role_id;
+  
+          const roleIdAsNumber = Number(userRoleId);
+  
+          if (roleIdAsNumber === 2) {
+            this.router.navigate(['/dashboard/visits'])
+              .then(() => {
+                this.loading = false;
+              })
+              .catch(() => {
+                this.errorMessage = 'An error occurred during navigation.';
+                this.loading = false;
+              });
+          } else {
+            this.router.navigate(['/dashboard'])
+              .then(() => {
+                this.loading = false;
+              })
+              .catch(() => {
+                this.errorMessage = 'An error occurred during navigation.';
+                this.loading = false;
+              });
+          }
         } else {
           this.errorMessage = 'Login failed. Please check your username and password.';
           this.loading = false;
         }
       },
       (error) => {
-        this.errorMessage = error.message || 'Login failed. Please check your username and password.';
+        // Safely check for the 'Invalid credentials' error
+        if (error?.error?.errors?.general?.length) {
+          this.errorMessage = error.error.errors.general[0]; // Shows 'Invalid credentials'
+        } else {
+          this.errorMessage = 'Login failed. Please check your username and password.';
+        }
         this.loading = false;
       }
     );
   }
-}
+}    

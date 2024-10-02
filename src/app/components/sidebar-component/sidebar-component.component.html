@@ -5,37 +5,49 @@
       'translate-x-0': isSidebarOpen,
       '-translate-x-full': !isSidebarOpen
     }"
-    class="fixed left-0 top-0 w-64 h-full bg-gray-900 p-4 z-50 sidebar-menu transition-transform"
+    class="fixed left-0 top-0 w-64 h-full bg-[#9A1915] p-4 z-50 shadow-right-lg transition-transform rounded-r-lg"
   >
     <!-- Sidebar content -->
-    <a href="#" class="flex items-center pb-4 border-b border-b-gray-800">
+    <!-- <a href="#" class="flex items-center pb-4 border-b border-b-[#9A1915]"> -->
+    <a href="#" class="flex items-center">
       <img
-      style="height: 150px;"
+        style="height: 165px; width: 220px"
         class="mx-auto h-auto w-auto"
-        src="new_logo2.png"
+        src="new_logo.png"
         alt="Your Company"
       />
       <!-- <span class="text-lg font-bold text-white ml-3">{{ title }}</span> -->
     </a>
-    <div class="mt-4 mb-2 text-gray-500 uppercase text-xs tracking-wider">
+    <div
+      *ngIf="user.role_id !== '2'"
+      class="mt-4 mb-2 text-white uppercase text-xs font-bold tracking-wider"
+    >
       Dashboard
     </div>
     <ul>
-      <li class="mb-1">
+      <li *ngIf="user.role_id !== '2'" class="mb-1">
         <a
           routerLink="/dashboard"
-          class="flex items-center py-2 px-4 text-gray-300 hover:bg-gray-950 hover:text-gray-100 rounded-md"
-          routerLinkActive="bg-gray-800 text-white"
+          class="flex items-center py-2 px-4 rounded-md"
+          [ngClass]="{
+            'text-white': !isActive('/dashboard'),
+            'text-red-900 bg-white': isActive('/dashboard'),
+            'hover:bg-white hover:text-red-900': true
+          }"
+          routerLinkActive="text-red-900"
           [routerLinkActiveOptions]="{ exact: true }"
         >
           <mat-icon>bar_chart_4_bars</mat-icon>
-          <p class="ml-2 text-sm">Dasboard</p>
+          <p class="ml-2 font-bold tracking-wider text-sm">Dashboard</p>
         </a>
       </li>
+
       <!-- Add other main menu items here -->
     </ul>
     <!-- Main Menu Label -->
-    <div class="mt-4 mb-2 text-gray-500 uppercase text-xs tracking-wider">
+    <div
+      class="mt-4 mb-2 text-black font-bold uppercase text-white text-xs tracking-wider"
+    >
       Main Menu
     </div>
     <!-- Main Menu Items -->
@@ -43,13 +55,18 @@
       <li class="mb-1">
         <a
           routerLink="/dashboard/visits"
-          class="flex items-center py-2 px-4 text-gray-300 hover:bg-gray-950 hover:text-gray-100 rounded-md"
-          routerLinkActive="bg-gray-800 text-white"
+          class="flex items-center py-2 px-4 text-black hover:bg-red-950 hover:text-gray-100 rounded-md"
+          [ngClass]="{
+            'text-white': !isActive('/dashboard/visits'),
+            'text-red-900 bg-white': isActive('/dashboard/visits'),
+            'hover:bg-white hover:text-red-900': true
+          }"
+          routerLinkActive="text-red-900"
           [routerLinkActiveOptions]="{ exact: true }"
         >
           <!-- <mat-icon>dashboard</mat-icon> -->
           <mat-icon>checklist</mat-icon>
-          <p class="ml-2 text-sm">Market visits</p>
+          <p class="ml-2 font-bold tracking-wider text-sm">Market Visits</p>
         </a>
       </li>
       <!-- Add other main menu items here -->
@@ -58,7 +75,7 @@
     <!-- Admin Options Label -->
     <div
       *ngIf="user.role_id !== '2'"
-      class="mt-6 mb-2 text-gray-500 uppercase text-xs tracking-wider"
+      class="mt-6 mb-2 text-white font-bold uppercase text-xs tracking-wider"
     >
       Admin Options
     </div>
@@ -68,11 +85,17 @@
       <li *ngIf="user.role_id !== '2'" class="mb-1">
         <a
           routerLink="/dashboard/users"
-          class="flex items-center py-2 px-4 text-gray-300 hover:bg-gray-950 hover:text-gray-100 rounded-md"
-          routerLinkActive="bg-gray-800 text-white"
+          class="flex items-center py-2 px-4 text-black hover:bg-red-950 hover:text-gray-100 rounded-md"
+          [ngClass]="{
+            'text-white': !isActive('/dashboard/users'),
+            'text-red-900 bg-white': isActive('/dashboard/users'),
+            'hover:bg-white hover:text-red-900': true
+          }"
+          routerLinkActive="text-red-900"
+          [routerLinkActiveOptions]="{ exact: true }"
         >
           <mat-icon>person_add</mat-icon>
-          <p class="ml-2 text-sm">Users</p>
+          <p class="ml-2 font-bold tracking-wider text-sm">Users</p>
         </a>
       </li>
       <!-- <li *ngIf="user.role_id !== '2'" class="mb-1">
@@ -91,69 +114,107 @@
       <!-- Admin Options Label -->
       <div
         *ngIf="user.role_id !== '2'"
-        class="mt-6 mb-2 text-gray-500 uppercase text-xs tracking-wider"
+        class="mt-6 mb-2 text-white uppercase text-xs font-bold tracking-wider"
       >
         Master Data
       </div>
       <li *ngIf="user.role_id !== '2'" class="mb-1">
         <a
           routerLink="/dashboard/areas"
-          class="flex items-center py-2 px-4 text-gray-300 hover:bg-gray-950 hover:text-gray-100 rounded-md"
-          routerLinkActive="bg-gray-800 text-white"
+          class="flex items-center py-2 px-4 text-black hover:bg-red-950 hover:text-gray-100 rounded-md"
+          [ngClass]="{
+            'text-white': !isActive('/dashboard/areas'),
+            'text-red-900 bg-white': isActive('/dashboard/areas'),
+            'hover:bg-white hover:text-red-900': true
+          }"
+          routerLinkActive="text-red-900"
+          [routerLinkActiveOptions]="{ exact: true }"
         >
           <mat-icon>add_location_alt</mat-icon>
-          <p class="ml-2 text-sm">Add area</p>
+          <p class="ml-2 font-bold tracking-wider text-sm">Add area</p>
         </a>
       </li>
       <li *ngIf="user.role_id !== '2'" class="mb-1">
         <a
           routerLink="/dashboard/isrs"
-          class="flex items-center py-2 px-4 text-gray-300 hover:bg-gray-950 hover:text-gray-100 rounded-md"
-          routerLinkActive="bg-gray-800 text-white"
+          class="flex items-center py-2 px-4 text-black hover:bg-red-950 hover:text-gray-100 rounded-md"
+          [ngClass]="{
+            'text-white': !isActive('/dashboard/isrs'),
+            'text-red-900 bg-white': isActive('/dashboard/isrs'),
+            'hover:bg-white hover:text-red-900': true
+          }"
+          routerLinkActive="text-red-900"
+          [routerLinkActiveOptions]="{ exact: true }"
         >
           <mat-icon>store</mat-icon>
-          <p class="ml-2 text-sm">In store requirements</p>
+          <p class="ml-2 font-bold tracking-wider text-sm">
+            In store requirements
+          </p>
         </a>
       </li>
       <li *ngIf="user.role_id !== '2'" class="mb-1">
         <a
           routerLink="/dashboard/pods"
-          class="flex items-center py-2 px-4 text-gray-300 hover:bg-gray-950 hover:text-gray-100 rounded-md"
-          routerLinkActive="bg-gray-800 text-white"
+          class="flex items-center py-2 px-4 text-black hover:bg-red-950 hover:text-gray-100 rounded-md"
+          [ngClass]="{
+            'text-white': !isActive('/dashboard/pods'),
+            'text-red-900 bg-white': isActive('/dashboard/pods'),
+            'hover:bg-white hover:text-red-900': true
+          }"
+          routerLinkActive="text-red-900"
+          [routerLinkActiveOptions]="{ exact: true }"
         >
           <mat-icon>inventory</mat-icon>
-          <p class="ml-2 text-sm">Product on display</p>
+          <p class="ml-2 font-bold tracking-wider text-sm">
+            Product on display
+          </p>
         </a>
       </li>
       <li *ngIf="user.role_id !== '2'" class="mb-1">
         <a
           routerLink="/dashboard/paps"
-          class="flex items-center py-2 px-4 text-gray-300 hover:bg-gray-950 hover:text-gray-100 rounded-md"
-          routerLinkActive="bg-gray-800 text-white"
+          class="flex items-center py-2 px-4 text-black hover:bg-red-950 hover:text-gray-100 rounded-md"
+          [ngClass]="{
+            'text-white': !isActive('/dashboard/paps'),
+            'text-red-900 bg-white': isActive('/dashboard/paps'),
+            'hover:bg-white hover:text-red-900': true
+          }"
+          routerLinkActive="text-red-900"
+          [routerLinkActiveOptions]="{ exact: true }"
         >
           <mat-icon>description</mat-icon>
-          <p class="ml-2 text-sm">Proposed action plan</p>
+          <p class="ml-2 font-bold tracking-wider text-sm">
+            Proposed action plan
+          </p>
         </a>
       </li>
       <!-- Add other admin menu items here -->
     </ul>
     <!-- Admin Options Label -->
-    <div class="mt-6 mb-2 text-gray-500 uppercase text-xs tracking-wider">
+    <div
+      class="mt-6 mb-2 text-white uppercase font-bold text-xs tracking-wider"
+    >
       Logout
     </div>
-    <li class="mb-1">
-      <a
-        routerLink="/dashboard"
-        class="flex items-center py-2 px-4 text-gray-300 hover:bg-gray-950 hover:text-gray-100 rounded-md"
-        [ngClass]="{
-          'bg-gray-800 text-white': selectedContent === 'content10'
-        }"
-        (click)="logout()"
-      >
-        <mat-icon>logout</mat-icon>
-        <p class="ml-2 text-sm">Logout</p>
-      </a>
-    </li>
+    <ul>
+      <li class="mb-1">
+        <a
+          routerLink="/dashboard"
+          class="flex items-center py-2 px-4 text-black hover:bg-red-950 hover:text-gray-100 rounded-md"
+          [ngClass]="{
+            'text-white': !isActive(''),
+            'text-red-900 bg-white': isActive(''),
+            'hover:bg-white hover:text-red-900': true
+          }"
+          routerLinkActive="text-red-900"
+          [routerLinkActiveOptions]="{ exact: true }"
+          (click)="logout()"
+        >
+          <mat-icon>logout</mat-icon>
+          <p class="ml-2 font-bold tracking-wider text-sm">Logout</p>
+        </a>
+      </li>
+    </ul>
   </div>
   <!-- Overlay -->
   <div
@@ -168,7 +229,7 @@
       'md:w-[calc(100%-256px)] md:ml-64': isSidebarOpen,
       'w-full': !isSidebarOpen
     }"
-    class="bg-[#fdfbff] min-h-screen transition-all main"
+    class="bg-[#ffffff] min-h-screen transition-all main"
   >
     <!-- start: Header -->
     <div

@@ -74,6 +74,9 @@ import { VisitChartComponent } from './components/charts/visit-chart/visit-chart
 import { StatusChartComponent } from './components/charts/status-chart/status-chart.component';
 import { NgApexchartsModule } from 'ng-apexcharts';
 import { MatAutocompleteModule } from '@angular/material/autocomplete';
+import { SubmitModalComponent } from './components/get-market-visits/modal/submit-modal/submit-modal.component';
+import { ApprovedModalComponent } from './components/get-market-visits/modal/approved-modal/approved-modal.component';
+import { RecallModalComponent } from './components/get-market-visits/modal/recall-modal/recall-modal.component';
 @NgModule({
   declarations: [
     AppComponent,
@@ -119,7 +122,10 @@ import { MatAutocompleteModule } from '@angular/material/autocomplete';
     ImagePreviewComponent,
     DashboardComponent,
     VisitChartComponent,
-    StatusChartComponent,        
+    StatusChartComponent,
+    SubmitModalComponent,
+    ApprovedModalComponent,
+    RecallModalComponent,        
   ],
   schemas: [CUSTOM_ELEMENTS_SCHEMA],
   imports: [

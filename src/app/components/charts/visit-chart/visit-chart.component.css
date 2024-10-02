@@ -3,3 +3,8 @@ apx-chart {
   display: block;
   margin: auto;
 }
+.chart-container {
+  overflow: hidden; /* Prevent scrolling */
+  width: 100%;      /* Ensure the container fits the chart */
+  height: 350px;    /* Set the desired height */
+}

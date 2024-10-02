@@ -78,7 +78,8 @@ export class TestComponent {
       visit_competitorsCheck: new FormControl('', Validators.required),
       pod_canned_other: new FormControl(''),
       visit_averageOffTakePd: new FormControl('', Validators.required),
-      visit_payolaMerchandiser: new FormControl('', Validators.required),
+      visit_payolaContactNumber: new FormControl('', Validators.required),
+      visit_payolaMerchandiser: new FormControl('', Validators.required),      
       visit_payolaSupervisor: new FormControl('', Validators.required),
       isr_needsOthers: new FormControl(''),
       isr_reqOthers: new FormControl(''),
@@ -291,6 +292,7 @@ export class TestComponent {
     const competitorsCheck = handleEmptyValue(this.formGroup.get('visit_competitorsCheck')?.value);
     const averageOffTakePd = handleEmptyValue(this.formGroup.get('visit_averageOffTakePd')?.value);
     const payolaMerchandiser = handleEmptyValue(this.formGroup.get('visit_payolaMerchandiser')?.value);
+    const payolaContactNumber = handleEmptyValue(this.formGroup.get('visit_payolaMerchandiser')?.value);
     const payolaSupervisor = handleEmptyValue(this.formGroup.get('visit_payolaSupervisor')?.value);
     const isrNeedsOthers = handleEmptyValue(this.formGroup.get('isr_needsOthers')?.value);
     const isrReqOthers = handleEmptyValue(this.formGroup.get('isr_reqOthers')?.value);
@@ -318,6 +320,7 @@ export class TestComponent {
     formData.append('visit_averageOffTakePd', averageOffTakePd);
     formData.append('visit_payolaMerchandiser', payolaMerchandiser);
     formData.append('visit_payolaSupervisor', payolaSupervisor);
+    formData.append('visit_payolaContactNumber', payolaContactNumber);
     formData.append('isr_needsOthers', isrNeedsOthers);
     formData.append('isr_reqOthers', isrReqOthers);
     formData.append('pap_others', pap_others);

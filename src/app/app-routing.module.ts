@@ -16,6 +16,7 @@ import { EditVisitsComponent } from './components/get-market-visits/views/edit-v
 import { ViewVisitsComponent } from './components/get-market-visits/views/view-visits/view-visits.component';
 import { TestComponent } from './components/get-market-visits/views/test/test.component';
 import { DashboardComponent } from './components/dashboard/dashboard.component';
+import { roleAdminGuard } from './auth/role-admin.guard';
 
 const routes: Routes = [
   {
@@ -31,7 +32,7 @@ const routes: Routes = [
       { path: 'paps', component: PapAddComponent, canActivate: [RoleGuard] }, // Paps view
       { path: 'visits', component: GetMarketVisitsComponent }, // Create visits view
       { path: 'visits/create', component: TestComponent }, // Create visits view
-      { path: 'visits/edit/:id', component: EditVisitsComponent, canActivate: [RoleGuard]}, // Edit visits view
+      { path: 'visits/edit/:id', component: EditVisitsComponent, canActivate: [roleAdminGuard]}, // Edit visits view
       { path: 'visits/view/:id', component: ViewVisitsComponent }, // Edit visits view
     ]
   },

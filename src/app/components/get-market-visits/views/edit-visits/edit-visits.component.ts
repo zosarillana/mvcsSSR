@@ -88,6 +88,7 @@ export class EditVisitsComponent implements OnInit {
       visit_competitorsCheck: [''],
       visit_averageOffTakePd: [''],
       visit_payolaMerchandiser: [''],
+      visit_payolaContactNumber: [''],
       visit_payolaSupervisor: [''],
       isr_needsOthers: [''],
       isr_reqOthers: [''],
@@ -480,6 +481,9 @@ export class EditVisitsComponent implements OnInit {
     const payolaMerchandiser = handleEmptyValue(
       this.formGroup.get('visit_payolaMerchandiser')?.value
     );
+    const payolaContactNumber = handleEmptyValue(
+      this.formGroup.get('visit_payolaContactNumber')?.value
+    );
     const payolaSupervisor = handleEmptyValue(
       this.formGroup.get('visit_payolaSupervisor')?.value
     );
@@ -523,6 +527,7 @@ export class EditVisitsComponent implements OnInit {
     formData.append('visit_averageOffTakePd', averageOffTakePd);
     formData.append('visit_payolaMerchandiser', payolaMerchandiser);
     formData.append('visit_payolaSupervisor', payolaSupervisor);
+    formData.append('visit_payolaContactNumber', payolaContactNumber);
     formData.append('isr_needsOthers', isrNeedsOthers);
     formData.append('isr_reqOthers', isrReqOthers);
     formData.append('pap_others', pap_others);

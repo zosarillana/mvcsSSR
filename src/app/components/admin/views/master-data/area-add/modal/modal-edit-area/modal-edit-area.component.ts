@@ -38,14 +38,14 @@ export class ModalEditAreaComponent {
   }
 
   save(): void {
-    console.log(this.data);
+    // console.log(this.data);
     this.areaService.updateAreas(this.data).subscribe({
       next: (response) => {
         this.dialogRef.close(this.data);
       },
       error: (errorResponse) => {
         // Log the error response for debugging
-        console.log('Error Response:', errorResponse);
+        // console.log('Error Response:', errorResponse);
 
         // Clear previous error messages
         this.errorMessages = {};

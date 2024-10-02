@@ -25,6 +25,9 @@ import { MatSnackBar } from '@angular/material/snack-bar';
 import { FormControl } from '@angular/forms';
 import { startWith } from 'rxjs/operators';
 import { SseService } from '../../services/sse.service';
+import { SubmitModalComponent } from './modal/submit-modal/submit-modal.component';
+import { RecallModalComponent } from './modal/recall-modal/recall-modal.component';
+import { ApprovedModalComponent } from './modal/approved-modal/approved-modal.component';
 @Component({
   selector: 'app-get-market-visits',
   templateUrl: './get-market-visits.component.html',
@@ -33,17 +36,21 @@ import { SseService } from '../../services/sse.service';
 export class GetMarketVisitsComponent implements AfterViewInit, OnInit {
   myControl = new FormControl('');
   options: string[] = []; // Initialize as empty
+  optionsForName: string[] = []; // Initialize as empty
+  filteredOptionsForName!: Observable<string[]>;
   filteredOptions!: Observable<string[]>;
   @Input() mvisit?: MarketVisits;
   displayedColumns: string[] = [
     'mv_id',
+    'fullname',
     'visit_area',
     'visit_date',
-    'visit_accountName',
+    'visit_accountName',   
     'visit_distributor',
     'visit_salesPersonnel',
     'visit_accountType',
     'date_created',
+    'status',
     'action',
   ];
 
@@ -94,6 +101,7 @@ export class GetMarketVisitsComponent implements AfterViewInit, OnInit {
       (data) => {
         this.mvisits = data || [];
         this.setupAutocomplete();
+        this.setupAutocompleteForName();
       },
       (error) => {
         console.error('Error fetching market visits', error);
@@ -129,10 +137,68 @@ export class GetMarketVisitsComponent implements AfterViewInit, OnInit {
     // });
 
     this.flowbiteService.loadFlowbite((flowbite) => {
-      console.log('Flowbite loaded', flowbite);
+      // console.log('Flowbite loaded', flowbite);
+    });
+  }
+  setupAutocompleteForName(): void {
+    // Extract unique fullname values for the autocomplete options from market visits
+    const uniqueFullNames = new Set(
+      this.mvisits.map((visit) => {
+        const user = visit.user; // Assuming each visit has a user property
+        return `${user.fname} ${user.mname ? user.mname + ' ' : ''}${user.lname}`;
+      })
+    );
+  
+    // Convert the Set back to an array
+    this.optionsForName = Array.from(uniqueFullNames);
+    
+    // Setup autocomplete filtering
+    this.filteredOptionsForName = this.myControl.valueChanges.pipe(
+      startWith(''),
+      map((value) => this._filterForName(value ?? '', this.optionsForName)) // Use current options
+    );
+  }
+  private _filterForName(value: string, options: string[]): string[] {
+    const filterValueForName = value.toLowerCase();
+    const filterTermsForName = filterValueForName.split(' ').filter((term) => term); // Split by space and filter out empty terms
+
+    return options.filter((option) => {
+      const optionLowerForName = option.toLowerCase();
+      return filterTermsForName.every((term) => optionLowerForName.includes(term)); // Ensure all terms are included in the option
     });
   }
 
+  applyFilterForName(event: Event, filterType: string): void {
+    const inputForName = event.target as HTMLInputElement;
+    const value = inputForName.value.trim().toLowerCase(); // Convert to lower case
+
+    if (filterType === 'fullname') {
+      this.dataSource.filterPredicate = (data: MarketVisits) => {
+        const fullname = `${data.user.fname} ${data.user.mname ? data.user.mname + ' ' : ''}${
+          data.user.lname
+        }`.toLowerCase();
+        return fullname.includes(value); // Check against the combined fullname
+      };
+      this.dataSource.filter = value; // Apply the filter
+    }
+  }
+  applyFilterOnSelectForName(selectedOption: string): void {
+    // Log the selected option
+    console.log('Selected option:', selectedOption);
+
+    const selectedValue = selectedOption.toLowerCase(); // Convert selected option to lower case
+
+    // Define the filter predicate
+    this.dataSource.filterPredicate = (data: MarketVisits) => {
+      const fullname = `${data.user.fname} ${data.user.mname ? data.user.mname + ' ' : ''}${
+        data.user.lname
+      }`.toLowerCase();
+      return fullname.includes(selectedValue); // Check against the combined fullname
+    };
+
+    // Apply the new filter
+    this.dataSource.filter = selectedValue; // Set the filter based on selected option
+  }
   setupAutocomplete() {
     // Extract mv_id values for the autocomplete options
     this.options = this.mvisits.map((visit) => visit.mv_id);
@@ -192,7 +258,7 @@ export class GetMarketVisitsComponent implements AfterViewInit, OnInit {
     this.subscription.add(
       this.sseService.messages$.subscribe((event) => {
         const message = event.data; // Extract the message from the event
-        console.log('Received SSE message:', message);
+        // console.log('Received SSE message:', message);
 
         // Display the message using MatSnackBar
         this.matSnackBar.open(message, 'Close', {
@@ -204,6 +270,7 @@ export class GetMarketVisitsComponent implements AfterViewInit, OnInit {
           (result: MarketVisits[]) => {
             this.mvisits = result || []; // Update the local data
             this.setupAutocomplete(); // Reinitialize autocomplete
+            this.setupAutocompleteForName();
             this.updateDataSource(result); // Update data source for your table or list
             this.updateVisitCount(); // Update visit count if applicable
           },
@@ -342,9 +409,9 @@ export class GetMarketVisitsComponent implements AfterViewInit, OnInit {
           dataToDisplay = result.filter(
             (visit) => visit.user?.user_id?.toString() === this.user_id
           );
-          console.log('Filtered Data for role_id 2:', dataToDisplay);
+          // console.log('Filtered Data for role_id 2:', dataToDisplay);
         } else {
-          console.log('Unfiltered Data for other roles:', dataToDisplay);
+          // console.log('Unfiltered Data for other roles:', dataToDisplay);
         }
 
         // Apply date filtering
@@ -423,6 +490,30 @@ export class GetMarketVisitsComponent implements AfterViewInit, OnInit {
   }
   openDeleteDialog(visit: MarketVisits): void {
     const dialogRef = this.dialog.open(ModalDeleteDialogComponent, {
+      width: '500px',
+      data: visit,
+    });
+
+    dialogRef.afterClosed().subscribe(() => this.loadMarketVisits());
+  }
+  openRecallModal(visit: MarketVisits): void {
+    const dialogRef = this.dialog.open(RecallModalComponent, {
+      width: '500px',
+      data: visit,
+    });
+
+    dialogRef.afterClosed().subscribe(() => this.loadMarketVisits());
+  }
+  openApproveModal(visit: MarketVisits): void {
+    const dialogRef = this.dialog.open(ApprovedModalComponent, {
+      width: '500px',
+      data: visit,
+    });
+
+    dialogRef.afterClosed().subscribe(() => this.loadMarketVisits());
+  }
+  openSubmitDialog(visit: MarketVisits): void {
+    const dialogRef = this.dialog.open(SubmitModalComponent, {
       width: '500px',
       data: visit,
     });

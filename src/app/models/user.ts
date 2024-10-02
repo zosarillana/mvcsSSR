@@ -9,8 +9,8 @@ export class User {
     contact_num = "";
     username = "";
     password = "";
-    dateCreated = ''; // Add this line
-    dateUpdated = ''; // Add this line
+    date_created = ''; // Add this line
+    date_updated = ''; // Add this line
     roles: Array<{
       id: number;
       role_id: string;

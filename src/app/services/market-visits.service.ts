@@ -23,6 +23,19 @@ export class MarketVisitsService {
       `${this.url}/${id}`,
       formData
     );
+  }  
+
+   // New method to update the status of a MarketVisit to "Submitted"
+   public updateMarketVisitStatusSubmitted(id: number): Observable<MarketVisits> {
+    return this.http.put<MarketVisits>(`${this.url}/${id}/status/submitted`, {});
+  }
+   // New method to update the status of a MarketVisit to "Submitted"
+   public updateMarketVisitStatusApproved(id: number): Observable<MarketVisits> {
+    return this.http.put<MarketVisits>(`${this.url}/${id}/status/approved`, {});
+  }
+   // New method to update the status of a MarketVisit to "Submitted"
+   public updateMarketVisitStatusRecalled(id: number): Observable<MarketVisits> {
+    return this.http.put<MarketVisits>(`${this.url}/${id}/status/recalled`, {});
   }
 
   getVisitById(id: string): Observable<MarketVisits> {
@@ -50,6 +63,27 @@ export class MarketVisitsService {
       })
     );
   }
+
+  public getChartData(): Observable<{ year: number; month: number; count: number }[]> {
+    return this.http.get<{ year: number; month: number; count: number }[]>(`${this.url}/chart-data`).pipe(
+      catchError(error => {
+        // Handle errors if needed
+        return throwError(() => new Error(error.message));
+      })
+    );
+  }
+  public getChartDataUser(): Observable<{ year: number; month: number; count: number }[]> {
+    return this.http.get<{ year: number; month: number; count: number }[]>(`${this.url}/chart-data/user`).pipe(
+      catchError(error => {
+        // Handle errors if needed
+        return throwError(() => new Error(error.message));
+      })
+    );
+  }
+  
+//   getVisitCountUser(userId: number): Observable<number> {
+//     return this.http.get<number>(`/api/count/user/${userId}`);
+// }
   public getVisitCountUser(): Observable<number> {
     // This endpoint does not require authentication
     return this.http.get<number>(`${this.url}/count/user`).pipe(
@@ -58,6 +92,10 @@ export class MarketVisitsService {
         return throwError(() => new Error(error.message));
       })
     );
+  }
+
+  getVisitCountForUser(userId: number): Observable<number> {
+    return this.http.get<number>(`${this.url}/count/user?userId=${userId}`);
   }
   
 

@@ -14,8 +14,11 @@ export class MarketVisits {
   isr_req_ImgPath = '';
   isr_needsOthers = '';
   isr_needs_ImgPath = '';
+  status = '';
+  data_status = '';
   visit_payolaSupervisor = '';
   visit_payolaMerchandiser = '';
+  visit_payolaContactNumber = '';
   visit_averageOffTakePd = '';
   pod_id: string[] = []; // Changed from string to string[]
   pod_canned_other = '';

@@ -83,6 +83,7 @@ export class ViewVisitsComponent {
       visit_averageOffTakePd: [''],
       visit_payolaMerchandiser: [''],
       visit_payolaSupervisor: [''],
+      visit_payolaContactNumber: [''],
       isr_needsOthers: [''],
       isr_reqOthers: [''],
       pap_others: [''],
@@ -96,7 +97,7 @@ export class ViewVisitsComponent {
       this.visitId = params.get('id');
       if (this.visitId) {
         // Logic to handle the ID, e.g., load data based on the ID
-        console.log('Visit ID:', this.visitId);
+        // console.log('Visit ID:', this.visitId);
       }
     });
     // Decode token and set user information
