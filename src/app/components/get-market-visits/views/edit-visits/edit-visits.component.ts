@@ -103,7 +103,7 @@ export class EditVisitsComponent implements OnInit {
       this.visitId = params.get('id');
       if (this.visitId) {
         // Logic to handle the ID, e.g., load data based on the ID
-        console.log('Visit ID:', this.visitId);
+        // console.log('Visit ID:', this.visitId);
       }
     });
     // Decode token and set user information

@@ -184,7 +184,7 @@ export class GetMarketVisitsComponent implements AfterViewInit, OnInit {
   }
   applyFilterOnSelectForName(selectedOption: string): void {
     // Log the selected option
-    console.log('Selected option:', selectedOption);
+    // console.log('Selected option:', selectedOption);
 
     const selectedValue = selectedOption.toLowerCase(); // Convert selected option to lower case
 
