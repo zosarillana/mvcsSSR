@@ -1,0 +1,62 @@
+<h1 mat-dialog-title style="text-align: center">Change Password</h1>
+<form [formGroup]="passwordForm" (ngSubmit)="onSubmit()">
+  <hr class="h-px my-4 bg-gray-200 border-0 dark:bg-gray-700" />
+  <div class="grid grid-cols-1 gap-2 mb-4">
+    <div class="relative mt-1 ml-2 mr-2">
+      <input
+        id="old_password"
+        placeholder="Old password"
+        formControlName="old_password"
+        class="border p-2 text-sm rounded w-full"
+        type="password"
+      />
+      <!-- <div *ngIf="statusMessage" class="text-red-700 text-xs mt-1">
+        {{ statusMessage }}
+      </div> -->
+    
+      <div
+        *ngIf="passwordForm.get('old_password')?.errors?.['incorrectPassword']"
+        class="text-red-700 text-xs mt-1"
+      >
+        Old password is incorrect.
+      </div>
+    </div>
+    <div class="relative mt-1 ml-2 mr-2">
+      <input
+        id="new_password"
+        placeholder="New password"
+        formControlName="new_password"
+        class="border p-2 text-sm rounded w-full"
+        type="password"
+      />
+      <div
+        *ngIf="passwordForm.get('new_password')?.errors?.['invalidPassword']"
+        class="text-red-700 text-xs mt-1"
+      >
+        New password must contain at least 8 characters, one uppercase letter,
+        one number, and one special character.
+      </div>
+    </div>
+    <div class="relative mt-1 ml-2 mr-2">
+      <input
+        id="confirm_password"
+        placeholder="Confirm password"
+        formControlName="confirm_password"
+        class="border p-2 text-sm rounded w-full"
+        type="password"
+      />
+      <div
+        *ngIf="passwordForm.get('confirm_password')?.errors?.['passwordsDoNotMatch']"
+        class="text-red-700 text-xs mt-1"
+      >
+        Confirm password does not match.
+      </div>
+    </div>
+  </div>
+  <div mat-dialog-actions>
+    <button mat-button (click)="onNoClick()">Close</button>
+    <button mat-button type="submit" [disabled]="passwordForm.invalid">
+      Save
+    </button>
+  </div>
+</form>

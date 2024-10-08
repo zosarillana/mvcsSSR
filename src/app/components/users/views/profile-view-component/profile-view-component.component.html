@@ -1,0 +1,113 @@
+<div
+  class="bg-white border border-gray-100 shadow-md shadow-black/5 p-6 rounded-md"
+>
+  <!-- Flex container for profile info and image -->
+  <div class="text-gray-700 text-lg font-semibold lg:mr-6">
+    <p>My Profile </p>
+  </div>
+  <!-- <div class="flex flex-col lg:flex-row items-start lg:items-center"> -->
+  <div class="flex">
+    <div class="flex w-64">
+    
+        <div class="sm:w-full sm:max-w-sm mb-4 lg:mb-0 lg:ml-auto">
+          <img class="border mt-2 rounded-md h-48 w-auto" src="def_prof.jpg" alt="Your Company" />
+        </div>
+    
+    </div>
+    <div class="ml-12 flex-1 w-64">
+      <div class="grid grid-cols-1 lg:grid-cols-2 gap-2">
+        <!-- <p>profile-Fields!</p> -->
+        <div class="relative">
+          <label
+            for="emp_id"
+            class="block text-gray-700 text-md dark:text-gray-300 text-sm font-medium mb-2"
+            >Employee Id </label
+          >
+          <input
+            id="emp_id"
+            type="text"
+            value="{{ user.abfi_id }}"
+            readonly
+            class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
+          />
+        </div>
+        <div class="relative">
+          <label
+            for="role"
+            class="block text-gray-700 text-md dark:text-gray-300 text-sm font-medium mb-2"
+            >Role</label
+          >
+          <input
+          id="role"
+          type="text"
+          value="{{ user.role_id == 2 ? 'User' : user.role_id }}"
+          readonly
+          class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
+        />
+        </div>
+        <!-- <p>profile-Fields!</p> -->
+        <div class="relative lg:mt-2">
+          <label
+            for="fullName"
+            class="block text-gray-700 text-md dark:text-gray-300 text-sm font-medium mb-2"
+            >Fullname</label
+          >
+          <input
+            id="fullName"
+            type="text"
+            value="{{ user.lname }}, {{ user.fname }} {{ user.mname }}"
+            readonly
+            class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
+          />
+        </div>
+        <div class="relative lg:mt-2">
+          <label
+            for="email_add"
+            class="block text-gray-700 text-md dark:text-gray-300 text-sm font-medium mb-2"
+            >Email Address</label
+          >
+          <input
+            id="email_add"
+            type="text"
+            value="{{ user.email_add }}"
+            readonly
+            class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
+          />
+        </div>
+        <div class="relative lg:mt-2">
+          <label
+            for="contact_number"
+            class="block text-gray-700 text-md dark:text-gray-300 text-sm font-medium mb-2"
+            >Contact number</label
+          >
+          <input
+            id="contact_number"
+            type="text"
+            value="{{ user.contact_num }}"
+            readonly
+            class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
+          />
+        </div>
+      </div>
+      <div class="grid grid-cols-1 lg:grid-cols-2 lg:mt-2 gap-2">
+        <div class="relative lg:mt-2">
+          <label
+            for="date_created"
+            class="block text-gray-700 text-md dark:text-gray-300 text-sm font-medium mb-2"
+            >Date Registered</label
+          >
+          <input
+            id="date_created"
+            type="text"
+            readonly
+            value="{{ user.date_created}}"
+            class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
+          />
+        </div>
+      </div>
+      <div class="mt-5">
+        <button mat-raised-button (click)="openChangePass()">Change password</button>
+      </div>
+    </div>
+  </div>
+</div>

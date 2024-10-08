@@ -77,6 +77,8 @@ import { MatAutocompleteModule } from '@angular/material/autocomplete';
 import { SubmitModalComponent } from './components/get-market-visits/modal/submit-modal/submit-modal.component';
 import { ApprovedModalComponent } from './components/get-market-visits/modal/approved-modal/approved-modal.component';
 import { RecallModalComponent } from './components/get-market-visits/modal/recall-modal/recall-modal.component';
+import { ProfileViewComponentComponent } from './components/users/views/profile-view-component/profile-view-component.component';
+import { ModalChangepassComponent } from './components/users/views/profile-view-component/modal/modal-changepass/modal-changepass.component';
 @NgModule({
   declarations: [
     AppComponent,
@@ -125,7 +127,9 @@ import { RecallModalComponent } from './components/get-market-visits/modal/recal
     StatusChartComponent,
     SubmitModalComponent,
     ApprovedModalComponent,
-    RecallModalComponent,        
+    RecallModalComponent,
+    ProfileViewComponentComponent,
+    ModalChangepassComponent,        
   ],
   schemas: [CUSTOM_ELEMENTS_SCHEMA],
   imports: [

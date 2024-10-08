@@ -50,6 +50,7 @@
     "@angular-devkit/build-angular": "^18.1.4",
     "@angular/cli": "^18.1.4",
     "@angular/compiler-cli": "^18.1.4",
+    "@types/bcryptjs": "^2.4.6",
     "@types/express": "^4.17.17",
     "@types/file-saver": "^2.0.7",
     "@types/jasmine": "~5.1.0",

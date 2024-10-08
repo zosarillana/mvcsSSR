@@ -1,8 +1,14 @@
-import { HttpClient, HttpErrorResponse } from '@angular/common/http';
+import {
+  HttpClient,
+  HttpErrorResponse,
+  HttpHeaders,
+} from '@angular/common/http';
 import { Injectable } from '@angular/core';
-import { Observable, throwError } from 'rxjs';
+import { Observable, of, throwError } from 'rxjs';
 import { User } from '../models/user';
 import { catchError } from 'rxjs/operators';
+import { ChangePassDto } from '../models/change-pass.dto';
+import { map } from 'rxjs/operators';
 
 @Injectable({
   providedIn: 'root',
@@ -15,6 +21,28 @@ export class UserService {
   public getUsers(): Observable<User[]> {
     return this.http.get<User[]>(`${this.url}`);
   }
+
+  public getUsersSearch(userId: number): Observable<User[]> {
+    return this.http.get<User[]>(`${this.url}/users/${userId}`).pipe(
+      catchError((error) => {
+        console.error('Error fetching user:', error);
+        return of([]); // Return an empty array on error
+      })
+    );
+  }
+
+  changePassword(userId: number, changePassDto: ChangePassDto): Observable<any> {
+    const url = `${this.url}/change-password/${userId}`;
+    const headers = new HttpHeaders({
+        'Content-Type': 'application/json',
+    });
+
+    return this.http.post(url, changePassDto, { headers }).pipe(
+        map(response => response), // Map response to ensure it is returned correctly                         
+    );
+}
+
+
 
   getUserCount(): Observable<number> {
     return this.http.get<number>(`${this.url}/count`);

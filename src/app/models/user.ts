@@ -1,5 +1,6 @@
 export class User {
     id?: number;
+    user_id?: number; // Add this line if you want to use user_id
     abfi_id = "";
     role?: number;
     fname = "";

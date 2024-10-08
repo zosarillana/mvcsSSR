@@ -71,6 +71,34 @@
       </li>
       <!-- Add other main menu items here -->
     </ul>
+    <!-- Main User Profile Label -->
+    <div
+      class="mt-4 mb-2 text-black font-bold uppercase text-white text-xs tracking-wider"
+    >
+      Profile
+    </div>
+    <!-- Main User Profile Items -->
+    <ul>
+      <li class="mb-1">
+        <a
+          *ngIf="user.role_id !== '1'"
+          routerLink="/dashboard/profile"
+          class="flex items-center py-2 px-4 text-black hover:bg-red-950 hover:text-gray-100 rounded-md"
+          [ngClass]="{
+            'text-white': !isActive('/dashboard/profile'),
+            'text-red-900 bg-white': isActive('/dashboard/profile'),
+            'hover:bg-white hover:text-red-900': true
+          }"
+          routerLinkActive="text-red-900"
+          [routerLinkActiveOptions]="{ exact: true }"
+        >
+          <!-- <mat-icon>dashboard</mat-icon> -->
+          <mat-icon>account_circle</mat-icon>
+          <p class="ml-2 font-bold tracking-wider text-sm">Profile</p>
+        </a>
+      </li>
+      <!-- Add other user profile items here -->
+    </ul>
 
     <!-- Admin Options Label -->
     <div
