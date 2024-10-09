@@ -10,6 +10,9 @@ export class User {
     contact_num = "";
     username = "";
     password = "";
+    department = "";
+    company = "";
+    position = "";    
     date_created = ''; // Add this line
     date_updated = ''; // Add this line
     roles: Array<{

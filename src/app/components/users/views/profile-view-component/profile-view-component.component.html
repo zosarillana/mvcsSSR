@@ -2,26 +2,26 @@
   class="bg-white border border-gray-100 shadow-md shadow-black/5 p-6 rounded-md"
 >
   <!-- Flex container for profile info and image -->
-  <div class="text-gray-700 text-lg font-semibold lg:mr-6">
+  <div class="ml-2 text-gray-700 text-lg font-semibold lg:mr-6">
     <p>My Profile </p>
   </div>
   <!-- <div class="flex flex-col lg:flex-row items-start lg:items-center"> -->
-  <div class="flex">
-    <div class="flex w-64">
+  <div class="md:flex lg:flex">
+    <div class="md:flex lg:flex w-64">
     
-        <div class="sm:w-full sm:max-w-sm mb-4 lg:mb-0 lg:ml-auto">
+        <div class="ml-2 sm:w-full sm:max-w-sm mb-4 lg:mb-0 lg:ml-auto">
           <img class="border mt-2 rounded-md h-48 w-auto" src="def_prof.jpg" alt="Your Company" />
         </div>
     
     </div>
-    <div class="ml-12 flex-1 w-64">
+    <div class="ml-2 md:flex-1 lg:flex-1 w-64">
       <div class="grid grid-cols-1 lg:grid-cols-2 gap-2">
         <!-- <p>profile-Fields!</p> -->
         <div class="relative">
           <label
             for="emp_id"
             class="block text-gray-700 text-md dark:text-gray-300 text-sm font-medium mb-2"
-            >Employee Id </label
+            >Employee ID </label
           >
           <input
             id="emp_id"
@@ -40,7 +40,7 @@
           <input
           id="role"
           type="text"
-          value="{{ user.role_id == 2 ? 'User' : user.role_id }}"
+          value="{{ user.role_id == 2 ? 'User' : user.role_id == 1 ? 'Admin' : user.role_id }}"
           readonly
           class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
         />
@@ -50,7 +50,7 @@
           <label
             for="fullName"
             class="block text-gray-700 text-md dark:text-gray-300 text-sm font-medium mb-2"
-            >Fullname</label
+            >Employee Name</label
           >
           <input
             id="fullName"
@@ -87,8 +87,55 @@
             readonly
             class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
           />
-        </div>
+        </div>     
       </div>
+      <hr class="h-px my-4 bg-gray-200 border-0 dark:bg-gray-700">
+     <div class="grid grid-cols-1 lg:grid-cols-2 gap-2">
+        <!-- <p>profile-Fields!</p> -->        
+        <div class="relative lg:mt-2">
+          <label
+            for="company"
+            class="block text-gray-700 text-md dark:text-gray-300 text-sm font-medium mb-2"
+            >Company</label
+          >
+          <input
+            id="company"
+            type="text"
+            value="{{ user.company }}"
+            readonly
+            class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
+          />
+        </div>
+        <div class="relative lg:mt-2">
+          <label
+            for="department"
+            class="block text-gray-700 text-md dark:text-gray-300 text-sm font-medium mb-2"
+            >Department</label
+          >
+          <input
+            id="department"
+            type="text"
+            value="{{ user.department }}"
+            readonly
+            class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
+          />
+        </div>
+        <div class="relative lg:mt-2">
+          <label
+            for="position"
+            class="block text-gray-700 text-md dark:text-gray-300 text-sm font-medium mb-2"
+            >Position</label
+          >
+          <input
+            id="position"
+            type="text"
+            value="{{ user.position }}"
+            readonly
+            class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
+          />
+        </div>     
+      </div>
+      <hr class="h-px my-4 bg-gray-200 border-0 dark:bg-gray-700">      
       <div class="grid grid-cols-1 lg:grid-cols-2 lg:mt-2 gap-2">
         <div class="relative lg:mt-2">
           <label

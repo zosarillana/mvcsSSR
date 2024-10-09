@@ -25,7 +25,7 @@ export class ProfileViewComponentComponent implements OnInit {
   }
 
   openChangePass(): void {
-    console.log('User ID:', this.user.id); // Ensure this is the correct value
+    // console.log('User ID:', this.user.id); // Ensure this is the correct value
     
     const dialogRef = this.dialog.open(ModalChangepassComponent, {
       width: '500px',

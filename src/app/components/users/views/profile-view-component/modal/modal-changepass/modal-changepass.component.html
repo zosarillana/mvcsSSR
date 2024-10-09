@@ -2,7 +2,7 @@
 <form [formGroup]="passwordForm" (ngSubmit)="onSubmit()">
   <hr class="h-px my-4 bg-gray-200 border-0 dark:bg-gray-700" />
   <div class="grid grid-cols-1 gap-2 mb-4">
-    <div class="relative mt-1 ml-2 mr-2">
+    <!-- <div class="relative mt-1 ml-2 mr-2">
       <input
         id="old_password"
         placeholder="Old password"
@@ -10,10 +10,59 @@
         class="border p-2 text-sm rounded w-full"
         type="password"
       />
-      <!-- <div *ngIf="statusMessage" class="text-red-700 text-xs mt-1">
-        {{ statusMessage }}
-      </div> -->
-    
+      <div
+        *ngIf="passwordForm.get('old_password')?.errors?.['incorrectPassword']"
+        class="text-red-700 text-xs mt-1"
+      >
+        Old password is incorrect.
+      </div>
+    </div> -->
+    <!-- <div class="relative mt-1 ml-2 mr-2">
+      <div class="flex items-center border-none text-sm rounded w-full">
+        <input
+          id="old_password"
+          placeholder="Old password"
+          formControlName="old_password"
+          [type]="oldPasswordVisible ? 'text' : 'password'"
+          class="border p-2 text-sm rounded w-full"
+        />      
+        <i
+          type="button"
+          (click)="toggleOldPasswordVisibility()"
+          class="absolute inset-y-0 right-0 pr-3 flex items-center text-sm leading-5"
+        >
+          <mat-icon>{{
+            oldPasswordVisible ? "visibility" : "visibility_off"
+          }}</mat-icon>
+        </i>
+      </div>
+      <div
+        *ngIf="passwordForm.get('old_password')?.errors?.['incorrectPassword']"
+        class="text-red-700 text-xs mt-1"
+      >
+        Old password is incorrect.
+      </div>
+    </div> -->
+    <div class="relative mt-1 ml-2 mr-2">
+      <div class="flex items-center border-none text-sm rounded w-full">
+        <input
+          id="old_password"
+          placeholder="Old password"
+          formControlName="old_password"
+          [type]="oldPasswordVisible ? 'text' : 'password'"
+          class="w-full outline-none rounded-md"
+        />
+        <button
+          type="button"
+          (click)="toggleOldPasswordVisibility()"
+          class="ml-2 mr-2"
+          style="background: none; border: none; cursor: pointer"
+        >
+          <mat-icon>{{
+            oldPasswordVisible ? "visibility" : "visibility_off"
+          }}</mat-icon>
+        </button>
+      </div>
       <div
         *ngIf="passwordForm.get('old_password')?.errors?.['incorrectPassword']"
         class="text-red-700 text-xs mt-1"
@@ -21,30 +70,115 @@
         Old password is incorrect.
       </div>
     </div>
+    
+
     <div class="relative mt-1 ml-2 mr-2">
-      <input
-        id="new_password"
-        placeholder="New password"
-        formControlName="new_password"
-        class="border p-2 text-sm rounded w-full"
-        type="password"
-      />
+      <!-- Wrap the input and toggle button in a flex container -->
+      <div class="flex items-center border-none text-sm rounded w-full">
+        <input
+          id="new_password"
+          placeholder="New password"
+          formControlName="new_password"
+          class="w-full outline-none rounded-md"
+          [type]="newPasswordVisible ? 'text' : 'password'"
+        />
+        <button
+          type="button"
+          (click)="toggleNewPasswordVisibility()"
+          class="ml-2 mr-2"
+          style="background: none; border: none; cursor: pointer"
+        >
+          <mat-icon>{{
+            newPasswordVisible ? "visibility" : "visibility_off"
+          }}</mat-icon>
+        </button>
+      </div>
+
+      <!-- Error message with margin to avoid pushing the input -->
       <div
-        *ngIf="passwordForm.get('new_password')?.errors?.['invalidPassword']"
+        *ngIf="passwordForm.get('new_password')?.errors?.['invalidPassword'] && passwordForm.get('new_password')?.dirty"
         class="text-red-700 text-xs mt-1"
       >
         New password must contain at least 8 characters, one uppercase letter,
         one number, and one special character.
       </div>
     </div>
-    <div class="relative mt-1 ml-2 mr-2">
+
+    <!-- <div class="relative mt-1 ml-2 mr-2">
       <input
-        id="confirm_password"
-        placeholder="Confirm password"
-        formControlName="confirm_password"
+        id="new_password"
+        placeholder="New password"
+        formControlName="new_password"
         class="border p-2 text-sm rounded w-full"
+        [type]="newPasswordVisible ? 'text' : 'password'"
         type="password"
       />
+      <i
+        type="button"
+        (click)="toggleNewPasswordVisibility()"
+        class="absolute inset-y-0 right-0 pr-3 flex items-center text-sm leading-5"
+      >
+        <mat-icon>{{
+          newPasswordVisible ? "visibility" : "visibility_off"
+        }}</mat-icon>
+      </i>
+      <div
+        *ngIf="passwordForm.get('new_password')?.errors?.['invalidPassword'] && passwordForm.get('new_password')?.dirty"
+        class="text-red-700 text-xs mt-1"
+      >
+        New password must contain at least 8 characters, one uppercase letter,
+        one number, and one special character.
+      </div>
+    </div> -->
+
+    <!-- <div class="relative mt-1 ml-2 mr-2">
+      <div class="flex items-center border-none text-sm rounded w-full">
+        <input
+          id="confirm_password"
+          placeholder="Confirm password"
+          formControlName="confirm_password"
+          class="border p-2 text-sm rounded w-full"
+          [type]="confimPasswordVisible ? 'text' : 'password'"
+          type="password"
+        />
+        <button
+          type="button"
+          (click)="toggleConfirmPasswordVisibility()"
+          class="absolute inset-y-0 right-0 pr-3 flex items-center text-sm leading-5"
+        >
+          <mat-icon>{{
+            confimPasswordVisible ? "visibility" : "visibility_off"
+          }}</mat-icon>
+        </button>
+      </div>
+      <div
+        *ngIf="passwordForm.get('confirm_password')?.errors?.['passwordsDoNotMatch']"
+        class="text-red-700 text-xs mt-1"
+      >
+        Confirm password does not match.
+      </div>
+    </div> -->
+
+    <div class="relative mt-1 ml-2 mr-2">
+      <div class="flex items-center border-none text-sm rounded w-full">
+        <input
+          id="confirm_password"
+          placeholder="Confirm password"
+          formControlName="confirm_password"
+          [type]="confimPasswordVisible ? 'text' : 'password'"
+          class="w-full outline-none rounded-md"
+        />
+        <button
+          type="button"
+          (click)="toggleConfirmPasswordVisibility()"
+          class="ml-2 mr-2"
+          style="background: none; border: none; cursor: pointer"
+        >
+          <mat-icon>{{
+            confimPasswordVisible ? "visibility" : "visibility_off"
+          }}</mat-icon>
+        </button>
+      </div>
       <div
         *ngIf="passwordForm.get('confirm_password')?.errors?.['passwordsDoNotMatch']"
         class="text-red-700 text-xs mt-1"

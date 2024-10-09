@@ -193,6 +193,73 @@
       </div>
     </div>
     <hr class="h-px my-4 bg-gray-200 border-0 dark:bg-gray-700">
+    <div class="grid grid-cols-1 lg:grid-cols-3 gap-2 mb-4">
+      <div class="relative">
+        <label
+          for="Department"
+          class="block text-gray-700 text-xs dark:text-gray-300 font-medium mb-2"
+          >Department</label
+        >
+        <input
+          id="Department"
+          [(ngModel)]="data.department"
+          placeholder="Department"
+          name="Department"
+          class="w-full border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
+        />
+        <div *ngIf="errorMessages['department']" class="text-red-700 text-xs mt-1">
+          <ul>
+            <li *ngFor="let errorMsg of errorMessages['department']">
+              {{ errorMsg }}
+            </li>
+          </ul>
+        </div>
+      </div>
+
+      <div class="relative">
+        <label
+          for="Company"
+          class="block text-gray-700 text-xs dark:text-gray-300 font-medium mb-2"
+          >Company</label
+        >
+        <input
+          id="Company"
+          [(ngModel)]="data.company"
+          placeholder="Company"
+          name="Company"
+          class="w-full border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
+        />
+        <div *ngIf="errorMessages['company']" class="text-red-700 text-xs mt-1">
+          <ul>
+            <li *ngFor="let errorMsg of errorMessages['company']">
+              {{ errorMsg }}
+            </li>
+          </ul>
+        </div>
+      </div>
+      <div class="relative">
+        <label
+          for="Position"
+          class="block text-gray-700 text-xs dark:text-gray-300 font-medium mb-2"
+          >Position</label
+        >
+        <input
+          id="Position"
+          [(ngModel)]="data.position"
+          placeholder="Position"
+          name="Position"
+          class="w-full border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
+        />
+        <div *ngIf="errorMessages['position']" class="text-red-700 text-xs mt-1">
+          <ul>
+            <li *ngFor="let errorMsg of errorMessages['position']">
+              {{ errorMsg }}
+            </li>
+          </ul>
+        </div>
+      </div>
+    </div>
+    <hr class="h-px my-4 bg-gray-200 border-0 dark:bg-gray-700">
     <div class="grid grid-cols-1 lg:grid-cols-2 gap-2">
       <div class="relative">
         <label

@@ -32,7 +32,7 @@ const routes: Routes = [
       { path: 'pods', component: PodAddComponent, canActivate: [RoleGuard] }, // Pods view
       { path: 'paps', component: PapAddComponent, canActivate: [RoleGuard] }, // Paps view
       { path: 'visits', component: GetMarketVisitsComponent }, // Create visits view
-      { path: 'profile', component: ProfileViewComponentComponent, canActivate: [roleAdminGuard]}, // Create users profile view
+      { path: 'profile', component: ProfileViewComponentComponent }, // Create users profile view
       { path: 'visits/create', component: TestComponent }, // Create visits view
       { path: 'visits/edit/:id', component: EditVisitsComponent, canActivate: [roleAdminGuard]}, // Edit visits view
       { path: 'visits/view/:id', component: ViewVisitsComponent }, // Edit visits view

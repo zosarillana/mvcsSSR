@@ -20,6 +20,22 @@ export class ModalChangepassComponent implements OnInit {
   currentUser: User | undefined;
   statusMessage: string = '';
 
+  // Flag to toggle password visibility
+  public oldPasswordVisible: boolean = false;
+  public newPasswordVisible: boolean = false;
+  public confimPasswordVisible: boolean = false;
+
+  // Method to toggle password visibility
+  toggleOldPasswordVisibility() {
+    this.oldPasswordVisible = !this.oldPasswordVisible;
+  }
+  toggleNewPasswordVisibility() {
+    this.newPasswordVisible = !this.newPasswordVisible;
+  }
+  toggleConfirmPasswordVisibility() {
+    this.confimPasswordVisible = !this.confimPasswordVisible;
+  }
+
   constructor(
     private matSnackBar: MatSnackBar,
     private fb: FormBuilder,
@@ -102,56 +118,58 @@ export class ModalChangepassComponent implements OnInit {
   onSubmit(): void {
     console.log('Current User:', this.currentUser);
     if (this.passwordForm.valid && this.currentUser) {
-        const { old_password, new_password, confirm_password } = this.passwordForm.value;
+      const { old_password, new_password, confirm_password } =
+        this.passwordForm.value;
 
-        const changePasswordDto = {
-            oldPassword: old_password,
-            newPassword: new_password,
-            confirmPassword: confirm_password,
-        };
+      const changePasswordDto = {
+        oldPassword: old_password,
+        newPassword: new_password,
+        confirmPassword: confirm_password,
+      };
 
-        this.statusMessage = 'Updating password...';
+      this.statusMessage = 'Updating password...';
 
-        const userId = this.currentUser.user_id;
+      const userId = this.currentUser.user_id;
 
-        console.log('User ID being used for password update:', userId);
+      console.log('User ID being used for password update:', userId);
 
-        if (userId !== undefined) {
-            this.userService.changePassword(userId, changePasswordDto).subscribe({
-                next: (response) => {
-                    // console.log('Password updated successfully:', response);
-                    this.statusMessage = response.message || 'Password updated successfully!'; // Use response message if available
-                    
-                    // Show success message using MatSnackBar
-                    this.matSnackBar.open(this.statusMessage, 'Close', {
-                        duration: 3000, // Duration in milliseconds
-                    });
+      if (userId !== undefined) {
+        this.userService.changePassword(userId, changePasswordDto).subscribe({
+          next: (response) => {
+            // console.log('Password updated successfully:', response);
+            this.statusMessage =
+              response.message || 'Password updated successfully!'; // Use response message if available
 
-                    this.passwordForm.reset();
-                    setTimeout(() => {
-                        this.dialogRef.close();
-                    }, 1500);
-                },
-                error: (error) => {
-                    console.error('Error updating password:', error);
-                    this.statusMessage = error.error?.message || 'Old password is incorrect.'; // Show error message from the service
-                    
-                    // Show error message using MatSnackBar
-                    this.matSnackBar.open(this.statusMessage, 'Close', {
-                        duration: 3000, // Duration in milliseconds
-                    });
-                },
+            // Show success message using MatSnackBar
+            this.matSnackBar.open(this.statusMessage, 'Close', {
+              duration: 3000, // Duration in milliseconds
             });
-        } else {
-            console.error('Current user ID is undefined.', this.currentUser);
-            this.statusMessage = 'Error: Current user ID is not available.';
-        }
-    } else {
-        console.error('Form is invalid or currentUser is undefined.');
-        this.statusMessage = 'Please fill in all fields correctly.';
-    }
-}
 
+            this.passwordForm.reset();
+            setTimeout(() => {
+              this.dialogRef.close();
+            }, 1500);
+          },
+          error: (error) => {
+            console.error('Error updating password:', error);
+            this.statusMessage =
+              error.error?.message || 'Old password is incorrect.'; // Show error message from the service
+
+            // Show error message using MatSnackBar
+            this.matSnackBar.open(this.statusMessage, 'Close', {
+              duration: 3000, // Duration in milliseconds
+            });
+          },
+        });
+      } else {
+        console.error('Current user ID is undefined.', this.currentUser);
+        this.statusMessage = 'Error: Current user ID is not available.';
+      }
+    } else {
+      console.error('Form is invalid or currentUser is undefined.');
+      this.statusMessage = 'Please fill in all fields correctly.';
+    }
+  }
 
   onNoClick(): void {
     this.dialogRef.close();

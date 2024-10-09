@@ -9,6 +9,7 @@
   >
     <!-- Sidebar content -->
     <!-- <a href="#" class="flex items-center pb-4 border-b border-b-[#9A1915]"> -->
+    <div class="h-full overflow-y-auto p-4">
     <a href="#" class="flex items-center">
       <img
         style="height: 165px; width: 220px"
@@ -18,6 +19,34 @@
       />
       <!-- <span class="text-lg font-bold text-white ml-3">{{ title }}</span> -->
     </a>
+       <!-- Main User Profile Label -->
+       <div
+       class="mt-4 mb-2 text-black font-bold uppercase text-white text-xs tracking-wider"
+     >
+       Profile
+     </div>
+     <!-- Main User Profile Items -->
+     <ul>
+       <li class="mb-1">
+         <a
+           
+           routerLink="/dashboard/profile"
+           class="flex items-center py-2 px-4 text-black hover:bg-red-950 hover:text-gray-100 rounded-md"
+           [ngClass]="{
+             'text-white': !isActive('/dashboard/profile'),
+             'text-red-900 bg-white': isActive('/dashboard/profile'),
+             'hover:bg-white hover:text-red-900': true
+           }"
+           routerLinkActive="text-red-900"
+           [routerLinkActiveOptions]="{ exact: true }"
+         >
+           <!-- <mat-icon>dashboard</mat-icon> -->
+           <mat-icon>account_circle</mat-icon>
+           <p class="ml-2 font-bold tracking-wider text-sm">Profile</p>
+         </a>
+       </li>
+       <!-- Add other user profile items here -->
+     </ul>
     <div
       *ngIf="user.role_id !== '2'"
       class="mt-4 mb-2 text-white uppercase text-xs font-bold tracking-wider"
@@ -71,35 +100,6 @@
       </li>
       <!-- Add other main menu items here -->
     </ul>
-    <!-- Main User Profile Label -->
-    <div
-      class="mt-4 mb-2 text-black font-bold uppercase text-white text-xs tracking-wider"
-    >
-      Profile
-    </div>
-    <!-- Main User Profile Items -->
-    <ul>
-      <li class="mb-1">
-        <a
-          *ngIf="user.role_id !== '1'"
-          routerLink="/dashboard/profile"
-          class="flex items-center py-2 px-4 text-black hover:bg-red-950 hover:text-gray-100 rounded-md"
-          [ngClass]="{
-            'text-white': !isActive('/dashboard/profile'),
-            'text-red-900 bg-white': isActive('/dashboard/profile'),
-            'hover:bg-white hover:text-red-900': true
-          }"
-          routerLinkActive="text-red-900"
-          [routerLinkActiveOptions]="{ exact: true }"
-        >
-          <!-- <mat-icon>dashboard</mat-icon> -->
-          <mat-icon>account_circle</mat-icon>
-          <p class="ml-2 font-bold tracking-wider text-sm">Profile</p>
-        </a>
-      </li>
-      <!-- Add other user profile items here -->
-    </ul>
-
     <!-- Admin Options Label -->
     <div
       *ngIf="user.role_id !== '2'"
@@ -244,6 +244,7 @@
       </li>
     </ul>
   </div>
+  </div>
   <!-- Overlay -->
   <div
     *ngIf="isSidebarOpen"
@@ -275,8 +276,7 @@
       <!-- Sidebar Content -->
       <div>
         <p class="font-semibold text-xs text-gray-600 mr-2">
-          WELCOME, {{ user.fname }} {{ user.mname }} {{ user.lname }}
-          {{ user.abfi_id }}
+          Welcome! {{ user.fname }} {{ user.mname }} {{ user.lname }}      
         </p>
       </div>
 
@@ -290,37 +290,7 @@
     </div>
 
     <div class="p-6">
-      <router-outlet></router-outlet>
-
-      <!-- <div *ngIf="selectedContent === 'content1'">
-        <app-get-market-visits></app-get-market-visits>
-      </div>     -->
-      <!-- <div *ngIf="selectedContent === 'content5'">      
-         <app-test></app-test>
-      </div>
-      <div *ngIf="selectedContent === 'edit-visits'">        
-        <app-edit-visits *ngIf="selectedContent === 'edit-visits'" [visitId]="selectedId"></app-edit-visits>
-      </div>
-      <div *ngIf="selectedContent === 'view-visits'">        
-        <app-view-visits *ngIf="selectedContent === 'view-visits'" [visitId]="selectedId"></app-view-visits>
-      </div>
-      <div *ngIf="selectedContent === 'content2' && user.role_id === '1'">
-        <app-user-add></app-user-add>
-      </div>
-      
-      <div *ngIf="selectedContent === 'content3' && user.role_id === '1'">
-        <app-isr-add></app-isr-add>
-      </div>
-      <div *ngIf="selectedContent === 'content4' && user.role_id === '1'">
-        <app-pod-add></app-pod-add>
-      </div>
-      
-      <div *ngIf="selectedContent === 'add-area' && user.role_id === '1'">
-        <app-area-add></app-area-add>
-      </div>
-      <div *ngIf="selectedContent === 'pap-add' && user.role_id === '1'">
-        <app-pap-add></app-pap-add>
-      </div> -->
+      <router-outlet></router-outlet>     
     </div>
   </main>
 </body>
