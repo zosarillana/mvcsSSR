@@ -243,7 +243,7 @@ export class UserAddComponent {
     const dialogRef = this.dialog.open(ModalEditUserDialogComponent, {
       width: '45vw', // Adjust the width to a percentage of the viewport width
       maxWidth: '45vw', // Optional: ensure it doesn’t exceed a maximum width
-      height: '67%', // Keep or adjust the height as needed
+      height: '70%', // Keep or adjust the height as needed
       data: user,
     });
 
@@ -256,7 +256,7 @@ export class UserAddComponent {
     const dialogRef = this.dialog.open(ModalCreateUserDialogComponent, {
       width: '45vw', // Adjust the width to a percentage of the viewport width
       maxWidth: '45vw', // Optional: ensure it doesn’t exceed a maximum width
-      height: '67%', // Keep or adjust the height as needed
+      height: '70%', // Keep or adjust the height as needed
       data: {},
     });
 
@@ -282,7 +282,7 @@ export class UserAddComponent {
     const dialogRef = this.dialog.open(ModalViewUserDialogComponent, {
       width: '45vw', // Adjust the width to a percentage of the viewport width
       maxWidth: '45vw', // Optional: ensure it doesn’t exceed a maximum width
-      height: '67%', // Keep or adjust the height as needed
+      height: '70%', // Keep or adjust the height as needed
       data: user,
     });
 

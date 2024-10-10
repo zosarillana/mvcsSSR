@@ -223,6 +223,118 @@
       </div>
     </div>
     <hr class="h-px my-4 bg-gray-200 border-0 dark:bg-gray-700" />
+    <div class="grid grid-cols-1 lg:grid-cols-3 gap-2 mb-4">
+      <div class="relative">
+        <label
+          for="department"
+          class="block text-xs font-medium text-gray-700 dark:text-gray-300 mb-2"
+          >Select a Department</label
+        >
+        <select
+          id="department"
+          [(ngModel)]="data.department"
+          name="department"
+          class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
+        >
+          <option selected disabled>Select a department</option>
+          <option value="CADO">Central for Administration Office</option>
+          <option value="CAO">Central Accounting Office</option>
+          <option value="CENLO">Central for Live Operation Office</option>
+          <option value="CENTO">Central for Technical Office</option>
+          <option value="CESSO">Central for Safety and Security Office</option>
+          <option value="CHRADO">Central for Human Resources and Administration Office</option>
+          <option value="CISDEVO">Central Information System Development Office</option>
+          <option value="Dressing Plant">Dressing Plant</option>
+          <option value="Executive">Executive Office</option>
+          <option value="Logistics">Logistics</option>
+          <option value="Sales and Marketing">Sales and Marketing</option>
+          <option value="Auxiliary">Auxiliary</option>
+          <option value="Blown Film Plant">Blown Film Plant</option>
+          <option value="CHB">Concrete Hollow Block</option>
+          <option value="Recycling">Recycling</option>
+          <option value="Motorpool">Central Motorpool Division</option>
+          <option value="EMD">Engineering and Maintenance Department</option>
+          <option value="Can making">Can making</option>
+          <option value="Ice Plant">Ice Plant</option>
+          <option value="MPP">Meat Processing Plant</option>
+          <option value="QA">Quality Assurance</option>
+          <option value="Purchasing Department">Purchasing Department</option>
+          <option value="PED">Planning & Project Engineering Department</option>
+          <option value="Poultry Operations-FEM">Poultry Operations-Farm Engineering & Maintenance</option>
+          <option value="PO-FEM">Poultry Operations-Farm Engineering & Maintenance</option>
+          <option value="PO">Poultry Operations</option>
+          <option value="FAIP">FAIP Administration</option>
+          <option value="Procurement">Procurement Department</option>
+          <option value="OON">Out of Nowhere</option>
+          <option value="R&D">Research and Development Department</option>
+          <option value="L&W">Logistics and Warehouse</option>
+        </select>
+      
+        <div *ngIf="errorMessages['department']" class="text-red-700 text-xs mt-1">
+          <ul>
+            <li *ngFor="let errorMsg of errorMessages['department']">
+              {{ errorMsg }}
+            </li>
+          </ul>
+        </div>
+      </div>
+
+      <div class="relative">
+        <label
+          for="company"
+          class="block text-xs font-medium text-gray-700 dark:text-gray-300 mb-2"
+          >Select a Company</label
+        >
+        <select
+          id="company"
+          [(ngModel)]="data.company"
+          name="company"
+          class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
+        >
+          <option selected disabled>Select a company</option>
+          <option value="ABFI">Ana's Breeders Farms, Inc.</option>
+          <option value="GSIII">Green Solution Integrated Industries Inc.</option>
+          <option value="JPPI">Jomaray Pulp Packaging Industries</option>
+          <option value="QPMI">Qualiproduct Marketing Inc.</option>
+          <option value="SCC">SuyChicken Corporation</option>
+          <option value="SFC">Southmin Feedmill Corporation</option>
+          <option value="SZ">Subzero Ice & Cold Storage, Inc.</option>
+          <option value="SGFFS">SuySarap Global Flavors & Food Services OPC</option>
+        </select>
+      
+        <div *ngIf="errorMessages['company']" class="text-red-700 text-xs mt-1">
+          <ul>
+            <li *ngFor="let errorMsg of errorMessages['company']">
+              {{ errorMsg }}
+            </li>
+          </ul>
+        </div>
+      </div>
+      
+      <div class="relative">
+        <label
+          for="Position"
+          class="block text-gray-700 text-xs dark:text-gray-300 font-medium mb-2"
+          >Position</label
+        >
+        <input
+          id="Position"
+          [(ngModel)]="data.position"
+          placeholder="Position"
+          name="Position"
+          readonly
+          class="w-full border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
+        />
+        <div *ngIf="errorMessages['position']" class="text-red-700 text-xs mt-1">
+          <ul>
+            <li *ngFor="let errorMsg of errorMessages['position']">
+              {{ errorMsg }}
+            </li>
+          </ul>
+        </div>
+      </div>
+    </div>
+    <hr class="h-px my-4 bg-gray-200 border-0 dark:bg-gray-700" />
     <div class="grid grid-cols-1 lg:grid-cols-2 gap-2">
       <div class="relative">
         <label
@@ -232,7 +344,7 @@
         >
         <input
           id="Emailadd"
-          [value]="data.dateCreated | date:'short'"
+          [value]="data.date_created| date:'short'"
           placeholder="Email Address"
           name="Emailadd"
           class="border p-2 text-sm rounded w-full"
@@ -243,36 +355,7 @@
           class="text-red-700 text-xs mt-1"
         >          
         </div>
-      </div>
-      <div class="relative">
-        <div class="grid grid-cols-2">
-          <div class="relative">
-            <label
-              for="lastUpdated"
-              class="block text-gray-700 text-xs dark:text-gray-300 font-medium mb-2"
-              >Date Last Updated</label
-            >
-          </div>
-        </div>
-        <input
-          id="Contactnum"
-          [value]="data.dateCreated | date:'short'"
-          placeholder="Contact Number"
-          name="Contactnum"
-          class="border p-2 text-sm rounded w-full"
-          disabled
-        />
-        <div
-          *ngIf="errorMessages['contact_num']"
-          class="text-red-700 text-xs mt-1"
-        >
-          <ul>
-            <li *ngFor="let errorMsg of errorMessages['contact_num']">
-              {{ errorMsg }}
-            </li>
-          </ul>
-        </div>
-      </div>
+      </div>      
     </div>    
   </form>
 </div>
