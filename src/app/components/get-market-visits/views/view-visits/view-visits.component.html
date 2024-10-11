@@ -19,7 +19,7 @@
               <div class="relative">
                 <label
                   for="user_id"
-                  class="block text-gray-700 text-md dark:text-gray-300 font-medium mb-2"
+                  class="block text-gray-700 text-xs font-semibold dark:text-gray-300 font-medium mb-2"
                   >Submitted by</label
                 >
                 <input
@@ -27,7 +27,7 @@
                   type="text"
                   [value]="mvisit.user.abfi_id"
                   readonly
-                  class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
+                  class="bg-gray-50 border border-gray-300 text-gray-900 text-xs rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500 font-light"
                 />
               </div>
 
@@ -35,7 +35,7 @@
               <div class="relative">
                 <label
                   for="user_name"
-                  class="block text-gray-700 text-md dark:text-gray-300 font-medium mb-2"
+                  class="block text-gray-700 text-xs font-semibold dark:text-gray-300 font-medium mb-2"
                   >Full Name</label
                 >
                 <input
@@ -49,7 +49,7 @@
                     mvisit.user.lname
                   "
                   readonly
-                  class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
+                  class="bg-gray-50 border border-gray-300 text-gray-900 text-xs rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500 font-light"
                 />
               </div>
 
@@ -57,7 +57,7 @@
               <div class="relative">
                 <label
                   for="user_email"
-                  class="block text-gray-700 text-md dark:text-gray-300 font-medium mb-2"
+                  class="block text-gray-700 text-xs font-semibold dark:text-gray-300 font-medium mb-2"
                   >Email Address</label
                 >
                 <input
@@ -65,7 +65,7 @@
                   type="email"
                   [value]="mvisit.user.email_add"
                   readonly
-                  class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
+                  class="bg-gray-50 border border-gray-300 text-gray-900 text-xs rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500 font-light"
                 />
               </div>
             </div>
@@ -74,7 +74,7 @@
               <div class="relative">
                 <label
                   for="visit_date"
-                  class="block text-gray-700 text-md dark:text-gray-300 font-medium mb-2"
+                 class="block text-gray-700 text-xs font-semibold dark:text-gray-300 font-medium mb-2"
                   >Visited Date</label
                 >
                 <input
@@ -82,7 +82,7 @@
                   type="text"
                   [value]="getFormattedVisitDate()"
                   readonly
-                  class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
+                  class="bg-gray-50 border border-gray-300 text-gray-900 text-xs rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500 font-light"
                 />
               </div>
 
@@ -90,7 +90,7 @@
               <div class="relative">
                 <label
                   for="visited_locations"
-                  class="block text-gray-700 text-md dark:text-gray-300 font-medium mb-2"
+                  class="block text-gray-700 text-xs font-semibold dark:text-gray-300 font-medium mb-2"
                   >Visited Locations</label
                 >
                 <input
@@ -98,7 +98,7 @@
                   type="text"
                   [value]="getAllAreaNames()"
                   readonly
-                  class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
+                  class="bg-gray-50 border border-gray-300 text-gray-900 text-xs rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500 font-light"
                 />
               </div>
             </div>
@@ -107,7 +107,7 @@
               <div class="relative">
                 <label
                   for="accountName"
-                  class="block text-gray-700 text-md dark:text-gray-300 font-medium mb-2"
+                  class="block text-gray-700 text-xs font-semibold dark:text-gray-300 font-medium mb-2"
                   >Account name</label
                 >
                 <input
@@ -115,7 +115,7 @@
                   type="text"
                   [value]="mvisit.visit_accountName"
                   readonly
-                  class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
+                  class="font-light bg-gray-50 border border-gray-300 text-gray-900 text-xs rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
                 />
               </div>
 
@@ -123,7 +123,7 @@
               <div class="relative">
                 <label
                   for="distributor"
-                  class="block text-gray-700 text-md dark:text-gray-300 font-medium mb-2"
+                  class="block text-gray-700 text-xs font-semibold dark:text-gray-300 font-medium mb-2"
                   >Distributor</label
                 >
                 <input
@@ -131,7 +131,7 @@
                   type="text"
                   [value]="mvisit.visit_distributor"
                   readonly
-                  class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
+                  class="font-light bg-gray-50 border border-gray-300 text-gray-900 text-xs rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
                 />
               </div>
 
@@ -139,7 +139,7 @@
               <div class="relative">
                 <label
                   for="salesPersonnel"
-                  class="block text-gray-700 text-md dark:text-gray-300 font-medium mb-2"
+                  class="block text-gray-700 text-xs font-semibold dark:text-gray-300 font-medium mb-2"
                   >Sales Personnel in Charge</label
                 >
                 <input
@@ -147,14 +147,14 @@
                   type="text"
                   [value]="mvisit.visit_salesPersonnel"
                   readonly
-                  class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
+                  class="font-light bg-gray-50 border border-gray-300 text-gray-900 text-xs rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
                 />
               </div>
               <!-- User Email input -->
               <div class="relative">
                 <label
                   for="accountType"
-                  class="block text-gray-700 text-md dark:text-gray-300 font-medium mb-2"
+                  class="block text-gray-700 text-xs font-semibold dark:text-gray-300 font-medium mb-2"
                   >Account Types</label
                 >
                 <input
@@ -162,16 +162,16 @@
                   type="text"
                   [value]="getAllAccountType()"
                   readonly
-                  class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
+                  class="font-light bg-gray-50 border border-gray-300 text-gray-900 text-xs rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
                 />
               </div>
             </div>
-            <hr class="h-px my-4 bg-gray-200 border-0 dark:bg-gray-700" />
+            <hr class="h-px my-6 bg-gray-200 border-0 dark:bg-gray-700" />
             <div class="grid grid-cols-1 lg:grid-cols-2 mt-5 gap-2">
               <div class="relative">
                 <label
                   for="allisrsreqs"
-                  class="block text-gray-700 text-md dark:text-gray-300 font-medium mb-2"
+                  class="block text-gray-700 text-xs font-semibold dark:text-gray-300 font-medium mb-2"
                   >In store requirements</label
                 >
                 <form [formGroup]="formGroup">
@@ -192,10 +192,11 @@
                       >No ISR Requirements Available</ng-template
                     >
                   </div>
+                  <hr class="h-px my-4 bg-gray-200 border-0 dark:bg-gray-700" />
                   <div class="relative">
                     <label
                       for="imageDisplay2"
-                      class="block text-gray-700 text-xs dark:text-gray-300 font-bold mb-2"
+                      class="block mt-3 text-gray-700 text-xs dark:text-gray-300  mb-2"
                     >
                       Display Needs Image
                     </label>
@@ -214,7 +215,7 @@
                       type="text"
                       [value]="mvisit.isr_reqOthers"
                       readonly
-                      class="w-1/2 mt-2 bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
+                      class="w-1/2 mt-3 bg-gray-50 border border-gray-300 text-gray-900 text-xs font-light rounded-lg focus:ring-blue-500 focus:border-blue-500 block p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
                     />
                     <!-- Replaced Modal for Image Preview with the ImagePreviewComponent -->
                     <app-image-preview
@@ -229,7 +230,7 @@
               <div class="relative">
                 <label
                   for="allisrsneeds"
-                  class="block text-gray-700 text-md dark:text-gray-300 font-medium mb-2"
+                  class="block text-gray-700 text-xs font-semibold dark:text-gray-300 font-medium mb-2"
                   >In store requirements needs</label
                 >
                 <form [formGroup]="formGroup">
@@ -249,10 +250,11 @@
                       <p>No ISR NEEDS available.</p>
                     </ng-template>
                   </div>
+                  <hr class="h-px my-4 bg-gray-200 border-0 dark:bg-gray-700" />
                   <div class="relative">
                     <label
                       for="imageDisplay"
-                      class="block text-gray-700 text-xs dark:text-gray-300 font-bold mb-2"
+                      class="block mt-3 text-gray-700 text-xs dark:text-gray-300 font-bold mb-2"
                     >
                       Display Requirement Image
                     </label>
@@ -273,7 +275,7 @@
                       type="text"
                       [value]="mvisit.isr_needsOthers"
                       readonly
-                      class="w-1/2 mt-2 bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
+                      class="w-1/2 mt-3 bg-gray-50 border border-gray-300 text-gray-900 text-xs font-light rounded-lg focus:ring-blue-500 focus:border-blue-500 block p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
                     />
                     <!-- Replaced Modal for Image Preview with the ImagePreviewComponent -->
                     <app-image-preview
@@ -291,7 +293,7 @@
               <div class="relative">
                 <label
                   for="merch"
-                  class="block text-gray-700 text-md dark:text-gray-300 font-medium mb-2"
+                  class="block text-gray-700 text-xs font-semibold dark:text-gray-300 font-medium mb-2"
                   >Payola Merchandiser</label
                 >
                 <input
@@ -299,7 +301,7 @@
                   type="text"
                   [value]="mvisit.visit_payolaMerchandiser"
                   readonly
-                  class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
+                  class="font-light bg-gray-50 border border-gray-300 text-gray-900 text-xs rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
                 />
               </div>
 
@@ -307,7 +309,7 @@
               <div class="relative">
                 <label
                   for="supervisor"
-                  class="block text-gray-700 text-md dark:text-gray-300 font-medium mb-2"
+                  class="block text-gray-700 text-xs font-semibold dark:text-gray-300 font-medium mb-2"
                   >Payola Supervisor</label
                 >
                 <input
@@ -315,7 +317,7 @@
                   type="text"
                   [value]="mvisit.visit_payolaSupervisor"
                   readonly
-                  class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
+                  class="font-light bg-gray-50 border border-gray-300 text-gray-900 text-xs rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
                 />
               </div>
 
@@ -323,7 +325,7 @@
               <div class="relative">
                 <label
                   for="cont_num"
-                  class="block text-gray-700 text-md dark:text-gray-300 font-medium mb-2"
+                  class="block text-gray-700 text-xs font-semibold dark:text-gray-300 font-medium mb-2"
                   >Payola Contact number</label
                 >
                 <input
@@ -331,7 +333,7 @@
                   type="text"
                   [value]="mvisit.visit_payolaContactNumber"
                   readonly
-                  class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
+                  class="font-light bg-gray-50 border border-gray-300 text-gray-900 text-xs rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
                 />
               </div>
 
@@ -339,7 +341,7 @@
               <div class="relative">
                 <label
                   for="avgo"
-                  class="block text-gray-700 text-md dark:text-gray-300 font-medium mb-2"
+                  class="block text-gray-700 text-xs font-semibold dark:text-gray-300 font-medium mb-2"
                   >Average Take Off</label
                 >
                 <input
@@ -347,7 +349,7 @@
                   type="text"
                   [value]="mvisit.visit_averageOffTakePd"
                   readonly
-                  class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
+                  class="font-light bg-gray-50 border border-gray-300 text-gray-900 text-xs rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
                 />
               </div>
             </div>
@@ -356,7 +358,7 @@
               <div class="relative">
                 <label
                   for="canned"
-                  class="block text-gray-700 text-md dark:text-gray-300 font-medium mb-2"
+                  class="block text-gray-700 text-xs font-semibold dark:text-gray-300 font-medium mb-2"
                   >Canned Product on Display</label
                 >
                 <input
@@ -364,7 +366,7 @@
                   type="text"
                   [value]="getAllPods('CANNED')"
                   readonly
-                  class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
+                  class="font-light bg-gray-50 border border-gray-300 text-gray-900 text-xs rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
                 />
               </div>
 
@@ -372,7 +374,7 @@
               <div class="relative">
                 <label
                   for="mpp"
-                  class="block text-gray-700 text-md dark:text-gray-300 font-medium mb-2"
+                  class="block text-gray-700 text-xs font-semibold dark:text-gray-300 font-medium mb-2"
                   >MPP Product on display</label
                 >
                 <input
@@ -380,7 +382,7 @@
                   type="text"
                   [value]="getAllPods('MPP')"
                   readonly
-                  class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
+                  class="font-light bg-gray-50 border border-gray-300 text-gray-900 text-xs rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
                 />
               </div>
             </div>
@@ -392,7 +394,7 @@
                     <div formArrayName="pod_id">
                       <div class="grid grid-cols-2">
                         <div>
-                          <label class="block font-medium mb-4"
+                          <label class="block text-gray-700 text-xs font-semibold dark:text-gray-300 font-medium mb-2"
                             >Canned PODs</label
                           >
                           <div *ngFor="let pod of cannedPods; let i = index">
@@ -409,7 +411,7 @@
                         </div>
                         <div>
                           <div>
-                            <label class="block font-medium mb-4"
+                            <label class="block text-gray-700 text-xs font-semibold dark:text-gray-300 font-medium mb-2"
                               >MPP PODs</label
                             >
                             <div *ngFor="let pod of mppPods; let i = index">
@@ -433,7 +435,7 @@
                           formControlName="pod_canned_other"
                           type="text"
                           id="pod_canned_others"
-                          class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
+                          class="bg-gray-50 border border-gray-300 text-gray-900 text-xs font-light rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
                           [ngModel]="mvisit.pod_canned_other"
                         />
                       </div>
@@ -442,7 +444,7 @@
                           formControlName="pod_mpp_other"
                           type="text"
                           id="pod_mpp_others"
-                          class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
+                          class="bg-gray-50 border border-gray-300 text-gray-900 text-xs font-light rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
                           [ngModel]="mvisit.pod_mpp_other"
                         />
                       </div>
@@ -457,7 +459,7 @@
                 <div class="relative">
                   <label
                     for="visit_competitorsCheck"
-                    class="block text-gray-700 text-md dark:text-gray-300 font-medium mb-2"
+                    class="block text-gray-700 text-xs font-semibold dark:text-gray-300 font-medium mb-2"
                     >Competitors Check (existing SKU in-store)
                   </label>
                   <input
@@ -465,13 +467,13 @@
                     id="visit_competitorsCheck"
                     [ngModel]="mvisit.visit_competitorsCheck"
                     name="visit_competitorsCheck"
-                    class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
+                    class="font-light bg-gray-50 border border-gray-300 text-gray-900 text-xs rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
                   />
                 </div>
               </div>
               <label
                 for="pap_id"
-                class="block text-gray-700 text-md dark:text-gray-300 font-medium mb-2"
+                class="block text-gray-700 text-xs font-semibold dark:text-gray-300 font-medium mb-2"
                 >Paps</label
               >
               <div formArrayName="pap_id">
@@ -491,7 +493,7 @@
                 type="text"
                 id="pap_others"
                 name="pap_others"
-                class="bg-gray-50 mt-2 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
+                class="font-light bg-gray-50 mt-2 border border-gray-300 text-gray-900 text-xs rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
                 [ngModel]="mvisit.pap_others"
               />
 
