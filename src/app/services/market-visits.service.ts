@@ -38,6 +38,10 @@ export class MarketVisitsService {
     return this.http.put<MarketVisits>(`${this.url}/${id}/status/recalled`, {});
   }
 
+   public updateMarketVisitDataStatusInactive(id: number): Observable<MarketVisits> {
+    return this.http.put<MarketVisits>(`${this.url}/${id}/data-status/inactive`, {});
+  }
+
   getVisitById(id: string): Observable<MarketVisits> {
     return this.http.get<MarketVisits>(
       `${this.url}/${id}`

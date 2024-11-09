@@ -45,12 +45,13 @@ export class GetMarketVisitsComponent implements AfterViewInit, OnInit {
     'fullname',
     'visit_area',
     'visit_date',
-    'visit_accountName',   
+    'visit_accountName',
     'visit_distributor',
     'visit_salesPersonnel',
     'visit_accountType',
     'date_created',
     'status',
+    'data_status',
     'action',
   ];
 
@@ -94,7 +95,7 @@ export class GetMarketVisitsComponent implements AfterViewInit, OnInit {
     private matSnackBar: MatSnackBar
   ) {}
 
-  ngOnInit(): void {  
+  ngOnInit(): void {
     this.loadMarketVisits(); // Load initial data
     this.subscribeToSseMessages();
     this.marketVisitsService.getMarketVisits().subscribe(
@@ -145,13 +146,15 @@ export class GetMarketVisitsComponent implements AfterViewInit, OnInit {
     const uniqueFullNames = new Set(
       this.mvisits.map((visit) => {
         const user = visit.user; // Assuming each visit has a user property
-        return `${user.fname} ${user.mname ? user.mname + ' ' : ''}${user.lname}`;
+        return `${user.fname} ${user.mname ? user.mname + ' ' : ''}${
+          user.lname
+        }`;
       })
     );
-  
+
     // Convert the Set back to an array
     this.optionsForName = Array.from(uniqueFullNames);
-    
+
     // Setup autocomplete filtering
     this.filteredOptionsForName = this.myControl.valueChanges.pipe(
       startWith(''),
@@ -160,11 +163,15 @@ export class GetMarketVisitsComponent implements AfterViewInit, OnInit {
   }
   private _filterForName(value: string, options: string[]): string[] {
     const filterValueForName = value.toLowerCase();
-    const filterTermsForName = filterValueForName.split(' ').filter((term) => term); // Split by space and filter out empty terms
+    const filterTermsForName = filterValueForName
+      .split(' ')
+      .filter((term) => term); // Split by space and filter out empty terms
 
     return options.filter((option) => {
       const optionLowerForName = option.toLowerCase();
-      return filterTermsForName.every((term) => optionLowerForName.includes(term)); // Ensure all terms are included in the option
+      return filterTermsForName.every((term) =>
+        optionLowerForName.includes(term)
+      ); // Ensure all terms are included in the option
     });
   }
 
@@ -174,9 +181,9 @@ export class GetMarketVisitsComponent implements AfterViewInit, OnInit {
 
     if (filterType === 'fullname') {
       this.dataSource.filterPredicate = (data: MarketVisits) => {
-        const fullname = `${data.user.fname} ${data.user.mname ? data.user.mname + ' ' : ''}${
-          data.user.lname
-        }`.toLowerCase();
+        const fullname = `${data.user.fname} ${
+          data.user.mname ? data.user.mname + ' ' : ''
+        }${data.user.lname}`.toLowerCase();
         return fullname.includes(value); // Check against the combined fullname
       };
       this.dataSource.filter = value; // Apply the filter
@@ -190,9 +197,9 @@ export class GetMarketVisitsComponent implements AfterViewInit, OnInit {
 
     // Define the filter predicate
     this.dataSource.filterPredicate = (data: MarketVisits) => {
-      const fullname = `${data.user.fname} ${data.user.mname ? data.user.mname + ' ' : ''}${
-        data.user.lname
-      }`.toLowerCase();
+      const fullname = `${data.user.fname} ${
+        data.user.mname ? data.user.mname + ' ' : ''
+      }${data.user.lname}`.toLowerCase();
       return fullname.includes(selectedValue); // Check against the combined fullname
     };
 
@@ -314,6 +321,11 @@ export class GetMarketVisitsComponent implements AfterViewInit, OnInit {
       });
     }
 
+    // // Filter by data_status to display only "Active" visits
+    // dataToDisplay = dataToDisplay.filter(
+    //   (visit) => visit.data_status === "Active"
+    // );
+    
     this.dataSource.data = dataToDisplay;
   }
 
@@ -425,6 +437,10 @@ export class GetMarketVisitsComponent implements AfterViewInit, OnInit {
           });
         }
 
+        dataToDisplay = dataToDisplay.filter(
+          (visit) => visit.data_status === "Active"
+        );
+        
         // Assign filtered or unfiltered data to the data source
         this.dataSource.data = dataToDisplay;
       });

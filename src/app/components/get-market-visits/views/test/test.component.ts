@@ -77,7 +77,8 @@ export class TestComponent {
       pod_mpp_other: new FormControl(''),
       visit_competitorsCheck: new FormControl('', Validators.required),
       pod_canned_other: new FormControl(''),
-      visit_averageOffTakePd: new FormControl('', Validators.required),
+      visit_averageOffTakePd: new FormControl(null), 
+      // visit_averageOffTakePd: new FormControl('', Validators.required),
       visit_payolaContactNumber: new FormControl('', Validators.required),
       visit_payolaMerchandiser: new FormControl('', Validators.required),      
       visit_payolaSupervisor: new FormControl('', Validators.required),
@@ -88,7 +89,12 @@ export class TestComponent {
       visit_distributor: new FormControl('', Validators.required),
       visit_accountName: new FormControl('', Validators.required),
       visit_date: new FormControl('', Validators.required),
-    });
+    });    
+  }
+  // Getter for display value
+  get visitAverageOffTakePdDisplay(): string {
+    const value = this.formGroup.get('visit_averageOffTakePd')?.value;
+    return value === null || value === '' ? 'N/A' : value;
   }
 
   ngOnInit(): void {

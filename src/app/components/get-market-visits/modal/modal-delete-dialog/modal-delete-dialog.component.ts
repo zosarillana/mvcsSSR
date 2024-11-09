@@ -22,10 +22,32 @@ export class ModalDeleteDialogComponent {
     this.dialogRef.close();
   }
 
+  // deleteVisit(): void {
+  //   this.marketVisitsService.deleteMarketVisits(this.data).subscribe(() => {
+  //     this.updateVisit();
+  //     this.dialogRef.close(this.data); // Close the dialog after fetching users
+  //   });
+  // }
+
+  // Fetch users after deletion to update the list
+  // private updateVisit() {
+  //   this.marketVisitsService.getMarketVisits().subscribe((marketVisits: MarketVisits[]) => {
+  //     this.marketVisitsUpdated.emit(marketVisits); // Emit the updated user list
+  //   });
+  // }
+
   deleteVisit(): void {
-    this.marketVisitsService.deleteMarketVisits(this.data).subscribe(() => {
-      this.updateVisit();
-      this.dialogRef.close(this.data); // Close the dialog after fetching users
+    // Ensure you're using the correct market visit ID from the data
+    const visitId = this.data.id; // Replace with the actual ID field if different
+
+    this.marketVisitsService.updateMarketVisitDataStatusInactive(visitId).subscribe({
+      next: () => {
+        this.updateVisit(); // Fetch the updated list after updating the status
+        this.dialogRef.close(); // Close the dialog after fetching users
+      },
+      error: (error) => {
+        console.error('Error updating market visit status:', error);
+      }
     });
   }
 
@@ -35,4 +57,5 @@ export class ModalDeleteDialogComponent {
       this.marketVisitsUpdated.emit(marketVisits); // Emit the updated user list
     });
   }
+
 }

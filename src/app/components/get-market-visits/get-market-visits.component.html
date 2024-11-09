@@ -369,6 +369,34 @@
                   </span>
                 </td>
               </ng-container>
+
+              <ng-container matColumnDef="data_status">
+                <th
+                  mat-header-cell
+                  *matHeaderCellDef
+                  class="bg-white-imp text-xs"
+                >
+                  Data Status
+                </th>
+                <td
+                  mat-cell
+                  *matCellDef="let mvisit"
+                  class="bg-white-imp border border-blueGray-100 px-6 py-3 text-sm whitespace-nowrap items-center justify-center"
+                >
+                  <span
+                    *ngIf="mvisit.data_status=== 'Active'"
+                    class="bg-green-100 text-green-800 text-sm font-medium me-2 px-2.5 py-0.5 rounded dark:bg-green-900 dark:text-green-300"
+                  >
+                    {{ mvisit.data_status }}
+                  </span>
+                  <span
+                  *ngIf="mvisit.data_status === 'Inactive'"
+                  class="bg-red-100 text-yellow-800 text-sm font-medium me-2 px-2.5 py-0.5 rounded dark:bg-yellow-900 dark:text-yellow-300"
+                >
+                  {{ mvisit.data_status }}
+                </span>
+                </td>
+              </ng-container>
               <ng-container matColumnDef="action">
                 <th
                   mat-header-cell
@@ -386,7 +414,7 @@
                     <div class="relative inline-block group">
                       <button
                         *ngIf="
-                          role_id === '2' && 
+                          role_id === '2' &&
                           mvisit.status !== 'Submitted' &&
                           mvisit.status !== 'Approved'
                         "
@@ -395,7 +423,7 @@
                         [routerLink]="['/dashboard/visits/edit', mvisit.id]"
                       >
                         <mat-icon>edit</mat-icon>
-                      </button>                    
+                      </button>
                     </div>
                     <div>
                       <button
@@ -415,8 +443,12 @@
                   <mat-icon>visibility</mat-icon>
                 </button>                
               </div> -->
-                    <div                      
-                      *ngIf="role_id === '2' && mvisit.status !== 'Approved' && mvisit.status !== 'Submitted'"
+                    <div
+                      *ngIf="
+                        role_id === '2' &&
+                        mvisit.status !== 'Approved' &&
+                        mvisit.status !== 'Submitted'
+                      "
                       class="relative inline-block group"
                     >
                       <button
@@ -428,7 +460,11 @@
                       </button>
                     </div>
                     <div
-                      *ngIf="role_id === '1'  && mvisit.status !== 'Approved' && mvisit.status !== 'Recalled'"
+                      *ngIf="
+                        role_id === '1' &&
+                        mvisit.status !== 'Approved' &&
+                        mvisit.status !== 'Recalled'
+                      "
                       class="relative inline-block group"
                     >
                       <button
@@ -441,7 +477,11 @@
                     </div>
 
                     <div
-                      *ngIf="role_id === '1' && mvisit.status !== 'Recalled' && mvisit.status !== 'Approved'"
+                      *ngIf="
+                        role_id === '1' &&
+                        mvisit.status !== 'Recalled' &&
+                        mvisit.status !== 'Approved'
+                      "
                       class="relative inline-block group"
                     >
                       <button
