@@ -1,78 +1,97 @@
 <!-- modal.component.html -->
 <!-- <h1 mat-dialog-title>Edit - {{data.fname}} {{data.mname}} {{data.lname}}</h1> -->
-<h1 mat-dialog-title style="text-align: center;">Edit</h1>
+<h1 mat-dialog-title style="text-align: center">Edit</h1>
 <hr class="h-px my-2 bg-gray-200 border-0 dark:bg-gray-700" />
 <div
   *ngIf="data"
   mat-dialog-content
   [ngStyle]="{ 'max-width': '75vw', width: '100%' }"
 >
-  <form>
+<form [formGroup]="userForm" (ngSubmit)="save()">
     <div class="grid grid-cols-2 gap-2 mb-2">
       <div class="relative">
         <label
           for="Username"
           class="block text-gray-700 text-xs dark:text-gray-300 font-medium mb-2"
-          >Username</label
         >
+          Username
+        </label>
         <input
           id="Username"
-          [(ngModel)]="data.username"
+          formControlName="username"
           placeholder="Username"
-          name="Username"
           class="w-full border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
         />
         <div
-          *ngIf="errorMessages['username']"
+          *ngIf="
+            userForm.get('username')?.touched &&
+            userForm.get('username')?.invalid
+          "
           class="text-red-700 text-xs mt-1"
         >
           <ul>
-            <li *ngFor="let errorMsg of errorMessages['username']">
-              {{ errorMsg }}
+            <li *ngIf="userForm.get('username')?.errors?.['required']">
+              Username is required.
+            </li>
+            <li *ngIf="userForm.get('username')?.errors?.['maxlength']">
+              Username cannot exceed 100 characters.
             </li>
           </ul>
         </div>
       </div>
+
       <!-- password -->
-      <div class="relative">
-        <!-- Password Input -->
-        <label
-          for="user_password"
-          class="block text-gray-700 text-xs dark:text-gray-300 font-medium mb-2"
-        >
-          Password
-        </label>
-        <input
-          id="user_password"
-          [value]="passwordValue"
-          placeholder="user_password"
-          name="user_password"
-          type="password"
-          class="w-full border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
-          [attr.disabled]="!isPasswordEnabled ? true : null"
-          [attr.readOnly]="!isPasswordEnabled ? true : null"
-          (input)="onPasswordInput($event)"
-        />
-        <div *ngIf="errorMessages['user_password']" class="error-message">
-          <span *ngFor="let error of errorMessages['user_password']">{{ error }}</span>
-        </div>
-        <!-- Enable Checkbox -->
-        <div class="mt-2">
-          <input
-            id="enable_password"
-            type="checkbox"
-            [checked]="isPasswordEnabled"
-            (change)="togglePasswordField($event)"
-            class="mr-2"
-          />
-          <label
-            for="enable_password"
-            class="text-gray-700 text-sm dark:text-gray-300"
-          >
-            Enable Password Input
-          </label>
-        </div>
-      </div>
+    <!-- password -->
+<div class="relative">
+  <label
+    for="user_password"
+    class="block text-gray-700 text-xs dark:text-gray-300 font-medium mb-2"
+  >
+    Password
+  </label>
+  <input
+    id="user_password"
+    formControlName="user_password"
+    placeholder="Password"
+    [type]="isPasswordEnabled ? 'text' : 'password'" 
+    class="w-full border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
+    [attr.disabled]="!isPasswordEnabled ? true : null"
+    [attr.readOnly]="!isPasswordEnabled ? true : null"
+  />
+  <!-- Show password validation errors -->
+  <div
+    *ngIf="
+      userForm.get('user_password')?.touched &&
+      userForm.get('user_password')?.invalid
+    "
+    class="text-red-700 text-xs mt-1"
+  >
+    <ul>
+      <li *ngIf="userForm.get('user_password')?.errors?.['required']">
+        Password is required.
+      </li>
+      <li *ngIf="userForm.get('user_password')?.errors?.['pattern']">
+        Password must contain at least one uppercase letter, one digit,
+        and one special character.
+      </li>
+    </ul>
+  </div>
+
+  <!-- Enable Password Checkbox -->
+  <div class="mt-2">
+    <input
+      id="enable_password"
+      type="checkbox"
+      [checked]="isPasswordEnabled"
+      (change)="togglePasswordField($event)"
+      class="mr-2"
+    />
+    <label for="enable_password" class="text-gray-700 text-sm dark:text-gray-300">
+      Enable Password Input
+    </label>
+  </div>
+</div>
+
     </div>
     <hr class="h-px my-4 bg-gray-200 border-0 dark:bg-gray-700" />
     <div class="grid grid-cols-1 lg:grid-cols-2 gap-2 mb-4">
@@ -80,19 +99,29 @@
         <label
           for="abfi_id"
           class="block text-gray-700 text-xs dark:text-gray-300 font-medium mb-2"
-          >Employee ID</label
         >
+          Employee ID
+        </label>
         <input
           id="abfi_id"
-          [(ngModel)]="data.abfi_id"
+          formControlName="abfi_id"
           placeholder="XXX-XXX"
           name="abfi_id"
           class="w-full border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
         />
-        <div *ngIf="errorMessages['abfi_id']" class="text-red-700 text-xs mt-1">
+        <!-- Show error messages -->
+        <div
+          *ngIf="
+            userForm.get('abfi_id')?.touched && userForm.get('abfi_id')?.invalid
+          "
+          class="text-red-700 text-xs mt-1"
+        >
           <ul>
-            <li *ngFor="let errorMsg of errorMessages['abfi_id']">
-              {{ errorMsg }}
+            <li *ngIf="userForm.get('abfi_id')?.errors?.['required']">
+              Employee ID is required.
+            </li>
+            <li *ngIf="userForm.get('abfi_id')?.errors?.['pattern']">
+              Employee ID must be in the format XXX-XXX (e.g., 123-456).
             </li>
           </ul>
         </div>
@@ -100,13 +129,13 @@
 
       <div class="relative">
         <label
-          for="countries"
+          for="role_id"
           class="block mb-2 text-sm font-medium text-gray-900 dark:text-white"
-          >Select an option</label
+          >Select a Role</label
         >
         <select
           id="role_id"
-          [(ngModel)]="data.role_id"
+          formControlName="role_id"
           name="role_id"
           class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
         >
@@ -115,61 +144,78 @@
           <option value="1">Admin</option>
         </select>
 
-        <div *ngIf="errorMessages['role']" class="text-red-700 text-xs mt-1">
+        <!-- Show error messages if the field is invalid -->
+        <div
+          *ngIf="
+            userForm.get('role_id')?.touched && userForm.get('role_id')?.invalid
+          "
+          class="text-red-700 text-xs mt-1"
+        >
           <ul>
-            <li *ngFor="let errorMsg of errorMessages['role']">
-              {{ errorMsg }}
+            <li *ngIf="userForm.get('role_id')?.errors?.['required']">
+              Role is required.
             </li>
           </ul>
         </div>
       </div>
     </div>
-    <hr class="h-px my-4 bg-gray-200 border-0 dark:bg-gray-700">
+    <hr class="h-px my-4 bg-gray-200 border-0 dark:bg-gray-700" />
     <div class="grid grid-cols-1 lg:grid-cols-3 gap-2 mb-4">
+      <!-- First Name -->
       <div class="relative">
         <label
           for="Firstname"
           class="block text-gray-700 text-xs dark:text-gray-300 font-medium mb-2"
-          >First name</label
+          >First Name</label
         >
         <input
           id="Firstname"
-          [(ngModel)]="data.fname"
-          placeholder="Firstname"
-          name="Firstname"
+          formControlName="fname"
+          placeholder="First Name"
+          name="fname"
           class="border p-2 text-sm rounded w-full"
         />
-        <div *ngIf="errorMessages['fname']" class="text-red-700 text-xs mt-1">
+        <div
+          *ngIf="
+            userForm.get('fname')?.touched && userForm.get('fname')?.invalid
+          "
+          class="text-red-700 text-xs mt-1"
+        >
           <ul>
-            <li *ngFor="let errorMsg of errorMessages['fname']">
-              {{ errorMsg }}
+            <li *ngIf="userForm.get('fname')?.errors?.['required']">
+              First name is required.
             </li>
           </ul>
         </div>
       </div>
 
+      <!-- Middle Name -->
       <div class="relative">
         <label
           for="Middlename"
           class="block text-gray-700 text-xs dark:text-gray-300 font-medium mb-2"
           >Middle Name</label
         >
-
         <input
           id="Middlename"
-          [(ngModel)]="data.mname"
+          formControlName="mname"
           placeholder="Middle Name"
-          name="Middlename"
+          name="mname"
           class="border p-2 text-sm rounded w-full"
         />
-        <div *ngIf="errorMessages['mname']" class="text-red-700 text-xs mt-1">
+        <div
+          *ngIf="
+            userForm.get('mname')?.touched && userForm.get('mname')?.invalid
+          "
+          class="text-red-700 text-xs mt-1"
+        >
           <ul>
-            <li *ngFor="let errorMsg of errorMessages['mname']">
-              {{ errorMsg }}
-            </li>
+            <!-- You can add specific validations for mname if needed -->
           </ul>
         </div>
       </div>
+
+      <!-- Last Name -->
       <div class="relative">
         <label
           for="Lastname"
@@ -178,22 +224,28 @@
         >
         <input
           id="Lastname"
-          [(ngModel)]="data.lname"
+          formControlName="lname"
           placeholder="Last Name"
-          name="Lastname"
+          name="lname"
           class="border p-2 text-sm rounded w-full"
         />
-        <div *ngIf="errorMessages['lname']" class="text-red-700 text-xs mt-1">
+        <div
+          *ngIf="
+            userForm.get('lname')?.touched && userForm.get('lname')?.invalid
+          "
+          class="text-red-700 text-xs mt-1"
+        >
           <ul>
-            <li *ngFor="let errorMsg of errorMessages['lname']">
-              {{ errorMsg }}
+            <li *ngIf="userForm.get('lname')?.errors?.['required']">
+              Last name is required.
             </li>
           </ul>
         </div>
       </div>
     </div>
-    <hr class="h-px my-4 bg-gray-200 border-0 dark:bg-gray-700">
+    <hr class="h-px my-4 bg-gray-200 border-0 dark:bg-gray-700" />
     <div class="grid grid-cols-1 lg:grid-cols-3 gap-2 mb-4">
+      <!-- Department -->
       <div class="relative">
         <label
           for="department"
@@ -202,7 +254,7 @@
         >
         <select
           id="department"
-          [(ngModel)]="data.department"
+          formControlName="department"
           name="department"
           class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
         >
@@ -212,8 +264,12 @@
           <option value="CENLO">Central for Live Operation Office</option>
           <option value="CENTO">Central for Technical Office</option>
           <option value="CESSO">Central for Safety and Security Office</option>
-          <option value="CHRADO">Central for Human Resources and Administration Office</option>
-          <option value="CISDEVO">Central Information System Development Office</option>
+          <option value="CHRADO">
+            Central for Human Resources and Administration Office
+          </option>
+          <option value="CISDEVO">
+            Central Information System Development Office
+          </option>
           <option value="Dressing Plant">Dressing Plant</option>
           <option value="Executive">Executive Office</option>
           <option value="Logistics">Logistics</option>
@@ -230,8 +286,12 @@
           <option value="QA">Quality Assurance</option>
           <option value="Purchasing Department">Purchasing Department</option>
           <option value="PED">Planning & Project Engineering Department</option>
-          <option value="Poultry Operations-FEM">Poultry Operations-Farm Engineering & Maintenance</option>
-          <option value="PO-FEM">Poultry Operations-Farm Engineering & Maintenance</option>
+          <option value="Poultry Operations-FEM">
+            Poultry Operations-Farm Engineering & Maintenance
+          </option>
+          <option value="PO-FEM">
+            Poultry Operations-Farm Engineering & Maintenance
+          </option>
           <option value="PO">Poultry Operations</option>
           <option value="FAIP">FAIP Administration</option>
           <option value="Procurement">Procurement Department</option>
@@ -239,16 +299,23 @@
           <option value="R&D">Research and Development Department</option>
           <option value="L&W">Logistics and Warehouse</option>
         </select>
-      
-        <div *ngIf="errorMessages['department']" class="text-red-700 text-xs mt-1">
+
+        <div
+          *ngIf="
+            userForm.get('department')?.touched &&
+            userForm.get('department')?.invalid
+          "
+          class="text-red-700 text-xs mt-1"
+        >
           <ul>
-            <li *ngFor="let errorMsg of errorMessages['department']">
-              {{ errorMsg }}
+            <li *ngIf="userForm.get('department')?.errors?.['required']">
+              Department is required.
             </li>
           </ul>
         </div>
       </div>
 
+      <!-- Company -->
       <div class="relative">
         <label
           for="company"
@@ -257,30 +324,40 @@
         >
         <select
           id="company"
-          [(ngModel)]="data.company"
+          formControlName="company"
           name="company"
           class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
         >
           <option selected disabled>Select a company</option>
           <option value="ABFI">Ana's Breeders Farms, Inc.</option>
-          <option value="GSIII">Green Solution Integrated Industries Inc.</option>
+          <option value="GSIII">
+            Green Solution Integrated Industries Inc.
+          </option>
           <option value="JPPI">Jomaray Pulp Packaging Industries</option>
           <option value="QPMI">Qualiproduct Marketing Inc.</option>
           <option value="SCC">SuyChicken Corporation</option>
           <option value="SFC">Southmin Feedmill Corporation</option>
           <option value="SZ">Subzero Ice & Cold Storage, Inc.</option>
-          <option value="SGFFS">SuySarap Global Flavors & Food Services OPC</option>
+          <option value="SGFFS">
+            SuySarap Global Flavors & Food Services OPC
+          </option>
         </select>
-      
-        <div *ngIf="errorMessages['company']" class="text-red-700 text-xs mt-1">
+
+        <div
+          *ngIf="
+            userForm.get('company')?.touched && userForm.get('company')?.invalid
+          "
+          class="text-red-700 text-xs mt-1"
+        >
           <ul>
-            <li *ngFor="let errorMsg of errorMessages['company']">
-              {{ errorMsg }}
+            <li *ngIf="userForm.get('company')?.errors?.['required']">
+              Company is required.
             </li>
           </ul>
         </div>
       </div>
-      
+
+      <!-- Position -->
       <div class="relative">
         <label
           for="Position"
@@ -289,21 +366,27 @@
         >
         <input
           id="Position"
-          [(ngModel)]="data.position"
+          formControlName="position"
           placeholder="Position"
-          name="Position"
+          name="position"
           class="w-full border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
         />
-        <div *ngIf="errorMessages['position']" class="text-red-700 text-xs mt-1">
+        <div
+          *ngIf="
+            userForm.get('position')?.touched &&
+            userForm.get('position')?.invalid
+          "
+          class="text-red-700 text-xs mt-1"
+        >
           <ul>
-            <li *ngFor="let errorMsg of errorMessages['position']">
-              {{ errorMsg }}
+            <li *ngIf="userForm.get('position')?.errors?.['required']">
+              Position is required.
             </li>
           </ul>
         </div>
       </div>
     </div>
-    <hr class="h-px my-4 bg-gray-200 border-0 dark:bg-gray-700">
+    <hr class="h-px my-4 bg-gray-200 border-0 dark:bg-gray-700" />
     <div class="grid grid-cols-1 lg:grid-cols-2 gap-2">
       <div class="relative">
         <label
@@ -313,19 +396,18 @@
         >
         <input
           id="Emailadd"
-          [(ngModel)]="data.email_add"
+          formControlName="email_add" 
           placeholder="Email Address"
           name="Emailadd"
           class="border p-2 text-sm rounded w-full"
         />
         <div
-          *ngIf="errorMessages['email_add']"
+          *ngIf="userForm.get('email_add')?.touched && userForm.get('email_add')?.invalid"
           class="text-red-700 text-xs mt-1"
         >
           <ul>
-            <li *ngFor="let errorMsg of errorMessages['email_add']">
-              {{ errorMsg }}
-            </li>
+            <li *ngIf="userForm.get('email_add')?.errors?.['required']">Email Address is required.</li>
+            <li *ngIf="userForm.get('email_add')?.errors?.['email']">Please enter a valid email address.</li>
           </ul>
         </div>
       </div>
@@ -341,22 +423,22 @@
         </div>
         <input
           id="Contactnum"
-          [(ngModel)]="data.contact_num"
+          formControlName="contact_num"
           placeholder="Contact Number"
           name="Contactnum"
           class="border p-2 text-sm rounded w-full"
         />
         <div
-          *ngIf="errorMessages['contact_num']"
+          *ngIf="userForm.get('contact_num')?.touched && userForm.get('contact_num')?.invalid"
           class="text-red-700 text-xs mt-1"
         >
           <ul>
-            <li *ngFor="let errorMsg of errorMessages['contact_num']">
-              {{ errorMsg }}
-            </li>
+            <li *ngIf="userForm.get('contact_num')?.errors?.['required']">Contact Number is required.</li>
+            <li *ngIf="userForm.get('contact_num')?.errors?.['pattern']">Please enter a valid 10-digit contact number.</li>
           </ul>
         </div>
       </div>
+      
     </div>
   </form>
 </div>
