@@ -23,11 +23,14 @@ export class DashboardComponent {
   user_id: string | null = null; // Declare user_id here
   users: User[] = [];
   statusData: number[] = [];
-  
+
   visitCount: number = 0;
   visitCountUser: number = 0;
+  // chartData: { year: number; month: number; count: number }[] = [];
   chartData: { year: number; month: number; count: number }[] = [];
   chartDataUser: { year: number; month: number; count: number }[] = [];
+  selectedYear: number = new Date().getFullYear(); // default to current year
+  yearOptions: number[] = []; // to populate year dropdown
   previousMarketVisits: MarketVisits[] = [];
   public dateCreated: string[] = []; // Declare the dateCreated property
   public marketVisits: MarketVisits[] = []; // Already initialized as empty
@@ -59,14 +62,12 @@ export class DashboardComponent {
     this.loadDashboardData();
   }
   loadDashboardData(): void {
-    //chart start
-    this.fetchChartData();
-    this.fetchChartDataUser();
-    //end
-    this.fetchAllCount();
-    this.updateVisitCount();
-    this.updateVisitCountUser();
-    this.getMarketVisitsDataAll();
+this.fetchAllCount();
+  this.updateVisitCount();
+  this.updateVisitCountUser();
+  
+  // Load market visits data (this will also populate charts)
+  this.getMarketVisitsDataAll();
   }
   // Subscribe to SSE messages instead of WebSocket
   private previousVisitCount: number | null = null;
@@ -92,7 +93,6 @@ export class DashboardComponent {
             this.updateVisitCount();
             this.updateVisitCountUser();
             this.getMarketVisitsDataAll();
-            
           },
           (error) => {
             console.error('Error fetching market visits on SSE update:', error);
@@ -131,45 +131,63 @@ export class DashboardComponent {
       );
     }
   }
-//   private updateVisitCountUser(): void {
-//     if (this.authService.isLoggedIn()) {        
-//         this.marketVisitsService.getVisitCountUser(this.user_id).subscribe(
-//             (count: number) => {
-//                 if (count !== this.previousVisitCountUser) {
-//                     this.previousVisitCountUser = count;
-//                     this.visitCountUser = count;
-//                 }
-//             },
-//             (error) => {
-//                 console.error('Error fetching visit count:', error);
-//             }
-//         );
-//     }
-// }
+  //   private updateVisitCountUser(): void {
+  //     if (this.authService.isLoggedIn()) {
+  //         this.marketVisitsService.getVisitCountUser(this.user_id).subscribe(
+  //             (count: number) => {
+  //                 if (count !== this.previousVisitCountUser) {
+  //                     this.previousVisitCountUser = count;
+  //                     this.visitCountUser = count;
+  //                 }
+  //             },
+  //             (error) => {
+  //                 console.error('Error fetching visit count:', error);
+  //             }
+  //         );
+  //     }
+  // }
 
+ private getMarketVisitsDataAll(): void {
+  if (this.authService.isLoggedIn()) {
+    this.marketVisitsService.getMarketVisits().subscribe(
+      (data: MarketVisits[]) => {
+        console.log('Raw market visits data:', data);
+        
+        if (data.length !== this.previousMarketVisits.length) {
+          this.previousMarketVisits = data;
+          this.marketVisits = data;
 
-  private getMarketVisitsDataAll(): void {
-    if (this.authService.isLoggedIn()) {
-      this.marketVisitsService.getMarketVisits().subscribe(
-        (data: MarketVisits[]) => {
-          // console.log('Fetched market visits:', data); // Debugging line
-          if (data.length !== this.previousMarketVisits.length) {
-            this.previousMarketVisits = data;
-            this.marketVisits = data; // Store the fetched data
+          // Extract years
+          const years = new Set<number>();
+          data.forEach((visit) => {
+            const year = new Date(visit.date_created).getFullYear();
+            years.add(year);
+          });
+          this.yearOptions = Array.from(years).sort((a, b) => b - a);
 
-            // Extract date_created into the dateCreated array
-            this.dateCreated = data.map((visit) => visit.date_created); // Assuming date_created exists in MarketVisits
+          // Set default year if not set
+          if (!this.selectedYear && this.yearOptions.length > 0) {
+            this.selectedYear = this.yearOptions[0];
           }
-        },
-        (error) => {
-          console.error('Error fetching market visits:', error);
+
+          // Build chart data from raw visits
+          this.updateChartDataByYear(this.selectedYear);
+          
+          // Also update user chart data if role is user
+          if (this.role_id === '2') {
+            this.updateUserChartDataByYear(this.selectedYear);
+          }
         }
-      );
-    }
+      },
+      (error) => {
+        console.error('Error fetching market visits:', error);
+      }
+    );
   }
+}
 
   // Other code remains the same...
-  
+
   public userCount: number = 0; // Initialize to 0
   public isrCount: number = 0; // Initialize to 0
   public areaCount: number = 0; // Initialize to 0
@@ -180,7 +198,7 @@ export class DashboardComponent {
       this.userCount,
       this.isrCount,
       this.areaCount,
-      this.podCount
+      this.podCount,
     ];
     // console.log('Status Data:', statusData); // Debugging line
     return statusData;
@@ -194,7 +212,7 @@ export class DashboardComponent {
       this.podCount !== null
     );
   }
-  
+
   private fetchAllCount(): void {
     if (this.authService.isLoggedIn()) {
       this.userService.getUserCount().subscribe(
@@ -240,15 +258,15 @@ export class DashboardComponent {
   }
   private fetchChartData(): void {
     this.marketVisitsService.getChartData().subscribe(
-      (data) => {
-        // console.log('Chart data:', data); // Debugging
-        this.chartData = data; // Store the data for passing to the chart component
+      (data: { year: number; month: number; count: number }[]) => {
+        this.chartData = data;
       },
       (error) => {
-        // console.error('Error fetching chart data:', error);
+        console.error('Error fetching chart data:', error);
       }
     );
   }
+
   private fetchChartDataUser(): void {
     this.marketVisitsService.getChartDataUser().subscribe(
       (data) => {
@@ -260,4 +278,118 @@ export class DashboardComponent {
       }
     );
   }
+
+onYearChange(): void {
+  console.log(`Year changed to: ${this.selectedYear}`);
+  console.log(`Role ID: ${this.role_id}`);
+  console.log(`selectedYear type: ${typeof this.selectedYear}`);
+
+  // Convert selectedYear to number to ensure proper comparison
+  const yearAsNumber = parseInt(this.selectedYear.toString(), 10);
+  console.log(`Converted year: ${yearAsNumber} (${typeof yearAsNumber})`);
+
+  // Ensure we have market visits data before processing
+  if (this.marketVisits.length === 0) {
+    console.warn('No market visits data available yet');
+    this.getMarketVisitsDataAll();
+    return;
+  }
+
+  if (this.role_id === '1') {
+    console.log('Calling updateChartDataByYear() for admin');
+    this.updateChartDataByYear(yearAsNumber);
+  } else if (this.role_id === '2') {
+    console.log('Calling updateUserChartDataByYear() for user');
+    this.updateUserChartDataByYear(yearAsNumber);
+  } else {
+    console.warn('Unknown role_id, no chart data update performed.');
+  }
+}
+
+  
+updateChartDataByYear(year: number): void {
+  console.log(`Updating chart data for year: ${year} (${typeof year}) (Admin)`);
+
+  const visitsInYear = this.marketVisits.filter((visit) => {
+    const visitDate = new Date(visit.date_created);
+    const visitYear = visitDate.getFullYear();
+    const match = visitYear === year;
+    
+    // Add debugging for the first few visits
+    if (this.marketVisits.indexOf(visit) < 3) {
+      console.log(`Visit ${visit.id}: date=${visit.date_created}, visitYear=${visitYear} (${typeof visitYear}), targetYear=${year} (${typeof year}), match=${match}`);
+    }
+    
+    return match;
+  });
+
+  console.log(`Found ${visitsInYear.length} visits in year ${year}`);
+
+  const monthMap = new Map<number, number>();
+
+  visitsInYear.forEach((visit) => {
+    const month = new Date(visit.date_created).getMonth();
+    const currentCount = monthMap.get(month) || 0;
+    monthMap.set(month, currentCount + 1);
+  });
+
+  console.log('Month map:', Array.from(monthMap.entries()));
+
+  this.chartData = Array.from({ length: 12 }, (_, index) => {
+    const count = monthMap.get(index) || 0;
+    return {
+      year: year, // Ensure this is a number
+      month: index + 1,
+      count,
+    };
+  });
+
+  console.log('Generated chartData:', this.chartData);
+}
+
+
+updateUserChartDataByYear(year: number): void {
+  console.log(
+    `Updating user-specific chart data for year: ${year} (${typeof year}), user_id: ${this.user_id}`
+  );
+
+  const visitsInYear = this.marketVisits.filter((visit) => {
+    const visitDate = new Date(visit.date_created);
+    const visitYear = visitDate.getFullYear();
+    const yearMatch = visitYear === year;
+    
+    // Handle both string and number comparisons for user_id
+    const userMatch = visit.user_id?.toString() === this.user_id?.toString();
+    
+    // Add debugging for the first few visits
+    if (this.marketVisits.indexOf(visit) < 3) {
+      console.log(`Visit ${visit.id}: date=${visit.date_created}, visitYear=${visitYear} (${typeof visitYear}), targetYear=${year} (${typeof year}), yearMatch=${yearMatch}, userMatch=${userMatch}`);
+    }
+    
+    return yearMatch && userMatch;
+  });
+
+  console.log(`User has ${visitsInYear.length} visits in year ${year}`);
+
+  const monthMap = new Map<number, number>();
+
+  visitsInYear.forEach((visit) => {
+    const month = new Date(visit.date_created).getMonth();
+    const currentCount = monthMap.get(month) || 0;
+    monthMap.set(month, currentCount + 1);
+  });
+
+  console.log('User Month map:', Array.from(monthMap.entries()));
+
+  this.chartDataUser = Array.from({ length: 12 }, (_, index) => {
+    const count = monthMap.get(index) || 0;
+    return {
+      year: year, // Ensure this is a number
+      month: index + 1,
+      count,
+    };
+  });
+
+  console.log('Generated chartDataUser:', this.chartDataUser);
+}
 }

@@ -28,7 +28,7 @@ export type ChartOptions = {
 })
 export class VisitChartComponent implements OnChanges {
   @Input() chartData: { year: number; month: number; count: number }[] = [];
-  @Input() chartName: string = 'Market Visits Per Month'; // New Input for dynamic chart name
+  // @Input() chartName: string = 'Market Visits Per Month'; // New Input for dynamic chart name
   public chartOptions: ChartOptions; // Use ChartOptions type
 
   constructor() {
@@ -43,6 +43,7 @@ export class VisitChartComponent implements OnChanges {
           enabled: false, // Disable zooming
         },
         toolbar: {
+          show: false,
           tools: {
             zoom: false, // Disable zoom tool
             selection: false, // Disable selection tool
@@ -67,7 +68,7 @@ export class VisitChartComponent implements OnChanges {
         min: 0,
       },
       title: {
-        text: this.chartName, // Set dynamic chart name
+        // text: this.chartName, // Set dynamic chart name
         align: 'left',
       },
       tooltip: {},
@@ -81,9 +82,7 @@ export class VisitChartComponent implements OnChanges {
   }
 
   ngOnChanges(): void {
-    if (this.chartData.length > 0) {
-      this.updateChartOptions();
-    }
+    this.updateChartOptions();
   }
 
   // Updated method to set up the chart options
@@ -128,6 +127,7 @@ export class VisitChartComponent implements OnChanges {
           enabled: false, // Disable zooming
         },
         toolbar: {
+          show: false,
           tools: {
             zoom: false, // Disable zoom tool
             selection: false, // Disable selection tool
@@ -150,7 +150,7 @@ export class VisitChartComponent implements OnChanges {
         max: seriesData.length > 0 ? Math.max(...seriesData) + 10 : 10, // Ensure seriesData is not empty
       },
       title: {
-        text: this.chartName, // Ensure title reflects the input property
+        // text: this.chartName, // Ensure title reflects the input property
         align: 'left',
       },
       tooltip: {},
